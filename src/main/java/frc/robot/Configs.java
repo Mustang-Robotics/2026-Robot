@@ -59,4 +59,48 @@ public final class Configs {
                     .positionWrappingInputRange(0, turningFactor);
         }
     }
+        public static final class Launcher {
+        public static final SparkMaxConfig LauncherConfig = new SparkMaxConfig();
+        public static final SparkMaxConfig Launcher_2Config = new SparkMaxConfig();
+
+        static {
+                LauncherConfig
+                .idleMode(IdleMode.kCoast)
+                .smartCurrentLimit(60)
+                .inverted(false)
+                .closedLoop
+                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                .outputRange(-1, 1)
+                .p(0.00009)
+                .maxMotion
+                .cruiseVelocity(5800)
+                .maxAcceleration(20000)
+                .allowedProfileError(25);
+
+                LauncherConfig
+                .encoder
+                .positionConversionFactor(1)
+                .velocityConversionFactor(1);
+
+                LauncherConfig
+                .closedLoop
+                .feedForward.kV(0.00225);
+                
+                Launcher_2Config
+                .idleMode(IdleMode.kBrake)
+                .smartCurrentLimit(60)
+                .follow(8, true);
+        }
 }
+
+        public static final class Intake {
+        public static final SparkMaxConfig IntakeConfig = new SparkMaxConfig();
+
+        static {
+                IntakeConfig
+                .idleMode(IdleMode.kCoast)
+                .smartCurrentLimit(60)
+                .inverted(true);
+        }}
+        }
+
