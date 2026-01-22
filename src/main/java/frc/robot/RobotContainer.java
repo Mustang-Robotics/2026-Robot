@@ -73,7 +73,7 @@ private final CommandXboxController m_driverController = new CommandXboxControll
   private void configureButtonBindings() {
 
     m_driverController.a().onTrue(new RunCommand(() -> m_launcher.setSpeed(3000), m_launcher));
-    m_driverController.a().onFalse(new RunCommand(() -> m_launcher.setSpeed(0), m_launcher));
+    m_driverController.b().onTrue(new RunCommand(() -> m_launcher.setSpeed(0), m_launcher));
     m_driverController.rightTrigger().whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
 
     m_driverController.rightTrigger().whileTrue(new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));

@@ -74,7 +74,7 @@ public final class Configs {
                 .p(0.00009)
                 .maxMotion
                 .cruiseVelocity(5800)
-                .maxAcceleration(20000)
+                .maxAcceleration(40000)
                 .allowedProfileError(25);
 
                 LauncherConfig
@@ -84,7 +84,7 @@ public final class Configs {
 
                 LauncherConfig
                 .closedLoop
-                .feedForward.kV(0.00225);
+                .feedForward.kV(0.0022);
                 
                 Launcher_2Config
                 .idleMode(IdleMode.kBrake)
