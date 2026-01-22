@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.FieldCentricDrive;
 import frc.robot.commands.IntakeDrive;
+import frc.robot.commands.RobotCentricDrive;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LauncherSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -66,9 +67,11 @@ public class RobotContainer {
 
     m_driverController.a().onTrue(new RunCommand(() -> m_launcher.setSpeed(3000), m_launcher));
     m_driverController.b().onTrue(new RunCommand(() -> m_launcher.setSpeed(0), m_launcher));
-    m_driverController.rightTrigger().whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
     m_driverController.y().onTrue(new IntakeDrive(m_robotDrive, m_driverController, IntakeDrivePID));
-    m_driverController.rightTrigger().whileTrue(new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
+    m_driverController.x().onTrue(new FieldCentricDrive(m_robotDrive, m_driverController));
+    m_driverController.rightBumper().onTrue(new RobotCentricDrive(m_robotDrive, m_driverController));
+    m_driverController.start().whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
+    m_driverController.back().whileTrue(new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
    }
 
   /**
