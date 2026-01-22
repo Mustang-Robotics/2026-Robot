@@ -133,6 +133,10 @@ public class DriveSubsystem extends SubsystemBase {
     return m_odometry.getEstimatedPosition();
   }
 
+  public double getAngle() {
+    return m_odometry.getEstimatedPosition().getRotation().getDegrees();
+  }
+
   /**
    * Resets the odometry to the specified pose.
    *
