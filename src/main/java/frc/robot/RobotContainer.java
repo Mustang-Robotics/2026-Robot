@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.FieldCentricDrive;
+import frc.robot.commands.HubDrive;
 import frc.robot.commands.IntakeDrive;
 import frc.robot.commands.RobotCentricDrive;
 import frc.robot.subsystems.DriveSubsystem;
@@ -70,6 +71,7 @@ public class RobotContainer {
     m_driverController.y().onTrue(new IntakeDrive(m_robotDrive, m_driverController, IntakeDrivePID));
     m_driverController.x().onTrue(new FieldCentricDrive(m_robotDrive, m_driverController));
     m_driverController.rightBumper().onTrue(new RobotCentricDrive(m_robotDrive, m_driverController));
+    m_driverController.leftBumper().onTrue(new HubDrive(m_robotDrive, m_driverController, IntakeDrivePID));
     m_driverController.start().whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
     m_driverController.back().whileTrue(new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
    }
