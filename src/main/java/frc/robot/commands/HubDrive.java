@@ -24,11 +24,6 @@ public class HubDrive extends Command{
         addRequirements(m_drive);
     }
 
-    @Override
-    public void initialize() {
-        // Restore the odometry to the previously-saved pose when starting this mode
-        m_drive.restorePose();
-    }
 
     private double convertGyroAngle(double angle) {
         double result = angle % 360;
