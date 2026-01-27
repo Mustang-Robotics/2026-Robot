@@ -87,7 +87,7 @@ public final class Configs {
                 .feedForward.kV(0.0022);
                 
                 Launcher_2Config
-                .idleMode(IdleMode.kBrake)
+                .idleMode(IdleMode.kCoast)
                 .smartCurrentLimit(60)
                 .follow(8, true);
         }

@@ -19,6 +19,12 @@ public class FieldCentricDrive extends Command{
     }
 
     @Override
+    public void initialize() {
+        // Ensure odometry reflects the last saved pose when switching modes
+        m_drive.restorePose();
+    }
+
+    @Override
     public void execute(){
         m_drive.drive(
                     -MathUtil.applyDeadband(m_controller.getRawAxis(1), OIConstants.kDriveDeadband),

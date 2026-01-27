@@ -14,9 +14,12 @@ import frc.robot.commands.HubDrive;
 import frc.robot.commands.IntakeDrive;
 import frc.robot.commands.RobotCentricDrive;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LauncherSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -33,14 +36,15 @@ public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final LauncherSubsystem m_launcher = new LauncherSubsystem();
+  private final IntakeSubsystem m_intake = new IntakeSubsystem();
 
   // The driver's controller
   private final CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
 
   private final SendableChooser<Command> m_chooser;
 
-  private PIDController IntakeDrivePID = new PIDController(.02, 0, 0);
-
+  private PIDController IntakeDrivePID = new PIDController(.006, 0, 0);
+  
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -48,7 +52,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-
+    IntakeDrivePID.enableContinuousInput(0, 360);
     m_chooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", m_chooser);
     // Configure default commands
@@ -66,14 +70,16 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    m_driverController.a().onTrue(new RunCommand(() -> m_launcher.setSpeed(3000), m_launcher));
-    m_driverController.b().onTrue(new RunCommand(() -> m_launcher.setSpeed(0), m_launcher));
-    m_driverController.y().onTrue(new IntakeDrive(m_robotDrive, m_driverController, IntakeDrivePID));
-    m_driverController.x().onTrue(new FieldCentricDrive(m_robotDrive, m_driverController));
-    m_driverController.rightBumper().onTrue(new RobotCentricDrive(m_robotDrive, m_driverController));
-    m_driverController.leftBumper().onTrue(new HubDrive(m_robotDrive, m_driverController, IntakeDrivePID));
-    m_driverController.start().whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
-    m_driverController.back().whileTrue(new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
+  m_driverController.a().onTrue(new RunCommand(() -> m_launcher.setSpeed(3000), m_launcher));
+  m_driverController.b().onTrue(new RunCommand(() -> m_launcher.setSpeed(0), m_launcher));
+  // Save pose before switching modes, then start the requested drive command which will restore the pose
+  m_driverController.x().onTrue(new InstantCommand(() -> m_robotDrive.savePose()).andThen(new FieldCentricDrive(m_robotDrive, m_driverController)));
+  m_driverController.rightBumper().onTrue(new InstantCommand(() -> m_robotDrive.savePose()).andThen(new RobotCentricDrive(m_robotDrive, m_driverController)));
+  m_driverController.leftBumper().onTrue(new InstantCommand(() -> m_robotDrive.savePose()).andThen(new HubDrive(m_robotDrive, m_driverController, IntakeDrivePID)));
+  m_driverController.start().whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
+  m_driverController.back().whileTrue(new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
+  m_driverController.rightTrigger().onTrue(new InstantCommand(() -> m_robotDrive.savePose()).andThen(new ParallelCommandGroup(new RunCommand(() -> m_intake.setPercent(.5), m_intake), new IntakeDrive(m_robotDrive, m_driverController, IntakeDrivePID))));
+  m_driverController.rightTrigger().onFalse(new InstantCommand(() -> m_robotDrive.savePose()).andThen(new ParallelCommandGroup(new RunCommand(() -> m_intake.setPercent(0), m_intake), new FieldCentricDrive(m_robotDrive, m_driverController))));
    }
 
   /**

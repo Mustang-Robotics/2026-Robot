@@ -51,11 +51,15 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The gyro sensor
   private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
+  public double intakeSetpoint = 0;
+
 
   // Odometry class for tracking robot pose
   public final Field2d m_pose = new Field2d();
   public Vision vision = new Vision();
   public Pose2d initialPosition = new Pose2d();
+  // Cached pose used when switching drive modes so odometry can be restored
+  private Pose2d savedPose = null;
   SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
       DriveConstants.kDriveKinematics,
       Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)),
@@ -101,6 +105,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Y", m_pose.getRobotPose().getMeasureY().baseUnitMagnitude());
     SmartDashboard.putNumber("Rotation", m_pose.getRobotPose().getRotation().getDegrees());
     SmartDashboard.putData("pose", m_pose);
+    publishIntakeSetpoint();
     m_odometry.update(
         Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)),
         new SwerveModulePosition[] {
@@ -131,6 +136,23 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public Pose2d getPose() {
     return m_odometry.getEstimatedPosition();
+  }
+
+  /** Save the current estimated pose so it can be restored after mode changes. */
+  public void savePose() {
+    savedPose = m_odometry.getEstimatedPosition();
+  }
+
+  /** Restore odometry to the last-saved pose. No-op if no pose has been saved. */
+  public void restorePose() {
+    if (savedPose != null) {
+      resetOdometry(savedPose);
+    }
+  }
+
+  /** Clear any saved pose. */
+  public void clearSavedPose() {
+    savedPose = null;
   }
 
   public double getAngle() {
@@ -258,4 +280,8 @@ public class DriveSubsystem extends SubsystemBase {
     SwerveDriveKinematics.desaturateWheelSpeeds(targetStates, DriveConstants.kMaxSpeedMetersPerSecond);
     setModuleStates(targetStates);
   }
+
+    public void publishIntakeSetpoint(){
+        SmartDashboard.putNumber("Rotation Setpoint", intakeSetpoint);
+    }
 }

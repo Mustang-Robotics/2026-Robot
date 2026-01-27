@@ -24,6 +24,12 @@ public class HubDrive extends Command{
         addRequirements(m_drive);
     }
 
+    @Override
+    public void initialize() {
+        // Restore the odometry to the previously-saved pose when starting this mode
+        m_drive.restorePose();
+    }
+
     private double convertGyroAngle(double angle) {
         double result = angle % 360;
         if (result < 0) {
@@ -41,10 +47,11 @@ public class HubDrive extends Command{
 
     @Override
     public void execute(){
+        m_drive.intakeSetpoint = convertGyroAngle(Math.toDegrees(findAngle(4.626, 4.035)));
         m_drive.drive(
                 -MathUtil.applyDeadband(m_controller.getRawAxis(1), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_controller.getRawAxis(0), OIConstants.kDriveDeadband),
-                m_PID.calculate(convertGyroAngle(m_drive.getAngle()), findAngle(4.626, 4.035)),
+                m_PID.calculate(convertGyroAngle(m_drive.getAngle()), m_drive.intakeSetpoint),
                 true);
     }
 

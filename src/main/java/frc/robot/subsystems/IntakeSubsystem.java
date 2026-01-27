@@ -19,6 +19,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public RelativeEncoder shooterEncoder = m_intake.getEncoder();
     private SparkClosedLoopController shooterClosedLoopController = m_intake.getClosedLoopController();
     private double targetSpeed = 0;
+    public double setpoint;
     public IntakeSubsystem(){
         m_intake.configure(
           Configs.Intake.IntakeConfig,
@@ -30,10 +31,16 @@ public class IntakeSubsystem extends SubsystemBase {
 
     }
 
+    public void setPercent(double percent){
+      m_intake.set(percent);
+    }
+
     private void moveToSetpoint() {
     
     shooterClosedLoopController.setSetpoint(targetSpeed, ControlType.kMAXMotionVelocityControl);
   }
+
+
 
   @Override
   public void periodic() {
