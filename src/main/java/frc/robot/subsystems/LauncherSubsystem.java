@@ -16,9 +16,10 @@ import frc.robot.Configs;
 public class LauncherSubsystem extends SubsystemBase{
     private final SparkMax m_launcher = new SparkMax(8, MotorType.kBrushless);
     private final SparkMax m_launcher_follower = new SparkMax(9, MotorType.kBrushless);
-    private double targetSpeed = 0;
+    private final SparkMax m_feeder = new SparkMax(33, MotorType.kBrushless);
+    public double targetSpeed = 0;
     public RelativeEncoder shooterEncoder = m_launcher.getEncoder();
-    private SparkClosedLoopController launcherClosedLoopController = m_launcher.getClosedLoopController();;
+    private SparkClosedLoopController launcherClosedLoopController = m_launcher.getClosedLoopController();
     public LauncherSubsystem(){
         m_launcher.configure(
           Configs.Launcher.LauncherConfig,
@@ -32,6 +33,15 @@ public class LauncherSubsystem extends SubsystemBase{
         }
     public void setSpeed(double speed){
         targetSpeed = speed;
+
+    }
+
+    public void feed(){
+        m_feeder.set(1);
+
+    }
+    public void feedOff(){
+        m_feeder.set(0);
 
     }
 

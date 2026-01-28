@@ -20,12 +20,6 @@ public class IntakeDrive extends Command{
         addRequirements(m_drive);
     }
 
-    @Override
-    public void initialize() {
-        // Restore odometry to the saved pose when switching into intake-aiming drive
-        m_drive.restorePose();
-    }
-
     private double convertAngle(double angle) {
         double result = angle % 360;
         if (result < 0) {
@@ -41,12 +35,24 @@ public class IntakeDrive extends Command{
 
     @Override
     public void execute(){
-        m_drive.intakeSetpoint = convertAngle(driveStickAngle(MathUtil.applyDeadband(m_controller.getRawAxis(1), OIConstants.kDriveDeadband), MathUtil.applyDeadband(m_controller.getRawAxis(0), OIConstants.kDriveDeadband)));
+        // Deadband left-stick inputs once and reuse
+        double xInput = MathUtil.applyDeadband(m_controller.getRawAxis(1), OIConstants.kDriveDeadband);
+        double yInput = MathUtil.applyDeadband(m_controller.getRawAxis(0), OIConstants.kDriveDeadband);
+
+        m_drive.intakeSetpoint = convertAngle(driveStickAngle(xInput, yInput));
+
+        // Only apply PID rotation when there is a translation input on the left stick
+        double rot = 0;
+        if (Math.hypot(xInput, yInput) > 0) {
+            rot = m_PID.calculate(convertAngle(m_drive.getAngle()), m_drive.intakeSetpoint);
+        }else{
+            rot = -MathUtil.applyDeadband(m_controller.getRawAxis(4), OIConstants.kDriveDeadband);
+        }
 
         m_drive.drive(
-                -MathUtil.applyDeadband(m_controller.getRawAxis(1), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(m_controller.getRawAxis(0), OIConstants.kDriveDeadband),
-                m_PID.calculate(convertAngle(m_drive.getAngle()), m_drive.intakeSetpoint),
+                -xInput,
+                -yInput,
+                rot,
                 true);
     }
 

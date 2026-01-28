@@ -58,8 +58,6 @@ public class DriveSubsystem extends SubsystemBase {
   public final Field2d m_pose = new Field2d();
   public Vision vision = new Vision();
   public Pose2d initialPosition = new Pose2d();
-  // Cached pose used when switching drive modes so odometry can be restored
-  private Pose2d savedPose = null;
   SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
       DriveConstants.kDriveKinematics,
       Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)),
@@ -137,23 +135,7 @@ public class DriveSubsystem extends SubsystemBase {
   public Pose2d getPose() {
     return m_odometry.getEstimatedPosition();
   }
-
-  /** Save the current estimated pose so it can be restored after mode changes. */
-  public void savePose() {
-    savedPose = m_odometry.getEstimatedPosition();
-  }
-
-  /** Restore odometry to the last-saved pose. No-op if no pose has been saved. */
-  public void restorePose() {
-    if (savedPose != null) {
-      resetOdometry(savedPose);
-    }
-  }
-
-  /** Clear any saved pose. */
-  public void clearSavedPose() {
-    savedPose = null;
-  }
+ 
 
   public double getAngle() {
     return m_odometry.getEstimatedPosition().getRotation().getDegrees();
