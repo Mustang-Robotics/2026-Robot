@@ -22,7 +22,7 @@ public final class Configs {
 
             drivingConfig
                     .idleMode(IdleMode.kBrake)
-                    .smartCurrentLimit(50);
+                    .smartCurrentLimit(60);
             drivingConfig.encoder
                     .positionConversionFactor(drivingFactor) // meters
                     .velocityConversionFactor(drivingFactor / 60.0); // meters per second
@@ -60,47 +60,81 @@ public final class Configs {
         }
     }
         public static final class Launcher {
-        public static final SparkMaxConfig LauncherConfig = new SparkMaxConfig();
-        public static final SparkMaxConfig Launcher_2Config = new SparkMaxConfig();
+                public static final SparkMaxConfig LauncherConfig = new SparkMaxConfig();
+                public static final SparkMaxConfig Launcher_2Config = new SparkMaxConfig();
+                public static final SparkMaxConfig FeederConfig = new SparkMaxConfig();
 
-        static {
-                LauncherConfig
-                .idleMode(IdleMode.kCoast)
-                .smartCurrentLimit(60)
-                .inverted(false)
-                .closedLoop
-                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                .outputRange(-1, 1)
-                .p(0.00009)
-                .maxMotion
-                .cruiseVelocity(5800)
-                .maxAcceleration(40000)
-                .allowedProfileError(25);
+                static {
+                        LauncherConfig
+                        .idleMode(IdleMode.kCoast)
+                        .smartCurrentLimit(60)
+                        .inverted(false)
+                        .closedLoop
+                        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                        .outputRange(-1, 1)
+                        .p(0.00009)
+                        .maxMotion
+                        .cruiseVelocity(5800)
+                        .maxAcceleration(40000)
+                        .allowedProfileError(25);
 
-                LauncherConfig
-                .encoder
-                .positionConversionFactor(1)
-                .velocityConversionFactor(1);
+                        LauncherConfig
+                        .encoder
+                        .positionConversionFactor(1)
+                        .velocityConversionFactor(1);
 
-                LauncherConfig
-                .closedLoop
-                .feedForward.kV(0.0022);
+                        LauncherConfig
+                        .closedLoop
+                        .feedForward.kV(0.0022);
                 
-                Launcher_2Config
-                .idleMode(IdleMode.kCoast)
-                .smartCurrentLimit(60)
-                .follow(8, true);
+                        Launcher_2Config
+                        .idleMode(IdleMode.kCoast)
+                        .smartCurrentLimit(60)
+                        .follow(8, true);
+
+                        FeederConfig
+                        .idleMode(IdleMode.kCoast)
+                        .smartCurrentLimit(60)
+                        .inverted(true);
+                
+                }
         }
-}
 
         public static final class Intake {
-        public static final SparkMaxConfig IntakeConfig = new SparkMaxConfig();
+                public static final SparkMaxConfig IntakeConfig = new SparkMaxConfig();
+                public static final SparkMaxConfig ExtendConfig = new SparkMaxConfig();
 
-        static {
-                IntakeConfig
-                .idleMode(IdleMode.kCoast)
-                .smartCurrentLimit(60)
-                .inverted(true);
-        }}
+                static {
+                        IntakeConfig
+                        .idleMode(IdleMode.kCoast)
+                        .smartCurrentLimit(60)
+                        .inverted(true);
+
+                        ExtendConfig
+                        .idleMode(IdleMode.kCoast)
+                        .smartCurrentLimit(50)
+                        .inverted(true)
+                        .voltageCompensation(12);
+
+                        ExtendConfig
+                        .absoluteEncoder
+                        .positionConversionFactor(360)
+                        .velocityConversionFactor(360);
+
+                        ExtendConfig
+                        .closedLoop
+                        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+                        .p(.0005)
+                        .outputRange(-1, 1)
+                        .positionWrappingEnabled(true)
+                        .maxMotion
+                        .cruiseVelocity(360)
+                        .maxAcceleration(720)
+                        .allowedProfileError(2);
+
+                }
+                
         }
+
+}
 

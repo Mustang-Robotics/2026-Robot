@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.CheckLaunchSpeed;
 import frc.robot.commands.FieldCentricDrive;
 import frc.robot.commands.HubDrive;
 import frc.robot.commands.IntakeDrive;

@@ -30,6 +30,12 @@ public class LauncherSubsystem extends SubsystemBase{
             Configs.Launcher.Launcher_2Config,
             ResetMode.kResetSafeParameters,
             PersistMode.kPersistParameters);
+
+        m_feeder.configure(
+            Configs.Launcher.FeederConfig,
+            ResetMode.kResetSafeParameters,
+            PersistMode.kPersistParameters);
+            
         }
     public void setSpeed(double speed){
         targetSpeed = speed;
