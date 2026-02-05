@@ -67,9 +67,14 @@ public class LauncherSubsystem extends SubsystemBase{
         return rpmTable.get(distance);
     }
 
+    private void publishRPMSetpoint(){
+        SmartDashboard.putNumber("Launcher RPM", m_launcher.shooterEncoder.getVelocity();
+    }
+
     @Override
     public void periodic() {
         moveToSetpoint();
+        publishRPMSetpoint();
     }
 
 }
