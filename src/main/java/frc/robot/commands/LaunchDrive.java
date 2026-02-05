@@ -39,12 +39,6 @@ public class LaunchDrive extends Command {
         }
         return result;
     }
-
-    private double findAngle(double x, double y) {
-        double a = (x - m_drive.getPose().getMeasureY().baseUnitMagnitude());
-        double b = (y - m_drive.getPose().getMeasureX().baseUnitMagnitude());
-        return Math.atan2(a, b);
-    }
     
     private double findAngle(Translation2d position) {
         double a = (position.getX() - m_drive.getPose().getMeasureY().baseUnitMagnitude());
