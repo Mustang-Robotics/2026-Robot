@@ -287,4 +287,17 @@ public class DriveSubsystem extends SubsystemBase {
     public void publishRotationSetpoint(){
         SmartDashboard.putNumber("Rotation Setpoint", rotationSetpoint);
     }
+
+  public double getVelocityFromTarget(Translation2d targetFieldPosition, ChassisSpeeds fieldRelativeSpeeds) {
+    Translation2d robotFieldPosition = this.getPose().getTranslatoin();
+    Translation2d delta = targetFieldPosition.minus(robotFieldPosition);
+    double distance = delta.getNorm();
+
+    if (distance < 0.1) return 0.0;
+
+    double unitX = delta.getX() / distance;
+    doulbe unitY = delta.getY() / distance;
+
+    return (fieldRelativeSpeeds.vxMetersPerSecond * unitX) + (fieldRelativeSpeeds.vyMetersPerSecond * unitY);
+  }
 }
