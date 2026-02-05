@@ -6,7 +6,7 @@ import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import edu.wpi.first.math.interpolation.InterpoolatingDoubleTreeMap;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.spark.SparkMax;
@@ -38,11 +38,11 @@ public class LauncherSubsystem extends SubsystemBase{
             ResetMode.kResetSafeParameters,
             PersistMode.kPersistParameters);
 
-        rpmTable.put(2.0, 2500);
-        rpmTable.put(3.0, 3000);
-        rpmTable.put(4.0, 4000);
-        rpmTable.put(5.0, 5000);
-        rpmTable.put(6.0, 6000);
+        rpmTable.put(2.0, 2500.0);
+        rpmTable.put(3.0, 3000.0);
+        rpmTable.put(4.0, 4000.0);
+        rpmTable.put(5.0, 5000.0);
+        rpmTable.put(6.0, 6000.0);
         
         }
     public void setSpeed(double speed){
@@ -61,6 +61,10 @@ public class LauncherSubsystem extends SubsystemBase{
 
     private void moveToSetpoint() {
         launcherClosedLoopController.setSetpoint(targetSpeed, ControlType.kMAXMotionVelocityControl);
+    }
+
+    public double getRPMForDistance(double distance){
+        return rpmTable.get(distance);
     }
 
     @Override

@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.LauncherSubsystem;
 
 public class LaunchDrive extends Command {
     double x;
@@ -18,8 +19,10 @@ public class LaunchDrive extends Command {
     CommandXboxController m_controller;
     LauncherSubsystem m_launcher;
     PIDController m_PID;
+    Translation2d Hub;
+    double timeOfFlight;
 
-    public LaunchDrive(DriveSubsystem drive, CommandXboxController controller, LauncherSubsystem launcher PIDController PID){
+    public LaunchDrive(DriveSubsystem drive, CommandXboxController controller, LauncherSubsystem launcher, PIDController PID){
         m_drive = drive;
         m_controller = controller;
         m_launcher = launcher;
@@ -57,7 +60,7 @@ public class LaunchDrive extends Command {
 
         Translation2d robotPos = m_drive.getPose().getTranslation();
         Translation2d predictedPos = targetPos;
-        double timeOfFlight = 0.0;
+        timeOfFlight = 0.0;
 
         for (int i = 0; i < 5; i++) {
             distance = robotPos.getDistance(predictedPos);
@@ -69,6 +72,13 @@ public class LaunchDrive extends Command {
         }
 
         return predictedPos;
+    }
+
+    private double getAdjustedRPM() {
+        double actualDistance = distance;
+        double radialVel;
+        double effectiveDistance = actualDistance- (radialVel * timeOfFlight);
+        return m_launcher.getRPMForDistance(effectiveDistance);
     }
 
 
@@ -86,19 +96,19 @@ public class LaunchDrive extends Command {
             x = 4.626;
         }
 
-        Translation2d Hub = new Translation2d(x, y);
+        Hub = new Translation2d(x, y);
     }
 
     @Override
     public void execute(){
-        m_drive.rotationSetpoint = convertGyroAngle(Math.toDegrees(findAngle(getPredictedTargetPosition(Hub, m_drive.getFieldRelativeSpeeds(), 3000))));
+        m_drive.rotationSetpoint = convertGyroAngle(Math.toDegrees(findAngle(getPredictedTargetPosition(Hub, m_drive.getFieldRelativeSpeeds(), m_launcher.getRPMForDistance(distance)))));
         m_drive.drive(
                 -MathUtil.applyDeadband(m_controller.getRawAxis(1), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_controller.getRawAxis(0), OIConstants.kDriveDeadband),
                 m_PID.calculate(convertGyroAngle(m_drive.getAngle()), m_drive.rotationSetpoint),
                 true);
         
-        m_launcher.setSpeed(3000);
+        m_launcher.setSpeed(m_launcher.getRPMForDistance(distance));
         
         if (MathUtil.isNear(m_launcher.targetSpeed, m_launcher.shooterEncoder.getVelocity(), 200) && angleReady){
             m_launcher.feed();

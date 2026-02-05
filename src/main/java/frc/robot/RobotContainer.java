@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.CheckLaunchSpeed;
 import frc.robot.commands.FieldCentricDrive;
-import frc.robot.commands.HubDrive;
+import frc.robot.commands.LaunchDrive;
 import frc.robot.commands.IntakeDrive;
 import frc.robot.commands.RobotCentricDrive;
 import frc.robot.subsystems.DriveSubsystem;
@@ -75,7 +75,7 @@ public class RobotContainer {
   m_driverController.b().onTrue(new ParallelCommandGroup(new RunCommand(() -> m_launcher.feedOff()), new RunCommand(() -> m_launcher.setSpeed(0), m_launcher)));
   m_driverController.x().onTrue(new FieldCentricDrive(m_robotDrive, m_driverController));
   m_driverController.rightBumper().onTrue(new RobotCentricDrive(m_robotDrive, m_driverController));
-  m_driverController.leftBumper().onTrue(new HubDrive(m_robotDrive, m_driverController, IntakeDrivePID));
+  m_driverController.leftBumper().onTrue(new LaunchDrive(m_robotDrive, m_driverController, m_launcher, IntakeDrivePID));
   m_driverController.start().whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
   m_driverController.back().whileTrue(new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
   m_driverController.rightTrigger().onTrue(new ParallelCommandGroup(new RunCommand(() -> m_intake.setPercent(1), m_intake), new IntakeDrive(m_robotDrive, m_driverController, IntakeDrivePID)));
