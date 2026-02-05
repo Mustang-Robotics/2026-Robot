@@ -61,15 +61,16 @@ public class LaunchDrive extends Command {
         Translation2d robotPos = m_drive.getPose().getTranslation();
         Translation2d predictedPos = targetPos;
         double timeOfFlight = 0.0;
+        double newRPM = 0.0;
 
         for (int i = 0; i < 5; i++) {
             double distance = robotPos.getDistance(predictedPos);
             double radialVel = m_drive.getVelocityFromTarget(Hub, m_drive.getFieldRelativeSpeeds());
             double effectiveDistance = distance - (radialVel * lastTOF);
-            double newRPM = m_launcher.getRPMForDistance(effectiveDistance);
+            newRPM = m_launcher.getRPMForDistance(effectiveDistance);
             double horizontalVel = (newRPM * 4 * Math.PI / 60 / 12 / 2.222) * Math.cos(LAUNCH_ANGLE_RADS);
             double totalVel = horizontalVel + radialVel;
-            double timeOfFlight = (distance / horizontalVel);
+            timeOfFlight = (distance / totalVel);
             predictedPos = new Translation2d(
                 targetPos.getX() + (-robotVelocity.vxMetersPerSecond * timeOfFlight),
                 targetPos.getY() + (-robotVelocity.vyMetersPerSecond * timeOfFlight)
@@ -108,7 +109,7 @@ public class LaunchDrive extends Command {
         
         m_launcher.setSpeed(adjustedRPM);
         
-        if (MathUtil.isNear(m_launcher.targetSpeed, m_launcher.shooterEncoder.getVelocity(), 200) && MathUtil.isNear(m_drive.rotationSetpoint, m_drive.getAngle(), 5){
+        if (MathUtil.isNear(m_launcher.targetSpeed, m_launcher.shooterEncoder.getVelocity(), 200) && MathUtil.isNear(m_drive.rotationSetpoint, m_drive.getAngle(), 5)){
             m_launcher.feed();
         } else {
             m_launcher.feedOff();

@@ -14,6 +14,7 @@ import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -289,14 +290,14 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
   public double getVelocityFromTarget(Translation2d targetFieldPosition, ChassisSpeeds fieldRelativeSpeeds) {
-    Translation2d robotFieldPosition = this.getPose().getTranslatoin();
+    Translation2d robotFieldPosition = this.getPose().getTranslation();
     Translation2d delta = targetFieldPosition.minus(robotFieldPosition);
     double distance = delta.getNorm();
 
     if (distance < 0.1) return 0.0;
 
     double unitX = delta.getX() / distance;
-    doulbe unitY = delta.getY() / distance;
+    double unitY = delta.getY() / distance;
 
     return (fieldRelativeSpeeds.vxMetersPerSecond * unitX) + (fieldRelativeSpeeds.vyMetersPerSecond * unitY);
   }

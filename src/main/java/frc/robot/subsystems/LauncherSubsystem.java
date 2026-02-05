@@ -7,6 +7,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.spark.SparkMax;
@@ -68,7 +69,7 @@ public class LauncherSubsystem extends SubsystemBase{
     }
 
     private void publishRPMSetpoint(){
-        SmartDashboard.putNumber("Launcher RPM", m_launcher.shooterEncoder.getVelocity();
+        SmartDashboard.putNumber("Launcher RPM", shooterEncoder.getVelocity());
     }
 
     @Override
