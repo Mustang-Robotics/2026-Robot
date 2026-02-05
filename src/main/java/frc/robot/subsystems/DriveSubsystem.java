@@ -267,6 +267,16 @@ public class DriveSubsystem extends SubsystemBase {
     return DriveConstants.kDriveKinematics.toChassisSpeeds(getStates());
   }
 
+  public ChassisSpeeds getFieldRelativeSpeeds(){
+    ChassisSpeeds robotSpeeds = getRobotRelativeSpeeds();
+    return ChassisSpeeds.fromFieldRelativeSpeeds(
+      robotSpeeds.vxMetersPerSecond,
+      robotSpeeds.vyMetersPerSecond,
+      robotSpeeds.omegaRadiansPerSecond,
+      Rotation2d.fromDegrees(getAngle())
+    );
+  }
+  
     /**Used to drive the robot in robot relative orientation for use in PathPlanner */
   public void driveRobotRelative(ChassisSpeeds speeds) {
     var targetStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
