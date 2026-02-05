@@ -16,9 +16,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
 
-    private final SparkMax m_extend = new SparkMax(34, MotorType.kBrushless);
-    private SparkClosedLoopController ExtendClosedLoopController = m_extend.getClosedLoopController();
-    public final AbsoluteEncoder extendEncoder = m_extend.getAbsoluteEncoder();
+    //private final SparkMax m_extend = new SparkMax(34, MotorType.kBrushless);
+    //private SparkClosedLoopController ExtendClosedLoopController = m_extend.getClosedLoopController();
+    //public final AbsoluteEncoder extendEncoder = m_extend.getAbsoluteEncoder();
     public double extendTarget = 30;
 
     private final SparkMax m_intake = new SparkMax(7, MotorType.kBrushless);
@@ -31,10 +31,10 @@ public class IntakeSubsystem extends SubsystemBase {
           ResetMode.kResetSafeParameters,
           PersistMode.kPersistParameters);
 
-        m_extend.configure(
-          Configs.Intake.ExtendConfig,
-          ResetMode.kResetSafeParameters,
-          PersistMode.kPersistParameters);
+        //m_extend.configure(
+        //  Configs.Intake.ExtendConfig,
+        //  ResetMode.kResetSafeParameters,
+        //  PersistMode.kPersistParameters);
 
     }
 
@@ -46,15 +46,15 @@ public class IntakeSubsystem extends SubsystemBase {
     extendTarget = setpoint;
   }
 
-  private void moveToSetpoint() {
-    ExtendClosedLoopController.setSetpoint(
-      extendTarget, ControlType.kMAXMotionPositionControl);
-  }
+  //private void moveToSetpoint() {
+  //  ExtendClosedLoopController.setSetpoint(
+  //    extendTarget, ControlType.kMAXMotionPositionControl);
+  //}
 
 
 
   @Override
   public void periodic() {
-    moveToSetpoint();
+  //  moveToSetpoint();
   }
 }

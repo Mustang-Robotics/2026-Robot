@@ -72,10 +72,10 @@ public final class Configs {
                         .closedLoop
                         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                         .outputRange(-1, 1)
-                        .p(0.00009)
+                        .p(0.0003)
                         .maxMotion
                         .cruiseVelocity(5800)
-                        .maxAcceleration(40000)
+                        .maxAcceleration(400000)
                         .allowedProfileError(25);
 
                         LauncherConfig
@@ -95,7 +95,7 @@ public final class Configs {
                         FeederConfig
                         .idleMode(IdleMode.kCoast)
                         .smartCurrentLimit(60)
-                        .inverted(true);
+                        .inverted(false);
                 
                 }
         }

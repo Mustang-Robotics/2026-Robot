@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class HubDrive extends Command {
+public class PassDrive extends Command {
     double a;
     double b;
     double x = 4.626;
@@ -17,7 +17,7 @@ public class HubDrive extends Command {
     CommandXboxController m_controller;
     PIDController m_PID;
 
-    public HubDrive(DriveSubsystem drive, CommandXboxController controller, PIDController PID){
+    public PassDrive(DriveSubsystem drive, CommandXboxController controller, PIDController PID){
         m_drive = drive;
         m_controller = controller;
         m_PID = PID;

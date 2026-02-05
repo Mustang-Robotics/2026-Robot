@@ -39,12 +39,12 @@ public class IntakeDrive extends Command{
         double xInput = MathUtil.applyDeadband(m_controller.getRawAxis(1), OIConstants.kDriveDeadband);
         double yInput = MathUtil.applyDeadband(m_controller.getRawAxis(0), OIConstants.kDriveDeadband);
 
-        m_drive.intakeSetpoint = convertAngle(driveStickAngle(xInput, yInput));
+        m_drive.rotationSetpoint = convertAngle(driveStickAngle(xInput, yInput));
 
         // Only apply PID rotation when there is a translation input on the left stick
         double rot = 0;
         if (Math.hypot(xInput, yInput) > 0) {
-            rot = m_PID.calculate(convertAngle(m_drive.getAngle()), m_drive.intakeSetpoint);
+            rot = m_PID.calculate(convertAngle(m_drive.getAngle()), m_drive.rotationSetpoint);
         }else{
             rot = -MathUtil.applyDeadband(m_controller.getRawAxis(4), OIConstants.kDriveDeadband);
         }

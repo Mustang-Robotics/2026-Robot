@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.CheckLaunchSpeed;
 import frc.robot.commands.FieldCentricDrive;
 import frc.robot.commands.HubDrive;
 import frc.robot.commands.IntakeDrive;
@@ -18,6 +19,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LauncherSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -69,14 +71,14 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-  m_driverController.a().onTrue(new ParallelCommandGroup(new RunCommand(() -> m_launcher.setSpeed(2500), m_launcher),new RunCommand(() -> m_launcher.feed())));
+  m_driverController.a().onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(3000)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
   m_driverController.b().onTrue(new ParallelCommandGroup(new RunCommand(() -> m_launcher.feedOff()), new RunCommand(() -> m_launcher.setSpeed(0), m_launcher)));
   m_driverController.x().onTrue(new FieldCentricDrive(m_robotDrive, m_driverController));
   m_driverController.rightBumper().onTrue(new RobotCentricDrive(m_robotDrive, m_driverController));
   m_driverController.leftBumper().onTrue(new HubDrive(m_robotDrive, m_driverController, IntakeDrivePID));
   m_driverController.start().whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
   m_driverController.back().whileTrue(new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
-  m_driverController.rightTrigger().onTrue(new ParallelCommandGroup(new RunCommand(() -> m_intake.setPercent(.5), m_intake), new IntakeDrive(m_robotDrive, m_driverController, IntakeDrivePID)));
+  m_driverController.rightTrigger().onTrue(new ParallelCommandGroup(new RunCommand(() -> m_intake.setPercent(1), m_intake), new IntakeDrive(m_robotDrive, m_driverController, IntakeDrivePID)));
   m_driverController.rightTrigger().onFalse(new ParallelCommandGroup(new RunCommand(() -> m_intake.setPercent(0), m_intake), new FieldCentricDrive(m_robotDrive, m_driverController)));
    }
 

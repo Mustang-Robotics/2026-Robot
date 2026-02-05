@@ -51,7 +51,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The gyro sensor
   private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
-  public double intakeSetpoint = 0;
+  public double rotationSetpoint = 0;
 
 
   // Odometry class for tracking robot pose
@@ -103,7 +103,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Y", m_pose.getRobotPose().getMeasureY().baseUnitMagnitude());
     SmartDashboard.putNumber("Rotation", m_pose.getRobotPose().getRotation().getDegrees());
     SmartDashboard.putData("pose", m_pose);
-    publishIntakeSetpoint();
+    publishRotationSetpoint();
     m_odometry.update(
         Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)),
         new SwerveModulePosition[] {
@@ -168,6 +168,17 @@ public class DriveSubsystem extends SubsystemBase {
    *                      field.
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+      if(fieldRelative){
+        var alliance = DriverStation.getAlliance();
+        boolean red = false;
+        if(alliance.isPresent()) {
+          red = alliance.get() == DriverStation.Alliance.Red;
+        }
+        if(red){
+          xSpeed = -xSpeed;
+          ySpeed = -ySpeed;
+        }
+      }
     // Convert the commanded speeds into the correct units for the drivetrain
     double xSpeedDelivered = xSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
     double ySpeedDelivered = ySpeed * DriveConstants.kMaxSpeedMetersPerSecond;
@@ -263,7 +274,7 @@ public class DriveSubsystem extends SubsystemBase {
     setModuleStates(targetStates);
   }
 
-    public void publishIntakeSetpoint(){
-        SmartDashboard.putNumber("Rotation Setpoint", intakeSetpoint);
+    public void publishRotationSetpoint(){
+        SmartDashboard.putNumber("Rotation Setpoint", rotationSetpoint);
     }
 }
