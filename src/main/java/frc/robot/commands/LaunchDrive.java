@@ -15,12 +15,12 @@ public class LaunchDrive extends Command {
     double x;
     double y = 4.035;
     DriveSubsystem m_drive;
-    double distance;
     CommandXboxController m_controller;
     LauncherSubsystem m_launcher;
     PIDController m_PID;
     Translation2d Hub;
-    double timeOfFlight;
+    double lastTOF = 0.0;
+    double adjustedRPM = 0.0;
 
     public LaunchDrive(DriveSubsystem drive, CommandXboxController controller, LauncherSubsystem launcher, PIDController PID){
         m_drive = drive;
@@ -52,36 +52,33 @@ public class LaunchDrive extends Command {
         return Math.atan2(a, b);
     }
 
-    private Translation2d getPredictedTargetPosition(Translation2d targetPos, ChassisSpeeds targetVelocity, double launcherRPM) {
+    private Translation2d getPredictedTargetPosition(Translation2d targetPos, ChassisSpeeds robotVelocity) {
         
         final double LAUNCH_ANGLE_RADS = Math.toRadians(70.0);
 
-        double horizontalSpeed = (launcherRPM * 4 * Math.PI / 60 / 12 / 2.222) * Math.cos(LAUNCH_ANGLE_RADS); // Convert RPM to m/s
+        double horizontalSpeed;
 
         Translation2d robotPos = m_drive.getPose().getTranslation();
         Translation2d predictedPos = targetPos;
-        timeOfFlight = 0.0;
+        double timeOfFlight = 0.0;
 
         for (int i = 0; i < 5; i++) {
-            distance = robotPos.getDistance(predictedPos);
-            timeOfFlight = (distance / horizontalSpeed) + 0.02;
+            double distance = robotPos.getDistance(predictedPos);
+            double radialVel = m_drive.getVelocityFromTarget(Hub, m_drive.getFieldRelativeSpeeds());
+            double effectiveDistance = distance - (radialVel * lastTOF);
+            double newRPM = m_launcher.getRPMForDistance(effectiveDistance);
+            double horizontalVel = (newRPM * 4 * Math.PI / 60 / 12 / 2.222) * Math.cos(LAUNCH_ANGLE_RADS);
+            double totalVel = horizontalVel + radialVel;
+            double timeOfFlight = (distance / horizontalVel);
             predictedPos = new Translation2d(
-                targetPos.getX() + (targetVelocity.vxMetersPerSecond * timeOfFlight),
-                targetPos.getY() + (targetVelocity.vyMetersPerSecond * timeOfFlight)
+                targetPos.getX() + (-robotVelocity.vxMetersPerSecond * timeOfFlight),
+                targetPos.getY() + (-robotVelocity.vyMetersPerSecond * timeOfFlight)
             );
         }
-
+        this.adjustedRPM = newRPM;
+        this.lastTOF = timeOfFlight;
         return predictedPos;
     }
-
-    private double getAdjustedRPM() {
-        double actualDistance = distance;
-        double radialVel;
-        double effectiveDistance = actualDistance- (radialVel * timeOfFlight);
-        return m_launcher.getRPMForDistance(effectiveDistance);
-    }
-
-
 
     @Override
     public void initialize() {
@@ -101,16 +98,17 @@ public class LaunchDrive extends Command {
 
     @Override
     public void execute(){
-        m_drive.rotationSetpoint = convertGyroAngle(Math.toDegrees(findAngle(getPredictedTargetPosition(Hub, m_drive.getFieldRelativeSpeeds(), m_launcher.getRPMForDistance(distance)))));
+        m_drive.rotationSetpoint = convertGyroAngle(Math.toDegrees(findAngle(getPredictedTargetPosition(Hub, m_drive.getFieldRelativeSpeeds()))));
+    
         m_drive.drive(
                 -MathUtil.applyDeadband(m_controller.getRawAxis(1), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_controller.getRawAxis(0), OIConstants.kDriveDeadband),
                 m_PID.calculate(convertGyroAngle(m_drive.getAngle()), m_drive.rotationSetpoint),
                 true);
         
-        m_launcher.setSpeed(m_launcher.getRPMForDistance(distance));
+        m_launcher.setSpeed(adjustedRPM);
         
-        if (MathUtil.isNear(m_launcher.targetSpeed, m_launcher.shooterEncoder.getVelocity(), 200) && angleReady){
+        if (MathUtil.isNear(m_launcher.targetSpeed, m_launcher.shooterEncoder.getVelocity(), 200) && MathUtil.isNear(m_drive.rotationSetpoint, m_drive.getAngle(), 5){
             m_launcher.feed();
         } else {
             m_launcher.feedOff();
