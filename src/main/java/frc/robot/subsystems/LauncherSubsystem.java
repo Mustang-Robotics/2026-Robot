@@ -6,7 +6,7 @@ import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-
+import edu.wpi.first.math.interpolation.InterpoolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.spark.SparkMax;
@@ -20,6 +20,8 @@ public class LauncherSubsystem extends SubsystemBase{
     public double targetSpeed = 0;
     public RelativeEncoder shooterEncoder = m_launcher.getEncoder();
     private SparkClosedLoopController launcherClosedLoopController = m_launcher.getClosedLoopController();
+    private final InterpolatingDoubleTreeMap rpmTable = new InterpolatingDoubleTreeMap();
+    
     public LauncherSubsystem(){
         m_launcher.configure(
           Configs.Launcher.LauncherConfig,
@@ -35,7 +37,13 @@ public class LauncherSubsystem extends SubsystemBase{
             Configs.Launcher.FeederConfig,
             ResetMode.kResetSafeParameters,
             PersistMode.kPersistParameters);
-            
+
+        rpmTable.put(2.0, 2500);
+        rpmTable.put(3.0, 3000);
+        rpmTable.put(4.0, 4000);
+        rpmTable.put(5.0, 5000);
+        rpmTable.put(6.0, 6000);
+        
         }
     public void setSpeed(double speed){
         targetSpeed = speed;
