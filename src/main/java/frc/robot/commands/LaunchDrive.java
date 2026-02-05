@@ -10,22 +10,22 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class HubDrive extends Command {
-    double a;
-    double b;
-    double x = 4.626;
+public class LaunchDrive extends Command {
+    double x;
     double y = 4.035;
-    Translation2d Hub = new Translation2d(4.626, 4.035);
     DriveSubsystem m_drive;
+    double distance;
     CommandXboxController m_controller;
+    LauncherSubsystem m_launcher;
     PIDController m_PID;
 
-    public HubDrive(DriveSubsystem drive, CommandXboxController controller, PIDController PID){
+    public LaunchDrive(DriveSubsystem drive, CommandXboxController controller, LauncherSubsystem launcher PIDController PID){
         m_drive = drive;
         m_controller = controller;
+        m_launcher = launcher;
         m_PID = PID;
 
-        addRequirements(m_drive);
+        addRequirements(m_drive, m_launcher);
     }
 
 
@@ -60,7 +60,7 @@ public class HubDrive extends Command {
         double timeOfFlight = 0.0;
 
         for (int i = 0; i < 5; i++) {
-            double distance = robotPos.getDistance(predictedPos);
+            distance = robotPos.getDistance(predictedPos);
             timeOfFlight = (distance / horizontalSpeed) + 0.02;
             predictedPos = new Translation2d(
                 targetPos.getX() + (targetVelocity.vxMetersPerSecond * timeOfFlight),
@@ -82,8 +82,11 @@ public class HubDrive extends Command {
         }
         if (red) {
             x = 11.8;
-            y = 4.035;
+        }else {
+            x = 4.626;
         }
+
+        Translation2d Hub = new Translation2d(x, y);
     }
 
     @Override
@@ -94,6 +97,14 @@ public class HubDrive extends Command {
                 -MathUtil.applyDeadband(m_controller.getRawAxis(0), OIConstants.kDriveDeadband),
                 m_PID.calculate(convertGyroAngle(m_drive.getAngle()), m_drive.rotationSetpoint),
                 true);
+        
+        m_launcher.setSpeed(3000);
+        
+        if (MathUtil.isNear(m_launcher.targetSpeed, m_launcher.shooterEncoder.getVelocity(), 200) && angleReady){
+            m_launcher.feed();
+        } else {
+            m_launcher.feedOff();
+        }
     }
 
     @Override
