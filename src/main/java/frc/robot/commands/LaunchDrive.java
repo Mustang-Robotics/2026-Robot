@@ -56,8 +56,6 @@ public class LaunchDrive extends Command {
         
         final double LAUNCH_ANGLE_RADS = Math.toRadians(70.0);
 
-        double horizontalSpeed;
-
         Translation2d robotPos = m_drive.getPose().getTranslation();
         Translation2d predictedPos = targetPos;
         double timeOfFlight = 0.0;
