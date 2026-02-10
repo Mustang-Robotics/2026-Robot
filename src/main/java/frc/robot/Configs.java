@@ -127,6 +127,7 @@ public final class Configs {
                         .p(.01)
                         .outputRange(-1, 1)
                         .positionWrappingEnabled(true)
+                        .positionWrappingInputRange(0, 1)
                         .maxMotion
                         .cruiseVelocity(100)
                         .maxAcceleration(50)

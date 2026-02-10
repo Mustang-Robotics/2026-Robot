@@ -77,14 +77,15 @@ public class RobotContainer {
   m_driverController.pov(90).onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(3500)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
   m_driverController.pov(180).onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(4000)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
   m_driverController.pov(270).onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(4500)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
-  m_driverController.start().onTrue(new ParallelCommandGroup(new RunCommand(() -> m_launcher.feedOff()), new RunCommand(() -> m_launcher.setSpeed(0), m_launcher)));
+  //m_driverController.start().onTrue(new ParallelCommandGroup(new RunCommand(() -> m_launcher.feedOff()), new RunCommand(() -> m_launcher.setSpeed(0), m_launcher)));
   m_driverController.leftBumper().onTrue(new FieldCentricDrive(m_robotDrive, m_driverController));
   m_driverController.rightBumper().onTrue(new RobotCentricDrive(m_robotDrive, m_driverController));
   m_driverController.rightTrigger().onTrue(new LaunchDrive(m_robotDrive, m_driverController, m_launcher, RotationPID));
   m_driverController.rightTrigger().onFalse(new ParallelCommandGroup(new FieldCentricDrive(m_robotDrive, m_driverController), new RunCommand(() -> m_launcher.feedOff()), new RunCommand(() -> m_launcher.setSpeed(0.0))));
   m_driverController.x().whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
   //m_driverController.back().whileTrue(new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
-  m_driverController.back().onTrue(new RunCommand(() -> m_intake.changeSetpoint(0)));
+  m_driverController.back().onTrue(new RunCommand(() -> m_intake.changeSetpoint(90)));
+  m_driverController.start().onTrue(new RunCommand(() -> m_intake.changeSetpoint(0)));
   m_driverController.leftTrigger().onTrue(new ParallelCommandGroup(new RunCommand(() -> m_intake.setPercent(1), m_intake), new IntakeDrive(m_robotDrive, m_driverController, RotationPID)));
   m_driverController.leftTrigger().onFalse(new ParallelCommandGroup(new RunCommand(() -> m_intake.setPercent(0), m_intake), new FieldCentricDrive(m_robotDrive, m_driverController)));
    }
