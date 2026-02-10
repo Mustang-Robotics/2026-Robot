@@ -113,24 +113,34 @@ public final class Configs {
                         ExtendConfig
                         .idleMode(IdleMode.kCoast)
                         .smartCurrentLimit(50)
-                        .inverted(true)
+                        .inverted(false)
                         .voltageCompensation(12);
 
                         ExtendConfig
                         .absoluteEncoder
-                        .positionConversionFactor(360)
-                        .velocityConversionFactor(360);
+                        .positionConversionFactor(1)
+                        .velocityConversionFactor(1);
 
                         ExtendConfig
                         .closedLoop
                         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-                        .p(.0005)
+                        .p(.01)
                         .outputRange(-1, 1)
                         .positionWrappingEnabled(true)
                         .maxMotion
-                        .cruiseVelocity(360)
-                        .maxAcceleration(720)
-                        .allowedProfileError(2);
+                        .cruiseVelocity(100)
+                        .maxAcceleration(50)
+                        .allowedProfileError(.1);
+
+                        ExtendConfig
+                        .closedLoop
+                        .feedForward
+                        .kS(.05)
+                        .kV(.126)
+                        .kA(0.001)
+                        .kCos(0.2)
+                        .kCosRatio(1);
+
 
                 }
                 
