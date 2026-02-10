@@ -83,10 +83,10 @@ public class RobotContainer {
   m_driverController.rightTrigger().onTrue(new LaunchDrive(m_robotDrive, m_driverController, m_launcher, RotationPID));
   m_driverController.rightTrigger().onFalse(new ParallelCommandGroup(new FieldCentricDrive(m_robotDrive, m_driverController), new RunCommand(() -> m_launcher.feedOff()), new RunCommand(() -> m_launcher.setSpeed(0.0))));
   m_driverController.x().whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
-  m_driverController.back().whileTrue(new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
-  m_driverController.leftTrigger().onTrue(new RunCommand(() -> m_intake.changeSetpoint(0)));
-  //m_driverController.leftTrigger().onTrue(new ParallelCommandGroup(new RunCommand(() -> m_intake.setPercent(1), m_intake), new IntakeDrive(m_robotDrive, m_driverController, RotationPID)));
-  //m_driverController.leftTrigger().onFalse(new ParallelCommandGroup(new RunCommand(() -> m_intake.setPercent(0), m_intake), new FieldCentricDrive(m_robotDrive, m_driverController)));
+  //m_driverController.back().whileTrue(new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
+  m_driverController.back().onTrue(new RunCommand(() -> m_intake.changeSetpoint(0)));
+  m_driverController.leftTrigger().onTrue(new ParallelCommandGroup(new RunCommand(() -> m_intake.setPercent(1), m_intake), new IntakeDrive(m_robotDrive, m_driverController, RotationPID)));
+  m_driverController.leftTrigger().onFalse(new ParallelCommandGroup(new RunCommand(() -> m_intake.setPercent(0), m_intake), new FieldCentricDrive(m_robotDrive, m_driverController)));
    }
 
   /**

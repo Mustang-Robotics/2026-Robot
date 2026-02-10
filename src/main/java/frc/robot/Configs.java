@@ -113,7 +113,7 @@ public final class Configs {
                         ExtendConfig
                         .idleMode(IdleMode.kCoast)
                         .smartCurrentLimit(50)
-                        .inverted(false)
+                        .inverted(true)
                         .voltageCompensation(12);
 
                         ExtendConfig
