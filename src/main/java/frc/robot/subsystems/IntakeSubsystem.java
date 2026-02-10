@@ -21,15 +21,15 @@ public class IntakeSubsystem extends SubsystemBase {
     public final AbsoluteEncoder extendEncoder = m_extend.getAbsoluteEncoder();
     public double extendTarget = 0;
 
-    private final SparkMax m_intake = new SparkMax(7, MotorType.kBrushless);
+    //private final SparkMax m_intake = new SparkMax(7, MotorType.kBrushless);
 
     
 
     public IntakeSubsystem(){
-        m_intake.configure(
-          Configs.Intake.IntakeConfig,
-          ResetMode.kResetSafeParameters,
-          PersistMode.kPersistParameters);
+        //m_intake.configure(
+          //Configs.Intake.IntakeConfig,
+          //ResetMode.kResetSafeParameters,
+          //PersistMode.kPersistParameters);
 
         m_extend.configure(
           Configs.Intake.ExtendConfig,
@@ -38,9 +38,9 @@ public class IntakeSubsystem extends SubsystemBase {
 
     }
 
-    public void setPercent(double percent){
-      m_intake.set(percent);
-    }
+    //public void setPercent(double percent){
+      //m_intake.set(percent);
+    //}
 
   public void changeSetpoint(double setpoint) {
     extendTarget = setpoint;
