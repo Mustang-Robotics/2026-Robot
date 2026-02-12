@@ -113,14 +113,14 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
         });
-    var visionBottomEst = vision.getBottomEstimatedGlobalPose();
+    var visionBottomEst = vision.getFrontEstimatedGlobalPose();
     visionBottomEst.ifPresent(
       est -> {
         var estStdDevs = vision.getEstimationStdDevs();
         m_odometry.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
     });
 
-    var visionTopEst = vision.getTopEstimatedGlobalPose();
+    var visionTopEst = vision.getBackEstimatedGlobalPose();
     visionTopEst.ifPresent(
       est -> {
         var estStdDevs = vision.getEstimationStdDevs();

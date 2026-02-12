@@ -113,13 +113,14 @@ public final class Configs {
                         ExtendConfig
                         .idleMode(IdleMode.kCoast)
                         .smartCurrentLimit(50)
-                        .inverted(true)
+                        .inverted(false)
                         .voltageCompensation(12);
 
                         ExtendConfig
                         .absoluteEncoder
                         .positionConversionFactor(1)
-                        .velocityConversionFactor(1);
+                        .velocityConversionFactor(1)
+                        .inverted(true);
 
                         ExtendConfig
                         .closedLoop
@@ -139,7 +140,7 @@ public final class Configs {
                         .kS(.05)
                         .kV(.126)
                         .kA(0.001)
-                        .kCos(0.2)
+                        .kCos(0)
                         .kCosRatio(1);
 
 

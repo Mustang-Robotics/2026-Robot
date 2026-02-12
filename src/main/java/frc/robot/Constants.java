@@ -96,14 +96,14 @@ public final class Constants {
   }
 
   public static class Vision {
-        public static final String kBottomCamera = "Bottom";
-        public static final String kTopCamera = "Top";
+        public static final String kFrontCamera = "Front";
+        public static final String kBackCamera = "Back";
         //public static final String objectCamera = "USB_Camera";
         // Cam mounted facing forward, half a meter forward of center, half a meter up from center.
-        public static final Transform3d kBottomRobotToCam =
-                new Transform3d(new Translation3d(0.1778, -0.3112, 0.3112), new Rotation3d(0, 0, .175));
-        public static final Transform3d kTopRobotToCam =
-                new Transform3d(new Translation3d(0.0445, -0.2223, 1.0478), new Rotation3d(0, -.524, 0));
+        public static final Transform3d kFrontRobotToCam =
+                new Transform3d(new Translation3d(0.1397, -0.3683, 0.5334), new Rotation3d(0, 0, .175));
+        public static final Transform3d kBackRobotToCam =
+                new Transform3d(new Translation3d(0.0635, 0.1651, 0.5334), new Rotation3d(0, -.524, 3.14159));
         // The layout of the AprilTags on the field
         public static final AprilTagFieldLayout kTagLayout =
                 AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
