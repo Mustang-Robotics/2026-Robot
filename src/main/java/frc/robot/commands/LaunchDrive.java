@@ -5,6 +5,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
@@ -41,9 +42,13 @@ public class LaunchDrive extends Command {
     }
     
     private double findAngle(Translation2d position) {
-        double a = (position.getX() - m_drive.getPose().getMeasureY().baseUnitMagnitude());
-        double b = (position.getY() - m_drive.getPose().getMeasureX().baseUnitMagnitude());
-        return Math.atan2(a, b);
+        double a = (position.getX() - m_drive.getPose().getTranslation().getX());
+        double b = (position.getY() - m_drive.getPose().getTranslation().getY());
+        SmartDashboard.putNumber("Hub Position X", position.getX());
+        SmartDashboard.putNumber("Hub Position Y", position.getY());
+        SmartDashboard.putNumber("Robot Position X", m_drive.getPose().getTranslation().getX());
+        SmartDashboard.putNumber("Robot Position Y", m_drive.getPose().getTranslation().getY());
+        return Math.atan2(b, a);
     }
 
     private Translation2d getPredictedTargetPosition(Translation2d targetPos, ChassisSpeeds robotVelocity) {
@@ -58,7 +63,7 @@ public class LaunchDrive extends Command {
         for (int i = 0; i < 5; i++) {
             double distance = robotPos.getDistance(predictedPos);
             double radialVel = m_drive.getVelocityFromTarget(Hub, m_drive.getFieldRelativeSpeeds());
-            double effectiveDistance = distance - (radialVel * lastTOF);
+            double effectiveDistance = distance - (radialVel * timeOfFlight);
             newRPM = m_launcher.getRPMForDistance(effectiveDistance);
             double horizontalVel = (newRPM * 4 * Math.PI / 60 / 12 / 2.222) * Math.cos(LAUNCH_ANGLE_RADS);
             double totalVel = horizontalVel + radialVel;
@@ -92,11 +97,12 @@ public class LaunchDrive extends Command {
     @Override
     public void execute(){
         m_drive.rotationSetpoint = convertGyroAngle(Math.toDegrees(findAngle(getPredictedTargetPosition(Hub, m_drive.getFieldRelativeSpeeds()))));
-    
+        double currentGyro = convertGyroAngle(m_drive.getAngle());
+        SmartDashboard.putNumber("currentGyro",currentGyro);
         m_drive.drive(
                 -MathUtil.applyDeadband(m_controller.getRawAxis(1), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_controller.getRawAxis(0), OIConstants.kDriveDeadband),
-                m_PID.calculate(convertGyroAngle(m_drive.getAngle()), m_drive.rotationSetpoint),
+                m_PID.calculate(currentGyro, m_drive.rotationSetpoint),
                 true);
         
         m_launcher.setSpeed(adjustedRPM);

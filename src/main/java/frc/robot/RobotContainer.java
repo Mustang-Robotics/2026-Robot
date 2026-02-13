@@ -45,7 +45,7 @@ public class RobotContainer {
 
   private final SendableChooser<Command> m_chooser;
 
-  private PIDController RotationPID = new PIDController(.006, 0, 0);
+  private PIDController RotationPID = new PIDController(.01, 0, 0);
   
 
   /**
