@@ -62,13 +62,14 @@ public final class Configs {
         public static final class Launcher {
                 public static final SparkMaxConfig LauncherConfig = new SparkMaxConfig();
                 public static final SparkMaxConfig Launcher_2Config = new SparkMaxConfig();
+                public static final SparkMaxConfig Launcher_3Config = new SparkMaxConfig();
                 public static final SparkMaxConfig FeederConfig = new SparkMaxConfig();
 
                 static {
                         LauncherConfig
                         .idleMode(IdleMode.kCoast)
                         .smartCurrentLimit(60)
-                        .inverted(false)
+                        .inverted(true)
                         .closedLoop
                         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                         .outputRange(-1, 1)
@@ -92,10 +93,15 @@ public final class Configs {
                         .smartCurrentLimit(60)
                         .follow(8, true);
 
+                        Launcher_3Config
+                        .idleMode(IdleMode.kCoast)
+                        .smartCurrentLimit(60)
+                        .follow(8, true);
+
                         FeederConfig
                         .idleMode(IdleMode.kCoast)
                         .smartCurrentLimit(60)
-                        .inverted(false);
+                        .inverted(true);
                 
                 }
         }
@@ -125,20 +131,20 @@ public final class Configs {
                         ExtendConfig
                         .closedLoop
                         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-                        .p(.01)
+                        .p(.03)
                         .outputRange(-1, 1)
                         .positionWrappingEnabled(true)
                         .positionWrappingInputRange(0, 1)
                         .maxMotion
                         .cruiseVelocity(100)
-                        .maxAcceleration(50)
-                        .allowedProfileError(.1);
+                        .maxAcceleration(100)
+                        .allowedProfileError(.01);
 
                         ExtendConfig
                         .closedLoop
                         .feedForward
-                        .kS(.05)
-                        .kV(.126)
+                        .kS(.08)
+                        .kV(.129)
                         .kA(0.001)
                         .kCos(0)
                         .kCosRatio(1);

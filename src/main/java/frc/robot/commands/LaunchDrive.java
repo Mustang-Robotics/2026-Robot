@@ -1,7 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LauncherSubsystem;
 
 public class LaunchDrive extends Command {
@@ -18,18 +19,20 @@ public class LaunchDrive extends Command {
     DriveSubsystem m_drive;
     CommandXboxController m_controller;
     LauncherSubsystem m_launcher;
-    PIDController m_PID;
+    ProfiledPIDController m_PID;
+    IntakeSubsystem m_intake;
     Translation2d Hub;
     double lastTOF = 0.0;
     double adjustedRPM = 0.0;
 
-    public LaunchDrive(DriveSubsystem drive, CommandXboxController controller, LauncherSubsystem launcher, PIDController PID){
+    public LaunchDrive(DriveSubsystem drive, CommandXboxController controller, LauncherSubsystem launcher, ProfiledPIDController PID, IntakeSubsystem intake){
         m_drive = drive;
         m_controller = controller;
         m_launcher = launcher;
         m_PID = PID;
+        m_intake = intake;
 
-        addRequirements(m_drive, m_launcher);
+        addRequirements(m_drive, m_launcher, m_intake);
     }
 
 
@@ -106,8 +109,10 @@ public class LaunchDrive extends Command {
                 true);
         
         m_launcher.setSpeed(adjustedRPM);
+
+        m_intake.changeSetpoint(.13);
         
-        if (MathUtil.isNear(m_launcher.targetSpeed, m_launcher.shooterEncoder.getVelocity(), 200) && MathUtil.isNear(m_drive.rotationSetpoint, m_drive.getAngle(), 5)){
+        if (MathUtil.isNear(m_launcher.targetSpeed, m_launcher.shooterEncoder.getVelocity(), 200) && MathUtil.isNear(m_drive.rotationSetpoint, convertGyroAngle(m_drive.getAngle()), 5)){
             m_launcher.feed();
         } else {
             m_launcher.feedOff();

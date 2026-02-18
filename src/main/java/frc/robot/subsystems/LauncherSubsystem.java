@@ -17,6 +17,7 @@ import frc.robot.Configs;
 public class LauncherSubsystem extends SubsystemBase{
     private final SparkMax m_launcher = new SparkMax(8, MotorType.kBrushless);
     private final SparkMax m_launcher_follower = new SparkMax(9, MotorType.kBrushless);
+    private final SparkMax m_launcher_follower2 = new SparkMax(6, MotorType.kBrushless);
     private final SparkMax m_feeder = new SparkMax(33, MotorType.kBrushless);
     public double targetSpeed = 0;
     public RelativeEncoder shooterEncoder = m_launcher.getEncoder();
@@ -34,18 +35,22 @@ public class LauncherSubsystem extends SubsystemBase{
             ResetMode.kResetSafeParameters,
             PersistMode.kPersistParameters);
 
+        m_launcher_follower2.configure(
+            Configs.Launcher.Launcher_3Config,
+            ResetMode.kResetSafeParameters,
+            PersistMode.kPersistParameters);
+
         m_feeder.configure(
             Configs.Launcher.FeederConfig,
             ResetMode.kResetSafeParameters,
             PersistMode.kPersistParameters);
 
-        rpmTable.put(2.0, 2500.0);
-        rpmTable.put(3.0, 3000.0);
-        rpmTable.put(4.0, 4000.0);
-        rpmTable.put(5.0, 5000.0);
-        rpmTable.put(6.0, 6000.0);
-        
+        rpmTable.put(2.74, 2500.0);
+        rpmTable.put(3.66, 3000.0);
+        rpmTable.put(4.57, 3500.0);
+        rpmTable.put(5.18, 4000.0);
         }
+
     public void setSpeed(double speed){
         targetSpeed = speed;
 

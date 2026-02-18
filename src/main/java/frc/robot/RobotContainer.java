@@ -4,7 +4,8 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -45,7 +46,9 @@ public class RobotContainer {
 
   private final SendableChooser<Command> m_chooser;
 
-  private PIDController RotationPID = new PIDController(.01, 0, 0);
+  private TrapezoidProfile.Constraints rotationSpeed = new TrapezoidProfile.Constraints(360, 540);
+  private ProfiledPIDController RotationPID = new ProfiledPIDController(.03, 0, 0, rotationSpeed);
+
   
 
   /**
@@ -74,21 +77,21 @@ public class RobotContainer {
 
   //m_driverController.a().onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(5000)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
   //m_driverController.b().onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(2500)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
-  m_driverController.pov(0).onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(3000)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
-  m_driverController.pov(90).onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(3500)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
-  m_driverController.pov(180).onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(4000)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
-  m_driverController.pov(270).onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(4500)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
-  m_driverController.x().onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(0)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feedOff())));
+  //m_driverController.pov(0).onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(3000)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
+  //m_driverController.pov(90).onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(3500)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
+  //m_driverController.pov(180).onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(4000)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
+  //m_driverController.pov(270).onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(4500)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
+  //m_driverController.x().onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(0)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feedOff())));
   //m_driverController.start().onTrue(new ParallelCommandGroup(new RunCommand(() -> m_launcher.feedOff()), new RunCommand(() -> m_launcher.setSpeed(0), m_launcher)));
   m_driverController.leftBumper().onTrue(new FieldCentricDrive(m_robotDrive, m_driverController));
   m_driverController.rightBumper().onTrue(new RobotCentricDrive(m_robotDrive, m_driverController));
-  m_driverController.rightTrigger().onTrue(new LaunchDrive(m_robotDrive, m_driverController, m_launcher, RotationPID));
+  m_driverController.rightTrigger().onTrue(new LaunchDrive(m_robotDrive, m_driverController, m_launcher, RotationPID, m_intake));
   m_driverController.rightTrigger().onFalse(new ParallelCommandGroup(new FieldCentricDrive(m_robotDrive, m_driverController), new RunCommand(() -> m_launcher.feedOff()), new RunCommand(() -> m_launcher.setSpeed(0.0))));
   //m_driverController.x().whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
-  //m_driverController.back().whileTrue(new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
-  m_driverController.a().onTrue(new InstantCommand(() -> m_intake.changeSetpoint(.3), m_intake));
-  m_driverController.b().onTrue(new InstantCommand(() -> m_intake.changeSetpoint(0), m_intake));
-  m_driverController.leftTrigger().onTrue(new ParallelCommandGroup(new RunCommand(() -> m_intake.setPercent(1), m_intake), new IntakeDrive(m_robotDrive, m_driverController, RotationPID)));
+  m_driverController.back().whileTrue(new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
+  //m_driverController.a().onTrue(new InstantCommand(() -> m_intake.changeSetpoint(.3), m_intake));
+  //m_driverController.b().onTrue(new InstantCommand(() -> m_intake.changeSetpoint(0), m_intake));
+  m_driverController.leftTrigger().onTrue(new ParallelCommandGroup(new InstantCommand(() -> m_intake.changeSetpoint(0.0)), new RunCommand(() -> m_intake.setPercent(1), m_intake), new IntakeDrive(m_robotDrive, m_driverController, RotationPID)));
   m_driverController.leftTrigger().onFalse(new ParallelCommandGroup(new RunCommand(() -> m_intake.setPercent(0), m_intake), new FieldCentricDrive(m_robotDrive, m_driverController)));
    }
 

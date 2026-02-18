@@ -49,7 +49,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   private void moveToSetpoint() {
     ExtendClosedLoopController.setSetpoint(
-      extendTarget, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, .2*calcArmAngle());
+      extendTarget, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, .22*calcArmAngle());
   }
 
   private double calcArmAngle() {
