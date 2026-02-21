@@ -15,6 +15,6 @@ public class CheckLaunchSpeed extends Command {
 
     @Override
     public boolean isFinished() {
-        return MathUtil.isNear(m_launcher.targetSpeed,m_launcher.shooterEncoder.getVelocity(),1000);
+        return MathUtil.isNear(m_launcher.targetSpeed,m_launcher.shooterEncoder.getVelocity(),100);
     }
 }

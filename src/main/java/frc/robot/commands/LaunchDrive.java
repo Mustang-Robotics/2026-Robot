@@ -132,11 +132,11 @@ public class LaunchDrive extends Command {
         
         if(m_drive.getPose().getX() < BLUE_HUB_X || m_drive.getPose().getX() > RED_HUB_X) {
             double distanceMeters = m_drive.getPose().getTranslation().getDistance(aimLocation);
-            double slope = (2.5 - 10.0) / (5.0 - 1.0); // results in -1.875 deg/meter
-            double dynamicTolerance = 10.0 + (slope * (distanceMeters - 1.0));
-            finalTolerance = MathUtil.clamp(dynamicTolerance, 2.5, 10.0);
+            double slope = (1.5 - 5.0) / (5.0 - 1.0); // results in -1.875 deg/meter
+            double dynamicTolerance = 5.0 + (slope * (distanceMeters - 1.0));
+            finalTolerance = MathUtil.clamp(dynamicTolerance, 1.5, 5.0);
         }else {
-            finalTolerance = 10;
+            finalTolerance = 5;
         }
 
         m_drive.drive(

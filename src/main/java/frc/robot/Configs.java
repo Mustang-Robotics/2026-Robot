@@ -22,7 +22,7 @@ public final class Configs {
 
             drivingConfig
                     .idleMode(IdleMode.kBrake)
-                    .smartCurrentLimit(60);
+                    .smartCurrentLimit(50);
             drivingConfig.encoder
                     .positionConversionFactor(drivingFactor) // meters
                     .velocityConversionFactor(drivingFactor / 60.0); // meters per second
@@ -68,15 +68,16 @@ public final class Configs {
                 static {
                         LauncherConfig
                         .idleMode(IdleMode.kCoast)
-                        .smartCurrentLimit(60)
+                        .smartCurrentLimit(50)
                         .inverted(true)
+                        .voltageCompensation(12)
                         .closedLoop
                         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                         .outputRange(-1, 1)
-                        .p(0.0003)
+                        .p(0.0001)
                         .maxMotion
                         .cruiseVelocity(5800)
-                        .maxAcceleration(400000)
+                        .maxAcceleration(2500)
                         .allowedProfileError(25);
 
                         LauncherConfig
@@ -86,16 +87,18 @@ public final class Configs {
 
                         LauncherConfig
                         .closedLoop
-                        .feedForward.kV(0.0022);
+                        .feedForward.kV(0.0021)
+                        .kA(0.0011)
+                        .kS(0.20);
                 
                         Launcher_2Config
                         .idleMode(IdleMode.kCoast)
-                        .smartCurrentLimit(60)
+                        .smartCurrentLimit(50)
                         .follow(8, true);
 
                         Launcher_3Config
                         .idleMode(IdleMode.kCoast)
-                        .smartCurrentLimit(60)
+                        .smartCurrentLimit(50)
                         .follow(8, true);
 
                         FeederConfig
@@ -113,12 +116,12 @@ public final class Configs {
                 static {
                         IntakeConfig
                         .idleMode(IdleMode.kCoast)
-                        .smartCurrentLimit(60)
+                        .smartCurrentLimit(40)
                         .inverted(true);
 
                         ExtendConfig
                         .idleMode(IdleMode.kCoast)
-                        .smartCurrentLimit(50)
+                        .smartCurrentLimit(40)
                         .inverted(false)
                         .voltageCompensation(12);
 

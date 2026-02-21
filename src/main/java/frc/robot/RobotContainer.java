@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
-//import frc.robot.commands.CheckLaunchSpeed;
+import frc.robot.commands.CheckLaunchSpeed;
 import frc.robot.commands.FieldCentricDrive;
 import frc.robot.commands.LaunchDrive;
 import frc.robot.commands.IntakeDrive;
@@ -21,7 +21,7 @@ import frc.robot.subsystems.LauncherSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-//import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -46,8 +46,8 @@ public class RobotContainer {
 
   private final SendableChooser<Command> m_chooser;
 
-  private TrapezoidProfile.Constraints rotationSpeed = new TrapezoidProfile.Constraints(360, 540);
-  private ProfiledPIDController RotationPID = new ProfiledPIDController(.03, 0, 0, rotationSpeed);
+  private TrapezoidProfile.Constraints rotationSpeed = new TrapezoidProfile.Constraints(360, 480);
+  private ProfiledPIDController RotationPID = new ProfiledPIDController(.015, 0, 0, rotationSpeed);
 
   
 
@@ -60,6 +60,7 @@ public class RobotContainer {
     RotationPID.enableContinuousInput(0, 360);
     m_chooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", m_chooser);
+    
     // Configure default commands
     m_robotDrive.setDefaultCommand(new FieldCentricDrive(m_robotDrive, m_driverController));
   }
@@ -74,8 +75,9 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-
-  //m_driverController.a().onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(5000)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
+  SmartDashboard.putNumber("Set RPM", 0.0);
+  //m_driverController.a().onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(SmartDashboard.getNumber("Set RPM", 0.0))),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
+  //m_driverController.a().onFalse(new ParallelCommandGroup(new RunCommand(() -> m_launcher.feedOff()), new RunCommand(() -> m_launcher.setSpeed(0), m_launcher)));
   //m_driverController.b().onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(2500)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
   //m_driverController.pov(0).onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(3000)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
   //m_driverController.pov(90).onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(3500)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
@@ -83,16 +85,18 @@ public class RobotContainer {
   //m_driverController.pov(270).onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(4500)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
   //m_driverController.x().onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(0)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feedOff())));
   //m_driverController.start().onTrue(new ParallelCommandGroup(new RunCommand(() -> m_launcher.feedOff()), new RunCommand(() -> m_launcher.setSpeed(0), m_launcher)));
-  m_driverController.leftBumper().onTrue(new FieldCentricDrive(m_robotDrive, m_driverController));
-  m_driverController.rightBumper().onTrue(new RobotCentricDrive(m_robotDrive, m_driverController));
+  m_driverController.a().onTrue(new FieldCentricDrive(m_robotDrive, m_driverController));
+  m_driverController.b().onTrue(new RobotCentricDrive(m_robotDrive, m_driverController));
   m_driverController.rightTrigger().onTrue(new LaunchDrive(m_robotDrive, m_driverController, m_launcher, RotationPID, m_intake));
   m_driverController.rightTrigger().onFalse(new ParallelCommandGroup(new FieldCentricDrive(m_robotDrive, m_driverController), new RunCommand(() -> m_launcher.feedOff()), new RunCommand(() -> m_launcher.setSpeed(0.0))));
   //m_driverController.x().whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
   m_driverController.back().whileTrue(new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
   //m_driverController.a().onTrue(new InstantCommand(() -> m_intake.changeSetpoint(.3), m_intake));
   //m_driverController.b().onTrue(new InstantCommand(() -> m_intake.changeSetpoint(0), m_intake));
-  m_driverController.leftTrigger().onTrue(new ParallelCommandGroup(new InstantCommand(() -> m_intake.changeSetpoint(0.0)), new RunCommand(() -> m_intake.setPercent(1), m_intake), new IntakeDrive(m_robotDrive, m_driverController, RotationPID)));
-  m_driverController.leftTrigger().onFalse(new ParallelCommandGroup(new RunCommand(() -> m_intake.setPercent(0), m_intake), new FieldCentricDrive(m_robotDrive, m_driverController)));
+  m_driverController.leftBumper().onTrue(new ParallelCommandGroup(new InstantCommand(() -> m_intake.changeSetpoint(0.0)), new RunCommand(() -> m_intake.setPercent(1), m_intake), new IntakeDrive(m_robotDrive, m_driverController, RotationPID)));
+  m_driverController.leftBumper().onFalse(new ParallelCommandGroup(new RunCommand(() -> m_intake.setPercent(0), m_intake), new FieldCentricDrive(m_robotDrive, m_driverController)));
+  m_driverController.leftTrigger().onTrue(new ParallelCommandGroup(new InstantCommand(() -> m_intake.changeSetpoint(0.0)), new RunCommand(() -> m_intake.setPercent(1), m_intake)));
+  m_driverController.leftTrigger().onFalse(new RunCommand(() -> m_intake.setPercent(0), m_intake));
    }
 
   /**

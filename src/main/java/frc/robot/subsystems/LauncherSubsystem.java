@@ -45,10 +45,15 @@ public class LauncherSubsystem extends SubsystemBase{
             ResetMode.kResetSafeParameters,
             PersistMode.kPersistParameters);
 
-        rpmTable.put(1.74, 2500.0);
-        rpmTable.put(2.66, 3000.0);
-        rpmTable.put(3.57, 3500.0);
-        rpmTable.put(4.18, 4000.0);
+        rpmTable.put(2.436, 2550.0);
+        rpmTable.put(2.726, 2550.0);
+        rpmTable.put(3.006, 2850.0);
+        rpmTable.put(3.306, 2900.0);
+        rpmTable.put(3.676, 3000.0);
+        rpmTable.put(4.056, 3100.0);
+        rpmTable.put(2.516, 2550.0);
+        rpmTable.put(2.876, 2750.0);
+        rpmTable.put(3.456, 2950.0);
         }
 
     public void setSpeed(double speed){
@@ -76,6 +81,7 @@ public class LauncherSubsystem extends SubsystemBase{
     private void publishRPMSetpoint(){
         SmartDashboard.putNumber("Launcher RPM", shooterEncoder.getVelocity());
     }
+
 
     @Override
     public void periodic() {
