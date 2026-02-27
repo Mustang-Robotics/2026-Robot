@@ -47,7 +47,7 @@ public class RobotContainer {
   private final SendableChooser<Command> m_chooser;
 
   private TrapezoidProfile.Constraints rotationSpeed = new TrapezoidProfile.Constraints(360, 480);
-  private ProfiledPIDController RotationPID = new ProfiledPIDController(.015, 0, 0, rotationSpeed);
+  private ProfiledPIDController RotationPID = new ProfiledPIDController(.015, 0, 0.001, rotationSpeed);
 
   
 
@@ -87,6 +87,7 @@ public class RobotContainer {
   //m_driverController.start().onTrue(new ParallelCommandGroup(new RunCommand(() -> m_launcher.feedOff()), new RunCommand(() -> m_launcher.setSpeed(0), m_launcher)));
   m_driverController.a().onTrue(new FieldCentricDrive(m_robotDrive, m_driverController));
   m_driverController.b().onTrue(new RobotCentricDrive(m_robotDrive, m_driverController));
+  m_driverController.x().onTrue(new InstantCommand(() -> m_intake.changeSetpoint(.3)));
   m_driverController.rightTrigger().onTrue(new LaunchDrive(m_robotDrive, m_driverController, m_launcher, RotationPID, m_intake));
   m_driverController.rightTrigger().onFalse(new ParallelCommandGroup(new FieldCentricDrive(m_robotDrive, m_driverController), new RunCommand(() -> m_launcher.feedOff()), new RunCommand(() -> m_launcher.setSpeed(0.0))));
   //m_driverController.x().whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));

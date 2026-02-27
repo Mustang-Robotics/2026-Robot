@@ -20,7 +20,7 @@ public class IntakeSubsystem extends SubsystemBase {
     private final SparkMax m_extend = new SparkMax(34, MotorType.kBrushless);
     private SparkClosedLoopController ExtendClosedLoopController = m_extend.getClosedLoopController();
     public final AbsoluteEncoder extendEncoder = m_extend.getAbsoluteEncoder();
-    public double extendTarget = .2;
+    public double extendTarget = 0.0;
 
     private final SparkMax m_intake = new SparkMax(7, MotorType.kBrushless);
 
@@ -49,7 +49,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   private void moveToSetpoint() {
     ExtendClosedLoopController.setSetpoint(
-      extendTarget, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, .22*calcArmAngle());
+      extendTarget, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, 0.29256*calcArmAngle());
   }
 
   private double calcArmAngle() {

@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
@@ -33,13 +34,29 @@ public class IntakeDrive extends Command{
         return result;
     }
 
+    private double allianceCheck() {
+        boolean red = false;
+        var alliance = DriverStation.getAlliance();
+        double plusAngle = 0;
+        if(alliance.isPresent()) {
+          red = alliance.get() == DriverStation.Alliance.Red;
+        }
+        if(red){
+          plusAngle = 180;
+        }else {
+            plusAngle = 0;
+        }
+
+        return plusAngle;
+    }
+
     @Override
     public void execute(){
         // Deadband left-stick inputs once and reuse
         double xInput = MathUtil.applyDeadband(m_controller.getRawAxis(1), OIConstants.kDriveDeadband);
         double yInput = MathUtil.applyDeadband(m_controller.getRawAxis(0), OIConstants.kDriveDeadband);
 
-        m_drive.rotationSetpoint = convertAngle(driveStickAngle(xInput, yInput));
+        m_drive.rotationSetpoint = convertAngle(driveStickAngle(xInput, yInput)) + allianceCheck();
 
         // Only apply PID rotation when there is a translation input on the left stick
         double rot = 0;

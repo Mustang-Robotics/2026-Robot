@@ -101,9 +101,9 @@ public final class Constants {
         //public static final String objectCamera = "USB_Camera";
         // Cam mounted facing forward, half a meter forward of center, half a meter up from center.
         public static final Transform3d kFrontRobotToCam =
-                new Transform3d(new Translation3d(0.327025, -0.17145, 0.3317875), new Rotation3d(0, 0, -.175));
+                new Transform3d(new Translation3d(0.301, -0.144, 0.364), new Rotation3d(0, .262, -.262));
         public static final Transform3d kBackRobotToCam =
-                new Transform3d(new Translation3d(0.0635, 0.1651, 0.5334), new Rotation3d(0, -.524, 3.14159));
+                new Transform3d(new Translation3d(.301, 0.144, 0.364), new Rotation3d(0, .262, .262));
         // The layout of the AprilTags on the field
         public static final AprilTagFieldLayout kTagLayout =
                 AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);

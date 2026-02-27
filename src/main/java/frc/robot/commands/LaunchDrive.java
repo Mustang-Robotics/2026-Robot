@@ -65,19 +65,19 @@ public class LaunchDrive extends Command {
 
     private Translation2d getPredictedTargetPosition(Translation2d targetPos, ChassisSpeeds robotVelocity) {
         
-        final double LAUNCH_ANGLE_RADS = Math.toRadians(70.0);
+        final double LAUNCH_ANGLE_RADS = Math.toRadians(65.0);
 
         Translation2d robotPos = m_drive.getPose().getTranslation();
         Translation2d predictedPos = targetPos;
         double timeOfFlight = 0.0;
         double newRPM = 0.0;
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 5; i++) {
             double distance = robotPos.getDistance(predictedPos);
             double radialVel = m_drive.getVelocityFromTarget(aimLocation, m_drive.getFieldRelativeSpeeds());
             double effectiveDistance = distance - (radialVel * timeOfFlight);
             newRPM = m_launcher.getRPMForDistance(effectiveDistance);
-            double horizontalVel = (newRPM * 4 * Math.PI / 60 / 12 / 2.222) * Math.cos(LAUNCH_ANGLE_RADS);
+            double horizontalVel = (newRPM * 4 * Math.PI * 0.3048 / 60 / 12 / 2.222) * Math.cos(LAUNCH_ANGLE_RADS);
             double totalVel = horizontalVel + radialVel;
             timeOfFlight = (distance / totalVel);
             predictedPos = new Translation2d(
@@ -140,15 +140,17 @@ public class LaunchDrive extends Command {
         }
 
         m_drive.drive(
-                -MathUtil.applyDeadband(m_controller.getRawAxis(1), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(m_controller.getRawAxis(0), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(m_controller.getRawAxis(1), OIConstants.kDriveDeadband)*.3,
+                -MathUtil.applyDeadband(m_controller.getRawAxis(0), OIConstants.kDriveDeadband)*.3,
                 m_PID.calculate(currentGyro, m_drive.rotationSetpoint),
                 true);
         
         m_launcher.setSpeed(adjustedRPM);
 
         m_intake.changeSetpoint(.13);
-        
+        SmartDashboard.putNumber("Target RPM", m_launcher.targetSpeed);
+        SmartDashboard.putBoolean("Speed", MathUtil.isNear(m_launcher.targetSpeed, m_launcher.shooterEncoder.getVelocity(), 200));
+        SmartDashboard.putBoolean("Angle", MathUtil.isNear(m_drive.rotationSetpoint, convertGyroAngle(m_drive.getAngle()), finalTolerance));
         if (MathUtil.isNear(m_launcher.targetSpeed, m_launcher.shooterEncoder.getVelocity(), 200) && MathUtil.isNear(m_drive.rotationSetpoint, convertGyroAngle(m_drive.getAngle()), finalTolerance)){
             m_launcher.feed();
         } else {

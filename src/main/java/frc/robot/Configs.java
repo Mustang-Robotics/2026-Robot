@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -78,7 +79,7 @@ public final class Configs {
                         .maxMotion
                         .cruiseVelocity(5800)
                         .maxAcceleration(2500)
-                        .allowedProfileError(25);
+                        .allowedProfileError(50);
 
                         LauncherConfig
                         .encoder
@@ -87,9 +88,9 @@ public final class Configs {
 
                         LauncherConfig
                         .closedLoop
-                        .feedForward.kV(0.0021)
-                        .kA(0.0011)
-                        .kS(0.20);
+                        .feedForward.kV(0.0022)
+                        .kA(0)
+                        .kS(0.13);
                 
                         Launcher_2Config
                         .idleMode(IdleMode.kCoast)
@@ -134,23 +135,23 @@ public final class Configs {
                         ExtendConfig
                         .closedLoop
                         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-                        .p(.03)
+                        .p(.05)
                         .outputRange(-1, 1)
                         .positionWrappingEnabled(true)
                         .positionWrappingInputRange(0, 1)
                         .maxMotion
-                        .cruiseVelocity(100)
-                        .maxAcceleration(100)
-                        .allowedProfileError(.01);
+                        .cruiseVelocity(250)
+                        .maxAcceleration(150)
+                        .allowedProfileError(.017);
 
                         ExtendConfig
                         .closedLoop
                         .feedForward
-                        .kS(.08)
-                        .kV(.129)
-                        .kA(0.001)
+                        .kS(.05256)
+                        .kV(.1355)
+                        .kA(0.0012)
                         .kCos(0)
-                        .kCosRatio(1);
+                        .kCosRatio(0);
 
 
                 }
