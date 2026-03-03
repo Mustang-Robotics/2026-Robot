@@ -1,0 +1,75 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.832298578199052,
+        "y": 6.974
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.899519247691154,
+        "y": 7.5151040991038105
+      },
+      "isLocked": false,
+      "linkedName": "Left In 1"
+    },
+    {
+      "anchor": {
+        "x": 7.456887417218542,
+        "y": 6.419
+      },
+      "prevControl": {
+        "x": 5.670935136329657,
+        "y": 7.878236197232136
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.37167070217917586,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 0.7154963680387444,
+      "rotationDegrees": 0.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Intake Up",
+      "waypointRelativePos": 0.7392226148409986,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake Up"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 480.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 124.64100000000002
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -58.946
+  },
+  "useDefaultConstraints": true
+}

@@ -5,7 +5,6 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
@@ -33,6 +32,7 @@ public class LaunchDrive extends Command {
     double lastTOF = 0.0;
     double adjustedRPM = 0.0;
     double finalTolerance;
+    double adjustedDistance = 0.0;
 
     public LaunchDrive(DriveSubsystem drive, CommandXboxController controller, LauncherSubsystem launcher, ProfiledPIDController PID, IntakeSubsystem intake){
         m_drive = drive;
@@ -56,10 +56,7 @@ public class LaunchDrive extends Command {
     private double findAngle(Translation2d position) {
         double a = (position.getX() - m_drive.getPose().getTranslation().getX());
         double b = (position.getY() - m_drive.getPose().getTranslation().getY());
-        SmartDashboard.putNumber("Hub Position X", position.getX());
-        SmartDashboard.putNumber("Hub Position Y", position.getY());
-        SmartDashboard.putNumber("Robot Position X", m_drive.getPose().getTranslation().getX());
-        SmartDashboard.putNumber("Robot Position Y", m_drive.getPose().getTranslation().getY());
+
         return Math.atan2(b, a);
     }
 
@@ -69,13 +66,14 @@ public class LaunchDrive extends Command {
 
         Translation2d robotPos = m_drive.getPose().getTranslation();
         Translation2d predictedPos = targetPos;
-        double timeOfFlight = 0.0;
-        double newRPM = 0.0;
+        double timeOfFlight = lastTOF;
+        double newRPM = adjustedRPM;
+        double effectiveDistance = adjustedDistance;
 
         for (int i = 0; i < 5; i++) {
             double distance = robotPos.getDistance(predictedPos);
             double radialVel = m_drive.getVelocityFromTarget(aimLocation, m_drive.getFieldRelativeSpeeds());
-            double effectiveDistance = distance - (radialVel * timeOfFlight);
+            effectiveDistance = distance - (radialVel * timeOfFlight);
             newRPM = m_launcher.getRPMForDistance(effectiveDistance);
             double horizontalVel = (newRPM * 4 * Math.PI * 0.3048 / 60 / 12 / 2.222) * Math.cos(LAUNCH_ANGLE_RADS);
             double totalVel = horizontalVel + radialVel;
@@ -87,6 +85,7 @@ public class LaunchDrive extends Command {
         }
         this.adjustedRPM = newRPM;
         this.lastTOF = timeOfFlight;
+        this.adjustedDistance = effectiveDistance;
         return predictedPos;
     }
 
@@ -128,13 +127,13 @@ public class LaunchDrive extends Command {
         aimLocation = new Translation2d(aimX, aimY);
         m_drive.rotationSetpoint = convertGyroAngle(Math.toDegrees(findAngle(getPredictedTargetPosition(aimLocation, m_drive.getFieldRelativeSpeeds()))));
         double currentGyro = convertGyroAngle(m_drive.getAngle());
-        SmartDashboard.putNumber("currentGyro",currentGyro);
+
         
         if(m_drive.getPose().getX() < BLUE_HUB_X || m_drive.getPose().getX() > RED_HUB_X) {
             double distanceMeters = m_drive.getPose().getTranslation().getDistance(aimLocation);
-            double slope = (1.5 - 5.0) / (5.0 - 1.0); // results in -1.875 deg/meter
-            double dynamicTolerance = 5.0 + (slope * (distanceMeters - 1.0));
-            finalTolerance = MathUtil.clamp(dynamicTolerance, 1.5, 5.0);
+            double slope = (2.5 - 5.0) / (5.0 - 2.436);
+            double dynamicTolerance = 5.0 + (slope * (distanceMeters - 2.436));
+            finalTolerance = MathUtil.clamp(dynamicTolerance, 2.5, 5.0);
         }else {
             finalTolerance = 5;
         }
@@ -148,10 +147,8 @@ public class LaunchDrive extends Command {
         m_launcher.setSpeed(adjustedRPM);
 
         m_intake.changeSetpoint(.13);
-        SmartDashboard.putNumber("Target RPM", m_launcher.targetSpeed);
-        SmartDashboard.putBoolean("Speed", MathUtil.isNear(m_launcher.targetSpeed, m_launcher.shooterEncoder.getVelocity(), 200));
-        SmartDashboard.putBoolean("Angle", MathUtil.isNear(m_drive.rotationSetpoint, convertGyroAngle(m_drive.getAngle()), finalTolerance));
-        if (MathUtil.isNear(m_launcher.targetSpeed, m_launcher.shooterEncoder.getVelocity(), 200) && MathUtil.isNear(m_drive.rotationSetpoint, convertGyroAngle(m_drive.getAngle()), finalTolerance)){
+
+        if (MathUtil.isNear(m_launcher.targetSpeed, m_launcher.shooterEncoder.getVelocity(), 200) && MathUtil.isNear(m_drive.rotationSetpoint, convertGyroAngle(m_drive.getAngle()), finalTolerance) && adjustedDistance > 2.436){
             m_launcher.feed();
         } else {
             m_launcher.feedOff();
