@@ -103,9 +103,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "IntakeOn"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "R Out 3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R Out 4"
           }
         }
       ]
