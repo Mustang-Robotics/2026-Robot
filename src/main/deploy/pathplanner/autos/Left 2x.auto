@@ -99,7 +99,13 @@
         {
           "type": "named",
           "data": {
-            "name": "IntakeOff"
+            "name": "LaunchOff"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "L Out 3"
           }
         }
       ]

@@ -73,7 +73,7 @@ public class LaunchDrive extends Command {
         for (int i = 0; i < 5; i++) {
             double distance = robotPos.getDistance(predictedPos);
             double radialVel = m_drive.getVelocityFromTarget(aimLocation, m_drive.getFieldRelativeSpeeds());
-            effectiveDistance = distance - (radialVel * timeOfFlight);
+            effectiveDistance = distance + (radialVel * timeOfFlight);
             newRPM = m_launcher.getRPMForDistance(effectiveDistance);
             double horizontalVel = (newRPM * 4 * Math.PI * 0.3048 / 60 / 12 / 2.222) * Math.cos(LAUNCH_ANGLE_RADS);
             double totalVel = horizontalVel + radialVel;

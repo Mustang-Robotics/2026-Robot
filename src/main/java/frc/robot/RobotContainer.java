@@ -61,9 +61,10 @@ public class RobotContainer {
     // Configure the button bindings
     NamedCommands.registerCommand("IntakeOn", new InstantCommand(() -> m_intake.setPercent(1)));
     NamedCommands.registerCommand("IntakeOff", new InstantCommand(() -> m_intake.setPercent(0)));
-    NamedCommands.registerCommand("LaunchOn", new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(3000)),new CheckLaunchSpeed(m_launcher)).andThen(new InstantCommand(() -> m_intake.changeSetpoint(.13))).andThen(new RunCommand(() -> m_launcher.feed())));
+    NamedCommands.registerCommand("LaunchOn", new CheckLaunchSpeed(m_launcher).andThen(new InstantCommand(() -> m_intake.changeSetpoint(.13))).andThen(new RunCommand(() -> m_launcher.feed())));
     NamedCommands.registerCommand("LaunchOff", new ZeroShooter(m_launcher, m_intake));
     NamedCommands.registerCommand("Intake Up", new InstantCommand(() -> m_intake.changeSetpoint(.34)));
+    NamedCommands.registerCommand("SpinUp", new InstantCommand(() -> m_launcher.setSpeed(3000)));
     configureButtonBindings();
     RotationPID.enableContinuousInput(0, 360);
     m_chooser = AutoBuilder.buildAutoChooser();
