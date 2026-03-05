@@ -1,0 +1,49 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Outpost 1"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 8.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Outpost 2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "LaunchOn"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "LaunchOff"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

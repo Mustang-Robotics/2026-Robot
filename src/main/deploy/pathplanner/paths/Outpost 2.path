@@ -3,51 +3,38 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.689691943127963,
-        "y": 5.248
+        "x": 0.4519061516812677,
+        "y": 0.5329489630870023
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.872388593101815,
-        "y": 8.020582472097615
+        "x": 1.4519061516812677,
+        "y": 0.5329489630870023
       },
       "isLocked": false,
-      "linkedName": "Left Out 2"
+      "linkedName": "Outpost 1"
     },
     {
       "anchor": {
-        "x": 2.832298578199052,
-        "y": 6.974
+        "x": 1.7360596026490067,
+        "y": 2.205496688741722
       },
       "prevControl": {
-        "x": 3.5200711844465715,
-        "y": 7.4575899131367285
+        "x": 1.6489403973509935,
+        "y": 1.2617052980132437
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Left In 1"
+      "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.22,
-      "rotationDegrees": 180.0
-    },
-    {
-      "waypointRelativePos": 0.4742451154529298,
-      "rotationDegrees": -90.0
-    },
-    {
-      "waypointRelativePos": 0.7264653641207875,
-      "rotationDegrees": -90.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "SpinUp",
-      "waypointRelativePos": 0.6289752650176643,
+      "waypointRelativePos": 0.38337662337662076,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -67,13 +54,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -58.946
+    "rotation": 32.368091866442796
   },
   "reversed": false,
-  "folder": "Left 2x",
+  "folder": "Outpost",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }
