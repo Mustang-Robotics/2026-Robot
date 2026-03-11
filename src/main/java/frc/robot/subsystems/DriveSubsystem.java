@@ -151,8 +151,22 @@ public class DriveSubsystem extends SubsystemBase {
             if(getPose().getX() < BLUE_HUB_X) {
                 aimX = BLUE_HUB_X;
                 aimY = HUB_Y;
+                if (adjustedDistance > 2.436 && !warningLight()){
+                  m_led.SolidGreen();
+                }else if (adjustedDistance > 2.436 && warningLight()){
+                  m_led.BlinkGreen();
+                }else if (adjustedDistance <= 2.436 && !warningLight()){
+                  m_led.SolidRed();
+                }else if (adjustedDistance <= 2.436 && warningLight()){
+                  m_led.BlinkRed();
+                }
             }else {
                 aimX = BLUE_PASS_X;
+                if (!warningLight()){
+                  m_led.SolidBlue();
+                }else if (warningLight()){
+                  m_led.BlinkBlue();
+                }
                 if(getPose().getY() < HUB_Y) {
                     aimY = PASS_Y_RIGHT;
                 } else {
@@ -163,8 +177,22 @@ public class DriveSubsystem extends SubsystemBase {
             if(getPose().getX() > RED_HUB_X) {
                 aimX = RED_HUB_X;
                 aimY = HUB_Y;
+                if (adjustedDistance > 2.436 && !warningLight()){
+                  m_led.SolidGreen();
+                }else if (adjustedDistance > 2.436 && warningLight()){
+                  m_led.BlinkGreen();
+                }else if (adjustedDistance <= 2.436 && !warningLight()){
+                  m_led.SolidRed();
+                }else if (adjustedDistance <= 2.436 && warningLight()){
+                  m_led.BlinkRed();
+                }
             }else {
                 aimX = RED_PASS_X;
+                if (!warningLight()){
+                  m_led.SolidBlue();
+                }else if (warningLight()){
+                  m_led.BlinkBlue();
+                }
                 if(getPose().getY() < HUB_Y) {
                     aimY = PASS_Y_RIGHT;
                 }else {
@@ -186,11 +214,6 @@ public class DriveSubsystem extends SubsystemBase {
             finalTolerance = 5;
         }
 
-        if (adjustedDistance > 2.436){
-          m_led.BlinkGreen();
-        }else{
-          m_led.BlinkRed();
-        }
   }
 
   /**
@@ -420,5 +443,21 @@ public class DriveSubsystem extends SubsystemBase {
         }
         return redAlliance;
     }
+
+    public boolean warningLight(){
+      boolean light = false;
+      double matchTime =DriverStation.getMatchTime();
+      if((matchTime <= 135 && matchTime > 130) || // Before Shift 1
+      (matchTime <= 110 && matchTime > 105) || // Before Shift 2
+      (matchTime <= 85  && matchTime > 80)  || // Before Shift 3
+      (matchTime <= 60  && matchTime > 55)  || // Before Shift 4
+      (matchTime <= 35  && matchTime > 30))    // Before Endgame
+      {
+        light = true;
+      }else{
+        light = false;
+      }
+      return light;
+      }
 
   }
