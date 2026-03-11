@@ -15,6 +15,7 @@ public class LaunchDrive extends Command {
     LauncherSubsystem m_launcher;
     ProfiledPIDController m_PID;
     IntakeSubsystem m_intake;
+    double intakeSetpoint;
 
 
     public LaunchDrive(DriveSubsystem drive, CommandXboxController controller, LauncherSubsystem launcher, ProfiledPIDController PID, IntakeSubsystem intake){
@@ -28,7 +29,10 @@ public class LaunchDrive extends Command {
     }
 
 
-
+    @Override
+    public void initialize(){
+        intakeSetpoint = 0.0;
+    }
 
     @Override
     public void execute(){
@@ -41,13 +45,16 @@ public class LaunchDrive extends Command {
         
         m_launcher.setSpeed(m_drive.adjustedRPM);
 
-        m_intake.changeSetpoint(.13);
+        m_intake.changeSetpoint(intakeSetpoint);
 
         if (MathUtil.isNear(m_launcher.targetSpeed, m_launcher.shooterEncoder.getVelocity(), 200) && MathUtil.isNear(m_drive.rotationSetpoint, m_drive.convertGyroAngle(m_drive.getAngle()), m_drive.finalTolerance) && m_drive.adjustedDistance > 2.436){
             m_launcher.feed();
+            intakeSetpoint += .005;
         } else {
             m_launcher.feedOff();
         }
+
+        intakeSetpoint = MathUtil.clamp(intakeSetpoint, 0.0, 0.28);
     }
 
     @Override
