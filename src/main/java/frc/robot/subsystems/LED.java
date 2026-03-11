@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 
+import static edu.wpi.first.units.Units.Seconds;
+
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.LEDPattern;
@@ -15,6 +17,11 @@ public class LED extends SubsystemBase {
     private LEDPattern green = LEDPattern.solid(Color.kRed);
     private LEDPattern yellow = LEDPattern.solid(Color.kYellow);
     private LEDPattern pink = LEDPattern.solid(Color.kTeal);
+    private LEDPattern blinkred = LEDPattern.solid(Color.kGreen).blink( Seconds.of(0.1));
+    private LEDPattern blinkblue = LEDPattern.solid(Color.kBlue).blink( Seconds.of(0.1));
+    private LEDPattern blinkgreen = LEDPattern.solid(Color.kRed).blink( Seconds.of(0.1));
+    private LEDPattern blinkyellow = LEDPattern.solid(Color.kYellow).blink( Seconds.of(0.1));
+    private LEDPattern blinkpink = LEDPattern.solid(Color.kTeal).blink( Seconds.of(0.1));
     
     public LED (){
         m_led.setLength(m_buffer.getLength());
@@ -46,4 +53,32 @@ public class LED extends SubsystemBase {
         pink.applyTo(m_buffer);
         m_led.setData(m_buffer);
     }
+
+    public void BlinkGreen(){
+        blinkgreen.applyTo(m_buffer);
+        m_led.setData(m_buffer);
+    }
+
+    public void BlinkRed(){
+        blinkred.applyTo(m_buffer);
+        m_led.setData(m_buffer);
+    }
+
+    public void BlinkBlue(){
+        blinkblue.applyTo(m_buffer);
+        m_led.setData(m_buffer);
+    }
+
+    public void BlinkYellow(){
+        blinkyellow.applyTo(m_buffer);
+        m_led.setData(m_buffer);
+    }
+
+    public void BlinkPink(){
+        blinkpink.applyTo(m_buffer);
+        m_led.setData(m_buffer);
+    }
+
+    
+
 }

@@ -187,9 +187,9 @@ public class DriveSubsystem extends SubsystemBase {
         }
 
         if (adjustedDistance > 2.436){
-          m_led.SolidGreen();
+          m_led.BlinkGreen();
         }else{
-          m_led.SolidRed();
+          m_led.BlinkRed();
         }
   }
 
