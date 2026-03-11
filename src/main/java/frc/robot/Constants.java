@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -114,6 +115,29 @@ public final class Constants {
         public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(.5, .5, 2);
         public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(.25, .25, .5);
     }
+
+  
+  public static class Launcher {
+    
+    public static final InterpolatingDoubleTreeMap rpmTable = new InterpolatingDoubleTreeMap();
+
+    static {
+        rpmTable.put(2.436, 2700.0);
+        rpmTable.put(2.726, 2700.0);
+        rpmTable.put(3.006, 3000.0);
+        rpmTable.put(3.306, 3050.0);
+        rpmTable.put(3.676, 3150.0);
+        rpmTable.put(4.056, 3250.0);
+        rpmTable.put(2.516, 2700.0);
+        rpmTable.put(2.876, 2900.0);
+        rpmTable.put(3.456, 3100.0);
+        rpmTable.put(4.38, 3600.0);
+        rpmTable.put(3.93, 3300.0);
+        rpmTable.put(4.98, 4500.0);
+        rpmTable.put(4.71, 3900.0);
+        rpmTable.put(5.13, 4700.0);
+    }
+  }
 
   public class AutoConfig {
       public static RobotConfig config;

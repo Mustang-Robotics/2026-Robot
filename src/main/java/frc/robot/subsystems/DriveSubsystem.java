@@ -11,6 +11,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -26,6 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConfig;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.Launcher;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -52,7 +54,25 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The gyro sensor
   private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
+  public double aimX;
+  public double aimY;
+  final double BLUE_HUB_X = 4.626;
+  final double RED_HUB_X = 11.915;
+  final double HUB_Y = 4.035;
+  final double BLUE_PASS_X = 2.313;
+  final double PASS_Y_RIGHT = 2.017;
+  final double PASS_Y_LEFT = 6.052;
+  final double RED_PASS_X = 14.228;
   public double rotationSetpoint = 0;
+  public boolean redAlliance = false;
+  public Translation2d aimLocation;
+  public double lastTOF = 0.0;
+  public double adjustedRPM = 0.0;
+  public double finalTolerance;
+  public double adjustedDistance = 0.0;
+  public double currentGyro = 0.0;
+
+  private LED m_led = new LED();
 
 
   // Odometry class for tracking robot pose
@@ -124,6 +144,53 @@ public class DriveSubsystem extends SubsystemBase {
         var estStdDevs = vision.getEstimationStdDevs();
         m_odometry.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
     });
+
+    //Aiming Stuff
+
+    if(!redAlliance()) {
+            if(getPose().getX() < BLUE_HUB_X) {
+                aimX = BLUE_HUB_X;
+                aimY = HUB_Y;
+            }else {
+                aimX = BLUE_PASS_X;
+                if(getPose().getY() < HUB_Y) {
+                    aimY = PASS_Y_RIGHT;
+                } else {
+                    aimY = PASS_Y_LEFT;
+                }
+            }
+        }else {
+            if(getPose().getX() > RED_HUB_X) {
+                aimX = RED_HUB_X;
+                aimY = HUB_Y;
+            }else {
+                aimX = RED_PASS_X;
+                if(getPose().getY() < HUB_Y) {
+                    aimY = PASS_Y_RIGHT;
+                }else {
+                    aimY = PASS_Y_LEFT;
+                }
+            }
+        }
+        aimLocation = new Translation2d(aimX, aimY);
+        rotationSetpoint = convertGyroAngle(Math.toDegrees(findAngle(getPredictedTargetPosition(aimLocation, getFieldRelativeSpeeds()))));
+        currentGyro = convertGyroAngle(getAngle());
+
+        
+        if(getPose().getX() < BLUE_HUB_X || getPose().getX() > RED_HUB_X) {
+            double distanceMeters = getPose().getTranslation().getDistance(aimLocation);
+            double slope = (2.5 - 5.0) / (5.0 - 2.436);
+            double dynamicTolerance = 5.0 + (slope * (distanceMeters - 2.436));
+            finalTolerance = MathUtil.clamp(dynamicTolerance, 2.5, 5.0);
+        }else {
+            finalTolerance = 5;
+        }
+
+        if (adjustedDistance > 2.436){
+          m_led.SolidGreen();
+        }else{
+          m_led.SolidRed();
+        }
   }
 
   /**
@@ -298,4 +365,60 @@ public class DriveSubsystem extends SubsystemBase {
 
     return (fieldRelativeSpeeds.vxMetersPerSecond * unitX) + (fieldRelativeSpeeds.vyMetersPerSecond * unitY);
   }
-}
+
+  //Aiming Stuff
+
+      public double convertGyroAngle(double angle) {
+        double result = angle % 360;
+        if (result < 0) {
+            result += 360;
+        }
+        return result;
+    }
+    
+    private double findAngle(Translation2d position) {
+        double a = (position.getX() - getPose().getTranslation().getX());
+        double b = (position.getY() - getPose().getTranslation().getY());
+
+        return Math.atan2(b, a);
+    }
+
+    private Translation2d getPredictedTargetPosition(Translation2d targetPos, ChassisSpeeds robotVelocity) {
+        
+        final double LAUNCH_ANGLE_RADS = Math.toRadians(65.0);
+
+        Translation2d robotPos = getPose().getTranslation();
+        Translation2d predictedPos = targetPos;
+        double timeOfFlight = lastTOF;
+        double newRPM = adjustedRPM;
+        double effectiveDistance = adjustedDistance;
+
+        for (int i = 0; i < 5; i++) {
+            double distance = robotPos.getDistance(predictedPos);
+            double radialVel = getVelocityFromTarget(aimLocation, getFieldRelativeSpeeds());
+            effectiveDistance = distance + (radialVel * timeOfFlight);
+            newRPM = Launcher.rpmTable.get(effectiveDistance);
+            double horizontalVel = (newRPM * 4 * Math.PI * 0.3048 / 60 / 12 / 2.222) * Math.cos(LAUNCH_ANGLE_RADS);
+            double totalVel = horizontalVel + radialVel;
+            timeOfFlight = (distance / totalVel);
+            predictedPos = new Translation2d(
+                targetPos.getX() + (-robotVelocity.vxMetersPerSecond * timeOfFlight),
+                targetPos.getY() + (-robotVelocity.vyMetersPerSecond * timeOfFlight)
+            );
+        }
+        this.adjustedRPM = newRPM;
+        this.lastTOF = timeOfFlight;
+        this.adjustedDistance = effectiveDistance;
+        return predictedPos;
+    }
+
+
+    public boolean redAlliance() {
+        var alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+            redAlliance = alliance.get() == DriverStation.Alliance.Red;
+        }
+        return redAlliance;
+    }
+
+  }
