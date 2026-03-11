@@ -47,6 +47,7 @@
  public class Vision {
      private final PhotonCamera frontCamera;
      private final PhotonCamera backCamera;
+     private final PhotonCamera hopperCamera;
      private final PhotonPoseEstimator photonFrontEstimator;
      private final PhotonPoseEstimator photonBackEstimator;
      private Matrix<N3, N1> curStdDevs;
@@ -58,6 +59,7 @@
      public Vision() {
          frontCamera = new PhotonCamera(kFrontCamera);
          backCamera = new PhotonCamera(kBackCamera);
+         hopperCamera = new PhotonCamera("Hopper");
  
          photonFrontEstimator =
                  new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, kFrontRobotToCam);
@@ -137,6 +139,12 @@
             }
         }
         return visionEst;
+    }
+
+    public double hopperFill() {
+        var results = hopperCamera.getLatestResult();
+        PhotonTrackedTarget target = results.getBestTarget();
+        return target.getArea();
     }
  
      /**

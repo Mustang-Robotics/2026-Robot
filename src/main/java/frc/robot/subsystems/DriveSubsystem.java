@@ -71,7 +71,7 @@ public class DriveSubsystem extends SubsystemBase {
   public double finalTolerance;
   public double adjustedDistance = 0.0;
   public double currentGyro = 0.0;
-
+  public double hopperFill;
   private LED m_led = new LED();
 
 
@@ -146,7 +146,8 @@ public class DriveSubsystem extends SubsystemBase {
     });
 
     //Aiming Stuff
-
+    hopperFill = vision.hopperFill();
+    SmartDashboard.putNumber("Hopper", hopperFill);
     if(!redAlliance()) {
             if(getPose().getX() < BLUE_HUB_X) {
                 aimX = BLUE_HUB_X;
@@ -162,10 +163,14 @@ public class DriveSubsystem extends SubsystemBase {
                 }
             }else {
                 aimX = BLUE_PASS_X;
-                if (!warningLight()){
+                if (!warningLight() && hopperFill < 70){
                   m_led.SolidBlue();
-                }else if (warningLight()){
+                }else if (warningLight() && hopperFill < 70){
                   m_led.BlinkBlue();
+                }else if (!warningLight() && hopperFill >= 70){
+                  m_led.SolidPink();
+                }else if (warningLight() && hopperFill >= 70){
+                  m_led.BlinkPink();
                 }
                 if(getPose().getY() < HUB_Y) {
                     aimY = PASS_Y_RIGHT;
@@ -188,10 +193,14 @@ public class DriveSubsystem extends SubsystemBase {
                 }
             }else {
                 aimX = RED_PASS_X;
-                if (!warningLight()){
+                if (!warningLight() && hopperFill < 70){
                   m_led.SolidBlue();
-                }else if (warningLight()){
+                }else if (warningLight() && hopperFill < 70){
                   m_led.BlinkBlue();
+                }else if (!warningLight() && hopperFill >= 70){
+                  m_led.SolidPink();
+                }else if (warningLight() && hopperFill >= 70){
+                  m_led.BlinkPink();
                 }
                 if(getPose().getY() < HUB_Y) {
                     aimY = PASS_Y_RIGHT;
