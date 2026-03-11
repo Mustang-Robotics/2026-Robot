@@ -451,7 +451,8 @@ public class DriveSubsystem extends SubsystemBase {
       (matchTime <= 110 && matchTime > 105) || // Before Shift 2
       (matchTime <= 85  && matchTime > 80)  || // Before Shift 3
       (matchTime <= 60  && matchTime > 55)  || // Before Shift 4
-      (matchTime <= 35  && matchTime > 30))    // Before Endgame
+      (matchTime <= 35  && matchTime > 30)  ||
+      (matchTime <= 5   && matchTime > 0))    // Before Endgame
       {
         light = true;
       }else{
