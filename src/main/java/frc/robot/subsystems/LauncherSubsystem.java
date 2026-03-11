@@ -44,20 +44,20 @@ public class LauncherSubsystem extends SubsystemBase{
             ResetMode.kResetSafeParameters,
             PersistMode.kPersistParameters);
 
-        rpmTable.put(2.436, 2600.0);
-        rpmTable.put(2.726, 2600.0);
-        rpmTable.put(3.006, 2900.0);
-        rpmTable.put(3.306, 2950.0);
-        rpmTable.put(3.676, 3050.0);
-        rpmTable.put(4.056, 3150.0);
-        rpmTable.put(2.516, 2600.0);
-        rpmTable.put(2.876, 2800.0);
-        rpmTable.put(3.456, 3000.0);
-        rpmTable.put(4.38, 3500.0);
-        rpmTable.put(3.93, 3200.0);
-        rpmTable.put(4.98, 4400.0);
-        rpmTable.put(4.71, 3800.0);
-        rpmTable.put(5.13, 4600.0);
+        rpmTable.put(2.436, 2700.0);
+        rpmTable.put(2.726, 2700.0);
+        rpmTable.put(3.006, 3000.0);
+        rpmTable.put(3.306, 3050.0);
+        rpmTable.put(3.676, 3150.0);
+        rpmTable.put(4.056, 3250.0);
+        rpmTable.put(2.516, 2700.0);
+        rpmTable.put(2.876, 2900.0);
+        rpmTable.put(3.456, 3100.0);
+        rpmTable.put(4.38, 3600.0);
+        rpmTable.put(3.93, 3300.0);
+        rpmTable.put(4.98, 4500.0);
+        rpmTable.put(4.71, 3900.0);
+        rpmTable.put(5.13, 4700.0);
         }
 
     public void setSpeed(double speed){
