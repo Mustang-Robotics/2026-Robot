@@ -7,7 +7,6 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.spark.SparkMax;
@@ -45,15 +44,20 @@ public class LauncherSubsystem extends SubsystemBase{
             ResetMode.kResetSafeParameters,
             PersistMode.kPersistParameters);
 
-        rpmTable.put(2.436, 2550.0);
-        rpmTable.put(2.726, 2550.0);
-        rpmTable.put(3.006, 2850.0);
-        rpmTable.put(3.306, 2900.0);
-        rpmTable.put(3.676, 3000.0);
-        rpmTable.put(4.056, 3100.0);
-        rpmTable.put(2.516, 2550.0);
-        rpmTable.put(2.876, 2750.0);
-        rpmTable.put(3.456, 2950.0);
+        rpmTable.put(2.436, 2700.0);
+        rpmTable.put(2.726, 2700.0);
+        rpmTable.put(3.006, 3000.0);
+        rpmTable.put(3.306, 3050.0);
+        rpmTable.put(3.676, 3150.0);
+        rpmTable.put(4.056, 3250.0);
+        rpmTable.put(2.516, 2700.0);
+        rpmTable.put(2.876, 2900.0);
+        rpmTable.put(3.456, 3100.0);
+        rpmTable.put(4.38, 3600.0);
+        rpmTable.put(3.93, 3300.0);
+        rpmTable.put(4.98, 4500.0);
+        rpmTable.put(4.71, 3900.0);
+        rpmTable.put(5.13, 4700.0);
         }
 
     public void setSpeed(double speed){
@@ -78,15 +82,13 @@ public class LauncherSubsystem extends SubsystemBase{
         return rpmTable.get(distance);
     }
 
-    private void publishRPMSetpoint(){
-        SmartDashboard.putNumber("Launcher RPM", shooterEncoder.getVelocity());
-    }
+
 
 
     @Override
     public void periodic() {
         moveToSetpoint();
-        publishRPMSetpoint();
+
     }
 
 }

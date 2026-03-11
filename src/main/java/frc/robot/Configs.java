@@ -1,7 +1,6 @@
 package frc.robot;
 
 import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -84,7 +83,9 @@ public final class Configs {
                         LauncherConfig
                         .encoder
                         .positionConversionFactor(1)
-                        .velocityConversionFactor(1);
+                        .velocityConversionFactor(1)
+                        .uvwMeasurementPeriod(10)
+                        .uvwAverageDepth(2);
 
                         LauncherConfig
                         .closedLoop

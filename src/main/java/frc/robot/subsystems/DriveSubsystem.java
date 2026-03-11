@@ -98,13 +98,11 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
-    SmartDashboard.putNumber("angle", m_gyro.getAngle(IMUAxis.kZ));
+
     m_pose.setRobotPose(m_odometry.getEstimatedPosition());
-    SmartDashboard.putNumber("X", m_pose.getRobotPose().getMeasureX().baseUnitMagnitude());
-    SmartDashboard.putNumber("Y", m_pose.getRobotPose().getMeasureY().baseUnitMagnitude());
-    SmartDashboard.putNumber("Rotation", m_pose.getRobotPose().getRotation().getDegrees());
+
     SmartDashboard.putData("pose", m_pose);
-    publishRotationSetpoint();
+
     m_odometry.update(
         Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)),
         new SwerveModulePosition[] {
@@ -179,7 +177,7 @@ public class DriveSubsystem extends SubsystemBase {
           xSpeed = -xSpeed;
           ySpeed = -ySpeed;
         }
-        SmartDashboard.putBoolean("Alliance", red);
+
       }
     // Convert the commanded speeds into the correct units for the drivetrain
     double xSpeedDelivered = xSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
@@ -286,9 +284,7 @@ public class DriveSubsystem extends SubsystemBase {
     setModuleStates(targetStates);
   }
 
-    public void publishRotationSetpoint(){
-        SmartDashboard.putNumber("Rotation Setpoint", rotationSetpoint);
-    }
+
 
   public double getVelocityFromTarget(Translation2d targetFieldPosition, ChassisSpeeds fieldRelativeSpeeds) {
     Translation2d robotFieldPosition = this.getPose().getTranslation();

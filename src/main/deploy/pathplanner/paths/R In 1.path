@@ -1,0 +1,71 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.102,
+        "y": 2.681
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.937560128370107,
+        "y": 1.0423576943635042
+      },
+      "isLocked": false,
+      "linkedName": "Right-Out-1"
+    },
+    {
+      "anchor": {
+        "x": 2.832298578199052,
+        "y": 1.026
+      },
+      "prevControl": {
+        "x": 5.680113645757624,
+        "y": 0.20929458773301923
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Right-In-1"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.776595744680855,
+      "rotationDegrees": 90.16704143703667
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "SpinUp",
+      "waypointRelativePos": 0.768904593639576,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "SpinUp"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 480.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 58.946
+  },
+  "reversed": false,
+  "folder": "Right 2x",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "useDefaultConstraints": true
+}

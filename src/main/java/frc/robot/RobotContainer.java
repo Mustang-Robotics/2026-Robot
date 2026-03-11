@@ -13,11 +13,12 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.CheckLaunchSpeed;
 import frc.robot.commands.FieldCentricDrive;
 import frc.robot.commands.LaunchDrive;
+import frc.robot.commands.OrientDrive;
 import frc.robot.commands.IntakeDrive;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.commands.RobotCentricDrive;
 import frc.robot.commands.ZeroShooter;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LauncherSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -29,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -57,6 +59,12 @@ public class RobotContainer {
    */
   public RobotContainer() {
     // Configure the button bindings
+    NamedCommands.registerCommand("IntakeOn", new InstantCommand(() -> m_intake.setPercent(1)));
+    NamedCommands.registerCommand("IntakeOff", new InstantCommand(() -> m_intake.setPercent(0)));
+    NamedCommands.registerCommand("LaunchOn", new CheckLaunchSpeed(m_launcher).andThen(new InstantCommand(() -> m_intake.changeSetpoint(.13))).andThen(new RunCommand(() -> m_launcher.feed())));
+    NamedCommands.registerCommand("LaunchOff", new ZeroShooter(m_launcher, m_intake));
+    NamedCommands.registerCommand("Intake Up", new InstantCommand(() -> m_intake.changeSetpoint(.34)));
+    NamedCommands.registerCommand("SpinUp", new InstantCommand(() -> m_launcher.setSpeed(3150)));
     configureButtonBindings();
     RotationPID.enableContinuousInput(0, 360);
     m_chooser = AutoBuilder.buildAutoChooser();
@@ -76,13 +84,15 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-  SmartDashboard.putNumber("Set RPM", 0.0);
-  //m_driverController.a().onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(SmartDashboard.getNumber("Set RPM", 0.0))),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
-  //m_driverController.a().onFalse(new ParallelCommandGroup(new RunCommand(() -> m_launcher.feedOff()), new RunCommand(() -> m_launcher.setSpeed(0), m_launcher)));
+  //SmartDashboard.putNumber("Set RPM", 0.0);
+  //m_driverController.y().onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(SmartDashboard.getNumber("Set RPM", 0.0))),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
+  //m_driverController.y().onFalse(new ParallelCommandGroup(new RunCommand(() -> m_launcher.feedOff()), new RunCommand(() -> m_launcher.setSpeed(0), m_launcher)));
   //m_driverController.b().onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(2500)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
   m_driverController.rightBumper().onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(3000)),new CheckLaunchSpeed(m_launcher)).andThen(new InstantCommand(() -> m_intake.changeSetpoint(.13))).andThen(new RunCommand(() -> m_launcher.feed())));
-  //m_driverController.pov(90).onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(3500)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
-  //m_driverController.pov(180).onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(4000)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
+  m_driverController.pov(0).onTrue(new OrientDrive(m_robotDrive, m_driverController, RotationPID, 0));
+  m_driverController.pov(0).onFalse(new FieldCentricDrive(m_robotDrive, m_driverController));
+  m_driverController.pov(180).onTrue(new OrientDrive(m_robotDrive, m_driverController, RotationPID, 180));
+  m_driverController.pov(180).onFalse(new FieldCentricDrive(m_robotDrive, m_driverController));
   //m_driverController.pov(270).onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(4500)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
   m_driverController.rightBumper().onFalse(new ZeroShooter(m_launcher, m_intake));
   //m_driverController.start().onTrue(new ParallelCommandGroup(new RunCommand(() -> m_launcher.feedOff()), new RunCommand(() -> m_launcher.setSpeed(0), m_launcher)));
@@ -109,4 +119,5 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return m_chooser.getSelected();
   }
+
 }
