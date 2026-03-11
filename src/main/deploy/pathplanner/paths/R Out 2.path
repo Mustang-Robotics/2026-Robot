@@ -9,7 +9,7 @@
       "prevControl": null,
       "nextControl": {
         "x": 4.433518957345973,
-        "y": 0.1447914691943134
+        "y": 0.1447914691943133
       },
       "isLocked": false,
       "linkedName": "Right-In-1"
@@ -38,7 +38,21 @@
       "rotationDegrees": -135.0
     }
   ],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.6999986211326825,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 2.5,
+        "maxAcceleration": 4.0,
+        "maxAngularVelocity": 360.0,
+        "maxAngularAcceleration": 480.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -54,7 +68,7 @@
     "rotation": -90.0
   },
   "reversed": false,
-  "folder": "Right 2x",
+  "folder": "Old Right 2x",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 58.946
