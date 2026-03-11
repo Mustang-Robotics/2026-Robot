@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LED;
 import frc.robot.subsystems.LauncherSubsystem;
 
 public class LaunchDrive extends Command {
@@ -29,19 +30,21 @@ public class LaunchDrive extends Command {
     LauncherSubsystem m_launcher;
     ProfiledPIDController m_PID;
     IntakeSubsystem m_intake;
+    LED m_led;
     Translation2d aimLocation;
     double lastTOF = 0.0;
     double adjustedRPM = 0.0;
     double finalTolerance;
 
-    public LaunchDrive(DriveSubsystem drive, CommandXboxController controller, LauncherSubsystem launcher, ProfiledPIDController PID, IntakeSubsystem intake){
+    public LaunchDrive(DriveSubsystem drive, CommandXboxController controller, LauncherSubsystem launcher, ProfiledPIDController PID, IntakeSubsystem intake, LED led){
         m_drive = drive;
         m_controller = controller;
         m_launcher = launcher;
         m_PID = PID;
         m_intake = intake;
+        m_led = led;
 
-        addRequirements(m_drive, m_launcher, m_intake);
+        addRequirements(m_drive, m_launcher, m_intake, m_led);
     }
 
 
