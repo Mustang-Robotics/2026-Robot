@@ -13,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Sweep 1"
+            "pathName": "Copy of Sweep 1"
           }
         },
         {
@@ -29,7 +29,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 2.5
+                  "waitTime": 2.7
                 }
               }
             ]
@@ -44,7 +44,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Sweep 2"
+            "pathName": "Copy of Sweep 2"
           }
         },
         {
@@ -60,7 +60,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 2.5
+                  "waitTime": 2.7
                 }
               }
             ]
@@ -70,6 +70,24 @@
           "type": "named",
           "data": {
             "name": "LaunchOff"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeOn"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "L Out 3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "L Out 4"
           }
         }
       ]

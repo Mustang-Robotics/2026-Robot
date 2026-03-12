@@ -13,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "L Out 1"
+            "pathName": "Copy of R Out 1"
           }
         },
         {
@@ -25,7 +25,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "L In 1"
+            "pathName": "Copy of R In 1"
           }
         },
         {
@@ -41,7 +41,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 2.0
+                  "waitTime": 3.0
                 }
               }
             ]
@@ -62,7 +62,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "L Out 2"
+            "pathName": "Copy of R Out 2"
           }
         },
         {
@@ -74,7 +74,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "L In 2"
+            "pathName": "Copy of R In 2"
           }
         },
         {
@@ -90,7 +90,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 2.0
+                  "waitTime": 3.0
                 }
               }
             ]
@@ -111,13 +111,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "L Out 3"
+            "pathName": "Copy of R Out 3"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "L Out 4"
+            "pathName": "Copy of R Out 4"
           }
         }
       ]

@@ -163,13 +163,13 @@ public class DriveSubsystem extends SubsystemBase {
                 }
             }else {
                 aimX = BLUE_PASS_X;
-                if (!warningLight() && hopperFill < 70){
+                if (!warningLight() && hopperFill < 60){
                   m_led.SolidBlue();
-                }else if (warningLight() && hopperFill < 70){
+                }else if (warningLight() && hopperFill < 60){
                   m_led.BlinkBlue();
-                }else if (!warningLight() && hopperFill >= 70){
+                }else if (!warningLight() && hopperFill >= 60){
                   m_led.SolidPink();
-                }else if (warningLight() && hopperFill >= 70){
+                }else if (warningLight() && hopperFill >= 60){
                   m_led.BlinkPink();
                 }
                 if(getPose().getY() < HUB_Y) {
@@ -193,13 +193,13 @@ public class DriveSubsystem extends SubsystemBase {
                 }
             }else {
                 aimX = RED_PASS_X;
-                if (!warningLight() && hopperFill < 70){
+                if (!warningLight() && hopperFill < 60){
                   m_led.SolidBlue();
-                }else if (warningLight() && hopperFill < 70){
+                }else if (warningLight() && hopperFill < 60){
                   m_led.BlinkBlue();
-                }else if (!warningLight() && hopperFill >= 70){
+                }else if (!warningLight() && hopperFill >= 60){
                   m_led.SolidPink();
-                }else if (warningLight() && hopperFill >= 70){
+                }else if (warningLight() && hopperFill >= 60){
                   m_led.BlinkPink();
                 }
                 if(getPose().getY() < HUB_Y) {

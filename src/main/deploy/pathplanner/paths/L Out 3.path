@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 2.832298578199052,
-        "y": 6.974
+        "y": 7.043
       },
       "prevControl": null,
       "nextControl": {
         "x": 3.899519247691154,
-        "y": 7.5151040991038105
+        "y": 7.5841040991038104
       },
       "isLocked": false,
       "linkedName": "Left In 1"
@@ -40,8 +40,8 @@
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 4.0,
-    "maxAngularVelocity": 360.0,
-    "maxAngularAcceleration": 480.0,
+    "maxAngularVelocity": 420.0,
+    "maxAngularAcceleration": 540.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },

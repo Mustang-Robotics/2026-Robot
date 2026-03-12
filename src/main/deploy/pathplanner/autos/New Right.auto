@@ -29,7 +29,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 2.5
+                  "waitTime": 2.7
                 }
               }
             ]
@@ -60,7 +60,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 2.5
+                  "waitTime": 2.7
                 }
               }
             ]
@@ -70,6 +70,24 @@
           "type": "named",
           "data": {
             "name": "LaunchOff"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeOn"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R Out 3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R Out 4"
           }
         }
       ]

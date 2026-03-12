@@ -49,12 +49,12 @@ public class LaunchDrive extends Command {
 
         if (MathUtil.isNear(m_launcher.targetSpeed, m_launcher.shooterEncoder.getVelocity(), 200) && MathUtil.isNear(m_drive.rotationSetpoint, m_drive.convertGyroAngle(m_drive.getAngle()), m_drive.finalTolerance) && m_drive.adjustedDistance > 2.436){
             m_launcher.feed();
-            intakeSetpoint += .003;
+            intakeSetpoint += .0016;
         } else {
             m_launcher.feedOff();
         }
 
-        intakeSetpoint = MathUtil.clamp(intakeSetpoint, 0.0, 0.28);
+        intakeSetpoint = MathUtil.clamp(intakeSetpoint, 0.0, 0.25);
     }
 
     @Override
