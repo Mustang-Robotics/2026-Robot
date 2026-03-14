@@ -125,19 +125,34 @@
       "name": "IntakeOn",
       "waypointRelativePos": 0.916134653693418,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeOn"
+        }
+      }
     },
     {
       "name": "IntakeOff",
       "waypointRelativePos": 4.2571190108492525,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeOff"
+        }
+      }
     },
     {
       "name": "SpinUp",
       "waypointRelativePos": 4.5214438200789,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "SpinUp"
+        }
+      }
     }
   ],
   "globalConstraints": {

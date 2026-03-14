@@ -168,9 +168,9 @@ public class DriveSubsystem extends SubsystemBase {
                 }else if (warningLight() && hopperFill < 60){
                   m_led.BlinkBlue();
                 }else if (!warningLight() && hopperFill >= 60){
-                  m_led.SolidPink();
+                  m_led.SolidYellow();
                 }else if (warningLight() && hopperFill >= 60){
-                  m_led.BlinkPink();
+                  m_led.BlinkYellow();
                 }
                 if(getPose().getY() < HUB_Y) {
                     aimY = PASS_Y_RIGHT;
@@ -198,9 +198,9 @@ public class DriveSubsystem extends SubsystemBase {
                 }else if (warningLight() && hopperFill < 60){
                   m_led.BlinkBlue();
                 }else if (!warningLight() && hopperFill >= 60){
-                  m_led.SolidPink();
+                  m_led.SolidYellow();
                 }else if (warningLight() && hopperFill >= 60){
-                  m_led.BlinkPink();
+                  m_led.BlinkYellow();
                 }
                 if(getPose().getY() < HUB_Y) {
                     aimY = PASS_Y_RIGHT;
@@ -428,14 +428,14 @@ public class DriveSubsystem extends SubsystemBase {
         for (int i = 0; i < 5; i++) {
             double distance = robotPos.getDistance(predictedPos);
             double radialVel = getVelocityFromTarget(aimLocation, getFieldRelativeSpeeds());
-            effectiveDistance = distance + (radialVel * timeOfFlight);
+            effectiveDistance = distance - (radialVel * timeOfFlight);
             newRPM = Launcher.rpmTable.get(effectiveDistance);
             double horizontalVel = (newRPM * 4 * Math.PI * 0.3048 / 60 / 12 / 2.222) * Math.cos(LAUNCH_ANGLE_RADS);
             double totalVel = horizontalVel + radialVel;
             timeOfFlight = (distance / totalVel);
             predictedPos = new Translation2d(
-                targetPos.getX() + (-robotVelocity.vxMetersPerSecond * timeOfFlight),
-                targetPos.getY() + (-robotVelocity.vyMetersPerSecond * timeOfFlight)
+                targetPos.getX() + (robotVelocity.vxMetersPerSecond * timeOfFlight),
+                targetPos.getY() + (robotVelocity.vyMetersPerSecond * timeOfFlight)
             );
         }
         this.adjustedRPM = newRPM;

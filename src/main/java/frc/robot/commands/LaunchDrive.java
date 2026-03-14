@@ -31,7 +31,11 @@ public class LaunchDrive extends Command {
 
     @Override
     public void initialize(){
+        if (m_drive.hopperFill < 50){
+            intakeSetpoint = .15;
+        }else{
         intakeSetpoint = 0.0;
+        }
     }
 
     @Override
@@ -49,7 +53,7 @@ public class LaunchDrive extends Command {
 
         if (MathUtil.isNear(m_launcher.targetSpeed, m_launcher.shooterEncoder.getVelocity(), 200) && MathUtil.isNear(m_drive.rotationSetpoint, m_drive.convertGyroAngle(m_drive.getAngle()), m_drive.finalTolerance) && m_drive.adjustedDistance > 2.436){
             m_launcher.feed();
-            intakeSetpoint += .0016;
+            intakeSetpoint += .006;
         } else {
             m_launcher.feedOff();
         }

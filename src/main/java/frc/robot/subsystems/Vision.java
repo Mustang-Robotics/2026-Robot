@@ -28,7 +28,8 @@
  import frc.robot.Robot;
  import edu.wpi.first.math.Matrix;
  import edu.wpi.first.math.VecBuilder;
- import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.math.geometry.Pose2d;
  import edu.wpi.first.math.geometry.Rotation2d;
  import edu.wpi.first.math.numbers.N1;
  import edu.wpi.first.math.numbers.N3;
@@ -51,6 +52,8 @@
      private final PhotonPoseEstimator photonFrontEstimator;
      private final PhotonPoseEstimator photonBackEstimator;
      private Matrix<N3, N1> curStdDevs;
+     private final LinearFilter hopperFilter = LinearFilter.movingAverage(10);
+    private double smoothedArea = 0.0;
  
      // Simulation
      private PhotonCameraSim cameraSim;
@@ -141,11 +144,18 @@
         return visionEst;
     }
 
-    public double hopperFill() {
-        var results = hopperCamera.getLatestResult();
-        PhotonTrackedTarget target = results.getBestTarget();
-        return target.getArea();
+public double hopperFill() {
+    var results = hopperCamera.getLatestResult();
+    double currentArea = 0.0;
+
+    if (results.hasTargets()) {
+        currentArea = results.getBestTarget().getArea();
     }
+
+    // The filter takes the "noisy" currentArea and returns a stable average
+    smoothedArea = hopperFilter.calculate(currentArea);
+    return smoothedArea;
+}
  
      /**
       * Calculates new standard deviations This algorithm is a heuristic that creates dynamic standard

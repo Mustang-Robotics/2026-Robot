@@ -61,7 +61,21 @@ public class RobotContainer {
     // Configure the button bindings
     NamedCommands.registerCommand("IntakeOn", new InstantCommand(() -> m_intake.setPercent(1)));
     NamedCommands.registerCommand("IntakeOff", new InstantCommand(() -> m_intake.setPercent(0)));
-    NamedCommands.registerCommand("LaunchOn", new CheckLaunchSpeed(m_launcher).andThen(new InstantCommand(() -> m_intake.changeSetpoint(.13))).andThen(new RunCommand(() -> m_launcher.feed())));
+    NamedCommands.registerCommand("LaunchOn", 
+    new CheckLaunchSpeed(m_launcher)
+    .andThen(
+        new RunCommand(() -> {
+            // 1. Get where we are now
+            double current = 0;
+            
+            // 2. Add a small step (e.g., 0.005) but stop at 0.25
+            m_intake.changeSetpoint(Math.min(0.25, current + 0.005));
+            
+            // 3. Keep the feeder running simultaneously
+            m_launcher.feed();
+        }, m_intake, m_launcher) // Claims both subsystems
+    )
+);
     NamedCommands.registerCommand("LaunchOff", new ZeroShooter(m_launcher, m_intake));
     NamedCommands.registerCommand("Intake Up", new InstantCommand(() -> m_intake.changeSetpoint(.34)));
     NamedCommands.registerCommand("SpinUp", new InstantCommand(() -> m_launcher.setSpeed(3150)));

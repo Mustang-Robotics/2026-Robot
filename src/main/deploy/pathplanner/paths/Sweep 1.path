@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 6.042,
-        "y": 1.026
+        "x": 6.163696682464456,
+        "y": 1.267
       },
       "prevControl": {
-        "x": 6.606507667940524,
-        "y": 1.4873967183433296
+        "x": 6.72820435040498,
+        "y": 1.7283967183433295
       },
       "nextControl": {
-        "x": 5.4818514314352775,
-        "y": 0.5681661635467694
+        "x": 5.603548113899734,
+        "y": 0.8091661635467693
       },
       "isLocked": false,
       "linkedName": null
@@ -52,8 +52,8 @@
         "y": 1.026
       },
       "prevControl": {
-        "x": 4.552242614093175,
-        "y": 0.6173285408158248
+        "x": 4.562476303317536,
+        "y": 0.7788270142180078
       },
       "nextControl": null,
       "isLocked": false,
@@ -85,13 +85,23 @@
       "name": "IntakeOff",
       "waypointRelativePos": 2.330399725524293,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeOff"
+        }
+      }
     },
     {
       "name": "SpinUp",
       "waypointRelativePos": 2.480744523463454,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "SpinUp"
+        }
+      }
     }
   ],
   "globalConstraints": {
