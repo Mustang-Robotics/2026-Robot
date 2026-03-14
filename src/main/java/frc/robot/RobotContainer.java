@@ -66,10 +66,10 @@ public class RobotContainer {
     .andThen(
         new RunCommand(() -> {
             // 1. Get where we are now
-            double current = 0;
+            double current = m_intake.getSetpoint();
             
             // 2. Add a small step (e.g., 0.005) but stop at 0.25
-            m_intake.changeSetpoint(Math.min(0.25, current + 0.005));
+            m_intake.changeSetpoint(Math.min(0.25, current + 0.006));
             
             // 3. Keep the feeder running simultaneously
             m_launcher.feed();

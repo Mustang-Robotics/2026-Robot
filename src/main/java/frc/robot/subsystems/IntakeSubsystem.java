@@ -52,6 +52,10 @@ public class IntakeSubsystem extends SubsystemBase {
       extendTarget, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, 0.29256*calcArmAngle());
   }
 
+  public double getSetpoint() {
+    return extendTarget;
+  }
+
   private double calcArmAngle() {
     return Math.cos(extendEncoder.getPosition()*2*Math.PI);
   }
