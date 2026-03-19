@@ -47,10 +47,40 @@ public class IntakeSubsystem extends SubsystemBase {
     extendTarget = setpoint;
   }
 
-  private void moveToSetpoint() {
+  /*private void moveToSetpoint() {
     ExtendClosedLoopController.setSetpoint(
-      extendTarget, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, 0.29256*calcArmAngle());
-  }
+      extendTarget, ControlType.kPosition, ClosedLoopSlot.kSlot0, 0.29256*calcArmAngle());
+  }*/
+
+  private void moveToSetpoint() {
+    // Calculate how far we are from the goal
+    double error = Math.abs(extendEncoder.getPosition() - extendTarget);
+    
+    // Choose a threshold (e.g., 0.015 rotations or ~5 degrees) 
+    // to decide when to "Lock" the position.
+    double arrivalThreshold = 0.015; 
+
+    if (error < arrivalThreshold) {
+        // --- HOLD MODE ---
+        // Uses Slot 1 (Pure Position) to fight displacement without profile resets.
+        ExtendClosedLoopController.setSetpoint(
+            extendTarget, 
+            ControlType.kPosition, 
+            ClosedLoopSlot.kSlot1, 
+            0.29256 * calcArmAngle()
+        );
+    } else {
+        // --- TRAVEL MODE ---
+        // Uses Slot 0 (MAXMotion) for smooth acceleration.
+        ExtendClosedLoopController.setSetpoint(
+            extendTarget, 
+            ControlType.kMAXMotionPositionControl, 
+            ClosedLoopSlot.kSlot0, 
+            0.29256 * calcArmAngle()
+        );
+    }
+}
+
 
   public double getSetpoint() {
     return extendTarget;

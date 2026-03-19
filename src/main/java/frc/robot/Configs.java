@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
@@ -122,7 +123,7 @@ public final class Configs {
                         .smartCurrentLimit(60)
                         .inverted(true);
 
-                        ExtendConfig
+                        /*ExtendConfig
                         .idleMode(IdleMode.kCoast)
                         .smartCurrentLimit(40)
                         .inverted(false)
@@ -153,7 +154,33 @@ public final class Configs {
                         .kV(.1355)
                         .kA(0.0012)
                         .kCos(0)
-                        .kCosRatio(0);
+                        .kCosRatio(0);*/
+
+                        // --- SLOT 0: SMOOTH TRAVEL (MAXMotion) ---
+                        ExtendConfig.closedLoop
+                        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+                        .p(0.05, ClosedLoopSlot.kSlot0)
+                        .outputRange(-1, 1, ClosedLoopSlot.kSlot0)
+                        .maxMotion
+                        .cruiseVelocity(250, ClosedLoopSlot.kSlot0)
+                        .maxAcceleration(150, ClosedLoopSlot.kSlot0)
+                        .allowedProfileError(0.1, ClosedLoopSlot.kSlot0); // Loosened for smoothness
+
+                        ExtendConfig.closedLoop.feedForward
+                        .kS(0.05256, ClosedLoopSlot.kSlot0)
+                        .kV(0.1355, ClosedLoopSlot.kSlot0) // MAXMotion uses kV/kA
+                        .kA(0.0012, ClosedLoopSlot.kSlot0);
+
+                        // --- SLOT 1: RIGID HOLD (Pure Position) ---
+                        ExtendConfig.closedLoop
+                        .p(0.15, ClosedLoopSlot.kSlot1)      // High P for "Spring" stiffness
+                        .i(0.001, ClosedLoopSlot.kSlot1)    // I for precision
+                        .iZone(0.02, ClosedLoopSlot.kSlot1)
+                        .outputRange(-1, 1, ClosedLoopSlot.kSlot1);
+
+                        ExtendConfig.closedLoop.feedForward
+                        .kS(0.05256, ClosedLoopSlot.kSlot1); // kS helps hold against friction in kPosition
+
 
 
                 }
