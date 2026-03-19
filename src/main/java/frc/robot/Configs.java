@@ -155,16 +155,28 @@ public final class Configs {
                         .kA(0.0012)
                         .kCos(0)
                         .kCosRatio(0);*/
+                        ExtendConfig
+                        .idleMode(IdleMode.kCoast)
+                        .smartCurrentLimit(40)
+                        .inverted(false)
+                        .voltageCompensation(12);
 
+                        ExtendConfig
+                        .absoluteEncoder
+                        .positionConversionFactor(1)
+                        .velocityConversionFactor(1)
+                        .inverted(true);
                         // --- SLOT 0: SMOOTH TRAVEL (MAXMotion) ---
                         ExtendConfig.closedLoop
                         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
                         .p(0.05, ClosedLoopSlot.kSlot0)
                         .outputRange(-1, 1, ClosedLoopSlot.kSlot0)
+                        .positionWrappingEnabled(true)
+                        .positionWrappingInputRange(0, 1)
                         .maxMotion
                         .cruiseVelocity(250, ClosedLoopSlot.kSlot0)
                         .maxAcceleration(150, ClosedLoopSlot.kSlot0)
-                        .allowedProfileError(0.1, ClosedLoopSlot.kSlot0); // Loosened for smoothness
+                        .allowedProfileError(0.03, ClosedLoopSlot.kSlot0); // Loosened for smoothness
 
                         ExtendConfig.closedLoop.feedForward
                         .kS(0.05256, ClosedLoopSlot.kSlot0)
@@ -173,10 +185,11 @@ public final class Configs {
 
                         // --- SLOT 1: RIGID HOLD (Pure Position) ---
                         ExtendConfig.closedLoop
-                        .p(0.15, ClosedLoopSlot.kSlot1)      // High P for "Spring" stiffness
-                        .i(0.001, ClosedLoopSlot.kSlot1)    // I for precision
-                        .iZone(0.02, ClosedLoopSlot.kSlot1)
-                        .outputRange(-1, 1, ClosedLoopSlot.kSlot1);
+                        .p(10, ClosedLoopSlot.kSlot1)      // High P for "Spring" stiffness
+                        .i(0.01, ClosedLoopSlot.kSlot1)    // I for precision
+                        .iZone(0.01, ClosedLoopSlot.kSlot1)
+                        .outputRange(-1, 1, ClosedLoopSlot.kSlot1)
+                        .allowedClosedLoopError(0, ClosedLoopSlot.kSlot1);
 
                         ExtendConfig.closedLoop.feedForward
                         .kS(0.05256, ClosedLoopSlot.kSlot1); // kS helps hold against friction in kPosition

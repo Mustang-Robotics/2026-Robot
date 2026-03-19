@@ -163,13 +163,13 @@ public class DriveSubsystem extends SubsystemBase {
                 }
             }else {
                 aimX = BLUE_PASS_X;
-                if (!warningLight() && hopperFill < 60){
+                if (!warningLight() && hopperFill < 75){
                   m_led.SolidBlue();
-                }else if (warningLight() && hopperFill < 60){
+                }else if (warningLight() && hopperFill < 75){
                   m_led.BlinkBlue();
-                }else if (!warningLight() && hopperFill >= 60){
+                }else if (!warningLight() && hopperFill >= 75){
                   m_led.SolidYellow();
-                }else if (warningLight() && hopperFill >= 60){
+                }else if (warningLight() && hopperFill >= 75){
                   m_led.BlinkYellow();
                 }
                 if(getPose().getY() < HUB_Y) {
@@ -193,13 +193,13 @@ public class DriveSubsystem extends SubsystemBase {
                 }
             }else {
                 aimX = RED_PASS_X;
-                if (!warningLight() && hopperFill < 60){
+                if (!warningLight() && hopperFill < 75){
                   m_led.SolidBlue();
-                }else if (warningLight() && hopperFill < 60){
+                }else if (warningLight() && hopperFill < 75){
                   m_led.BlinkBlue();
-                }else if (!warningLight() && hopperFill >= 60){
+                }else if (!warningLight() && hopperFill >= 75){
                   m_led.SolidYellow();
-                }else if (warningLight() && hopperFill >= 60){
+                }else if (warningLight() && hopperFill >= 75){
                   m_led.BlinkYellow();
                 }
                 if(getPose().getY() < HUB_Y) {
@@ -431,11 +431,11 @@ public class DriveSubsystem extends SubsystemBase {
             effectiveDistance = distance - (radialVel * timeOfFlight);
             newRPM = Launcher.rpmTable.get(effectiveDistance);
             double horizontalVel = (newRPM * 4 * Math.PI * 0.3048 / 60 / 12 / 2.222) * Math.cos(LAUNCH_ANGLE_RADS);
-            double totalVel = horizontalVel + radialVel;
+            double totalVel = horizontalVel - radialVel;
             timeOfFlight = (distance / totalVel);
             predictedPos = new Translation2d(
-                targetPos.getX() + (robotVelocity.vxMetersPerSecond * timeOfFlight),
-                targetPos.getY() + (robotVelocity.vyMetersPerSecond * timeOfFlight)
+                targetPos.getX() - (robotVelocity.vxMetersPerSecond * timeOfFlight),
+                targetPos.getY() - (robotVelocity.vyMetersPerSecond * timeOfFlight)
             );
         }
         this.adjustedRPM = newRPM;

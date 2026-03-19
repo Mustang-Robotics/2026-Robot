@@ -121,7 +121,7 @@ public class RobotContainer {
   //m_driverController.b().onTrue(new InstantCommand(() -> m_intake.changeSetpoint(0), m_intake));
   //m_driverController.leftTrigger().onTrue(new ParallelCommandGroup(new InstantCommand(() -> m_intake.changeSetpoint(0.0)), new RunCommand(() -> m_intake.setPercent(1), m_intake), new IntakeDrive(m_robotDrive, m_driverController, RotationPID)));
   //m_driverController.leftTrigger().onFalse(new ParallelCommandGroup(new RunCommand(() -> m_intake.setPercent(0), m_intake), new FieldCentricDrive(m_robotDrive, m_driverController)));
-  m_driverController.leftBumper().onTrue(new ParallelCommandGroup(new InstantCommand(() -> m_intake.changeSetpoint(0.0)), new RunCommand(() -> m_intake.setPercent(1), m_intake)));
+  m_driverController.leftBumper().onTrue(new ParallelCommandGroup(new InstantCommand(() -> m_intake.changeSetpoint(0.005)), new RunCommand(() -> m_intake.setPercent(1), m_intake)));
   m_driverController.leftBumper().onFalse(new RunCommand(() -> m_intake.setPercent(0), m_intake));
    }
 

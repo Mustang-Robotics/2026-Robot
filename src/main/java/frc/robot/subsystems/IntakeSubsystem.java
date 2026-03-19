@@ -20,7 +20,7 @@ public class IntakeSubsystem extends SubsystemBase {
     private final SparkMax m_extend = new SparkMax(34, MotorType.kBrushless);
     private SparkClosedLoopController ExtendClosedLoopController = m_extend.getClosedLoopController();
     public final AbsoluteEncoder extendEncoder = m_extend.getAbsoluteEncoder();
-    public double extendTarget = 0.0;
+    public double extendTarget = 0.005;
 
     private final SparkMax m_intake = new SparkMax(7, MotorType.kBrushless);
 
@@ -58,7 +58,7 @@ public class IntakeSubsystem extends SubsystemBase {
     
     // Choose a threshold (e.g., 0.015 rotations or ~5 degrees) 
     // to decide when to "Lock" the position.
-    double arrivalThreshold = 0.015; 
+    double arrivalThreshold = 0.04; 
 
     if (error < arrivalThreshold) {
         // --- HOLD MODE ---
