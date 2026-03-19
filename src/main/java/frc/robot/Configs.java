@@ -119,7 +119,7 @@ public final class Configs {
                 static {
                         IntakeConfig
                         .idleMode(IdleMode.kCoast)
-                        .smartCurrentLimit(40)
+                        .smartCurrentLimit(60)
                         .inverted(true);
 
                         ExtendConfig
