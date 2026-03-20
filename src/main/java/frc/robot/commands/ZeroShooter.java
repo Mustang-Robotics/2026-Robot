@@ -17,7 +17,7 @@ public class ZeroShooter extends Command {
 
     @Override
     public void execute() {
-        m_intake.changeSetpoint(0);
+        m_intake.changeSetpoint(0.005);
         m_launcher.feedOff();
         m_launcher.setSpeed(1000);
     }
