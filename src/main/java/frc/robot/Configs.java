@@ -79,7 +79,7 @@ public final class Configs {
                         .p(0.0001)
                         .maxMotion
                         .cruiseVelocity(5800)
-                        .maxAcceleration(2500)
+                        .maxAcceleration(4000)
                         .allowedProfileError(50);
 
                         LauncherConfig

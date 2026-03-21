@@ -457,11 +457,11 @@ public class DriveSubsystem extends SubsystemBase {
       boolean light = false;
       double matchTime =DriverStation.getMatchTime();
       if((matchTime <= 135 && matchTime > 130) || // Before Shift 1
-      (matchTime <= 110 && matchTime > 105) || // Before Shift 2
-      (matchTime <= 85  && matchTime > 80)  || // Before Shift 3
-      (matchTime <= 60  && matchTime > 55)  || // Before Shift 4
-      (matchTime <= 35  && matchTime > 30)  ||
-      (matchTime <= 5   && matchTime > 0))    // Before Endgame
+      (matchTime <= 112 && matchTime > 105) || // Before Shift 2
+      (matchTime <= 87  && matchTime > 80)  || // Before Shift 3
+      (matchTime <= 62  && matchTime > 55)  || // Before Shift 4
+      (matchTime <= 37  && matchTime > 30)  ||
+      (matchTime <= 7   && matchTime > 0))    // Before Endgame
       {
         light = true;
       }else{

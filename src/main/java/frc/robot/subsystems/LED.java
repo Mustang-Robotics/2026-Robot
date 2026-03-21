@@ -17,11 +17,11 @@ public class LED extends SubsystemBase {
     private LEDPattern green = LEDPattern.solid(Color.kRed);
     private LEDPattern yellow = LEDPattern.solid(Color.kYellow);
     private LEDPattern pink = LEDPattern.solid(Color.kTeal);
-    private LEDPattern blinkred = LEDPattern.solid(Color.kGreen).blink( Seconds.of(0.1));
-    private LEDPattern blinkblue = LEDPattern.solid(Color.kBlue).blink( Seconds.of(0.1));
-    private LEDPattern blinkgreen = LEDPattern.solid(Color.kRed).blink( Seconds.of(0.1));
-    private LEDPattern blinkyellow = LEDPattern.solid(Color.kYellow).blink( Seconds.of(0.1));
-    private LEDPattern blinkpink = LEDPattern.solid(Color.kTeal).blink( Seconds.of(0.1));
+    private LEDPattern blinkred = LEDPattern.solid(Color.kGreen).blink( Seconds.of(0.05));
+    private LEDPattern blinkblue = LEDPattern.solid(Color.kBlue).blink( Seconds.of(0.05));
+    private LEDPattern blinkgreen = LEDPattern.solid(Color.kRed).blink( Seconds.of(0.05));
+    private LEDPattern blinkyellow = LEDPattern.solid(Color.kYellow).blink( Seconds.of(0.05));
+    private LEDPattern blinkpink = LEDPattern.solid(Color.kTeal).blink( Seconds.of(0.05));
     
     public LED (){
         m_led.setLength(m_buffer.getLength());
