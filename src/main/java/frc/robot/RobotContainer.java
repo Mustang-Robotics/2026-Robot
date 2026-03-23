@@ -126,6 +126,9 @@ public class RobotContainer {
   m_driverController.leftBumper().onFalse(new RunCommand(() -> m_intake.setPercent(0), m_intake));
   m_driverController.y().onTrue(new InstantCommand(() -> m_launcher.setSpeed(-1500)));
   m_driverController.y().onFalse(new ZeroShooter(m_launcher, m_intake));
+  m_driverController.start().onTrue(new RunCommand(() -> m_launcher.feed()));
+  m_driverController.start().onFalse(new RunCommand(() -> m_launcher.feedOff()));
+
    }
 
   /**
