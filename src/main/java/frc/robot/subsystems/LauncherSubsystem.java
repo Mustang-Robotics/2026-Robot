@@ -54,6 +54,10 @@ public class LauncherSubsystem extends SubsystemBase{
         m_feeder.set(1);
 
     }
+
+    public void feedReverse(){
+        m_feeder.set(-1);
+    }
     public void feedOff(){
         m_feeder.set(0);
 

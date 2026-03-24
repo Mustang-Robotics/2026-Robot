@@ -70,7 +70,7 @@ public class RobotContainer {
             double current = m_intake.getSetpoint();
             
             // 2. Add a small step (e.g., 0.005) but stop at 0.25
-            m_intake.changeSetpoint(Math.min(0.25, current + 0.006));
+            m_intake.changeSetpoint(Math.min(0.25, current + 0.003));
             
             // 3. Keep the feeder running simultaneously
             m_launcher.feed();
@@ -126,8 +126,8 @@ public class RobotContainer {
   m_driverController.leftBumper().onFalse(new RunCommand(() -> m_intake.setPercent(0), m_intake));
   m_driverController.y().onTrue(new InstantCommand(() -> m_launcher.setSpeed(-1500)));
   m_driverController.y().onFalse(new ZeroShooter(m_launcher, m_intake));
-  m_driverController.start().onTrue(new RunCommand(() -> m_launcher.feed()));
-  m_driverController.start().onFalse(new RunCommand(() -> m_launcher.feedOff()));
+  m_driverController.start().onTrue(new InstantCommand(() -> m_launcher.feedReverse()));
+  m_driverController.start().onFalse(new InstantCommand(() -> m_launcher.feedOff()));
 
    }
 

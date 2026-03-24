@@ -70,7 +70,7 @@ public final class Configs {
                 static {
                         LauncherConfig
                         .idleMode(IdleMode.kCoast)
-                        .smartCurrentLimit(50)
+                        .smartCurrentLimit(60)
                         .inverted(true)
                         .voltageCompensation(12)
                         .closedLoop
@@ -97,17 +97,17 @@ public final class Configs {
                 
                         Launcher_2Config
                         .idleMode(IdleMode.kCoast)
-                        .smartCurrentLimit(50)
+                        .smartCurrentLimit(60)
                         .follow(8, true);
 
                         Launcher_3Config
                         .idleMode(IdleMode.kCoast)
-                        .smartCurrentLimit(50)
+                        .smartCurrentLimit(60)
                         .follow(8, true);
 
                         FeederConfig
                         .idleMode(IdleMode.kCoast)
-                        .smartCurrentLimit(60)
+                        .smartCurrentLimit(80)
                         .inverted(true);
                 
                 }
