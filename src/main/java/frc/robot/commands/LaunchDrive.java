@@ -17,8 +17,7 @@ public class LaunchDrive extends Command {
     IntakeSubsystem m_intake;
     double intakeSetpoint;
 
-
-    public LaunchDrive(DriveSubsystem drive, CommandXboxController controller, LauncherSubsystem launcher, ProfiledPIDController PID, IntakeSubsystem intake){
+    public LaunchDrive(DriveSubsystem drive, CommandXboxController controller, LauncherSubsystem launcher, ProfiledPIDController PID, IntakeSubsystem intake) {
         m_drive = drive;
         m_controller = controller;
         m_launcher = launcher;
@@ -28,32 +27,39 @@ public class LaunchDrive extends Command {
         addRequirements(m_drive, m_launcher, m_intake);
     }
 
-
     @Override
-    public void initialize(){
-        if (m_drive.hopperFill < 50){
-            intakeSetpoint = .10;
-        }else{
-        intakeSetpoint = 0.0;
+    public void initialize() {
+        if (m_drive.hopperFill < 50) {
+            intakeSetpoint = 0.10;
+        } else {
+            intakeSetpoint = 0.0;
         }
     }
 
     @Override
-    public void execute(){
-
+    public void execute() {
         m_drive.drive(
-                -MathUtil.applyDeadband(m_controller.getRawAxis(1), OIConstants.kDriveDeadband)*.3,
-                -MathUtil.applyDeadband(m_controller.getRawAxis(0), OIConstants.kDriveDeadband)*.3,
+                -MathUtil.applyDeadband(m_controller.getRawAxis(1), OIConstants.kDriveDeadband) * 0.3,
+                -MathUtil.applyDeadband(m_controller.getRawAxis(0), OIConstants.kDriveDeadband) * 0.3,
                 m_PID.calculate(m_drive.currentGyro, m_drive.rotationSetpoint),
                 true);
-        
+
         m_launcher.setSpeed(m_drive.adjustedRPM);
 
         m_intake.changeSetpoint(intakeSetpoint);
 
-        if (MathUtil.isNear(m_launcher.targetSpeed, m_launcher.shooterEncoder.getVelocity(), 200) && MathUtil.isNear(m_drive.rotationSetpoint, m_drive.convertGyroAngle(m_drive.getAngle()), m_drive.finalTolerance) && m_drive.adjustedDistance > 2.436){
+        // Check conditions: RPM matched, Rotation aligned, and Distance is valid
+        boolean isReady = MathUtil.isNear(m_launcher.targetSpeed, m_launcher.shooterEncoder.getVelocity(), 200) 
+                       && MathUtil.isNear(m_drive.rotationSetpoint, m_drive.convertGyroAngle(m_drive.getAngle()), m_drive.finalTolerance) 
+                       && m_drive.adjustedDistance > 2.436;
+
+        if (isReady) {
             m_launcher.feed();
-            intakeSetpoint += .003;
+            
+            // Pause intake setpoint growth if we are clearing a jam (auto or manual)
+            if (!m_launcher.isJammed()) {
+                intakeSetpoint += 0.003;
+            }
         } else {
             m_launcher.feedOff();
         }
@@ -62,7 +68,7 @@ public class LaunchDrive extends Command {
     }
 
     @Override
-    public boolean isFinished(){
+    public boolean isFinished() {
         return false;
     }
 }
