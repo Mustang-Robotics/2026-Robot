@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.9798459715639805,
-        "y": 6.9580331753554505
+        "x": 8.019574855982155,
+        "y": 6.490370787742144
       },
       "isLocked": false,
       "linkedName": "Left Out 1"
@@ -30,7 +30,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.776595744680855,
+      "waypointRelativePos": 0.8,
       "rotationDegrees": -90.167
     }
   ],
@@ -39,7 +39,7 @@
   "eventMarkers": [
     {
       "name": "SpinUp",
-      "waypointRelativePos": 0.7731448763250918,
+      "waypointRelativePos": 0.8,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

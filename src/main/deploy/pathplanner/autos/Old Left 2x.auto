@@ -13,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of R Out 1"
+            "pathName": "L Out 1"
           }
         },
         {
@@ -25,7 +25,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of R In 1"
+            "pathName": "L In 1"
           }
         },
         {
@@ -62,7 +62,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of R Out 2"
+            "pathName": "L Out 2"
           }
         },
         {
@@ -74,7 +74,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of R In 2"
+            "pathName": "L In 2"
           }
         },
         {
@@ -111,13 +111,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of R Out 3"
+            "pathName": "L Out 3"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of R Out 4"
+            "pathName": "L Out 4"
           }
         }
       ]

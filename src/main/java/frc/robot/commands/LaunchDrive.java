@@ -29,8 +29,8 @@ public class LaunchDrive extends Command {
 
     @Override
     public void initialize() {
-        if (m_drive.hopperFill < 50) {
-            intakeSetpoint = 0.10;
+        if (m_drive.hopperFill < 30) {
+            intakeSetpoint = 0.05;
         } else {
             intakeSetpoint = 0.0;
         }
@@ -58,7 +58,7 @@ public class LaunchDrive extends Command {
             
             // Pause intake setpoint growth if we are clearing a jam (auto or manual)
             if (!m_launcher.isJammed()) {
-                intakeSetpoint += 0.003;
+                intakeSetpoint += 0.0015;
             }
         } else {
             m_launcher.feedOff();

@@ -70,7 +70,7 @@ public class RobotContainer {
             double current = m_intake.getSetpoint();
             
             // 2. Add a small step (e.g., 0.005) but stop at 0.25
-            m_intake.changeSetpoint(Math.min(0.25, current + 0.003));
+            m_intake.changeSetpoint(Math.min(0.25, current + 0.0015));
             
             // 3. Keep the feeder running simultaneously
             m_launcher.feed();
@@ -104,10 +104,10 @@ public class RobotContainer {
   //m_driverController.y().onFalse(new ParallelCommandGroup(new RunCommand(() -> m_launcher.feedOff()), new RunCommand(() -> m_launcher.setSpeed(0), m_launcher)));
   //m_driverController.b().onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(2500)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
   m_driverController.rightBumper().onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(3000)),new CheckLaunchSpeed(m_launcher)).andThen(new InstantCommand(() -> m_intake.changeSetpoint(.13))).andThen(new RunCommand(() -> m_launcher.feed())));
-  m_driverController.pov(0).onTrue(new OrientDrive(m_robotDrive, m_driverController, RotationPID, 0));
-  m_driverController.pov(0).onFalse(new FieldCentricDrive(m_robotDrive, m_driverController));
-  m_driverController.pov(180).onTrue(new OrientDrive(m_robotDrive, m_driverController, RotationPID, 180));
-  m_driverController.pov(180).onFalse(new FieldCentricDrive(m_robotDrive, m_driverController));
+  //m_driverController.pov(0).onTrue(new OrientDrive(m_robotDrive, m_driverController, RotationPID, 0));
+  //m_driverController.pov(0).onFalse(new FieldCentricDrive(m_robotDrive, m_driverController));
+  //m_driverController.pov(180).onTrue(new OrientDrive(m_robotDrive, m_driverController, RotationPID, 180));
+  //m_driverController.pov(180).onFalse(new FieldCentricDrive(m_robotDrive, m_driverController));
   //m_driverController.pov(270).onTrue(new ParallelRaceGroup(new RunCommand(() -> m_launcher.setSpeed(4500)),new CheckLaunchSpeed(m_launcher)).andThen(new RunCommand(() -> m_launcher.feed())));
   m_driverController.rightBumper().onFalse(new ZeroShooter(m_launcher, m_intake));
   //m_driverController.start().onTrue(new ParallelCommandGroup(new RunCommand(() -> m_launcher.feedOff()), new RunCommand(() -> m_launcher.setSpeed(0), m_launcher)));

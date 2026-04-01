@@ -5,15 +5,27 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Start"
+            "name": "IntakeOn"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Sweep 1"
+            "pathName": "Copy of Copy of R Out 1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeOff"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Copy of Copy of R In 1"
           }
         },
         {
@@ -29,7 +41,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 3.2
+                  "waitTime": 3.0
                 }
               }
             ]
@@ -42,9 +54,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "IntakeOn"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Sweep 2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeOff"
           }
         },
         {
@@ -60,7 +84,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 3.2
+                  "waitTime": 3.0
                 }
               }
             ]
