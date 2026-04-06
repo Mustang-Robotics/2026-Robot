@@ -29,6 +29,11 @@ public class LaunchDrive extends Command {
 
     @Override
     public void initialize() {
+ 
+        double currentAngle = convertAngle(m_drive.getAngle());
+        double currentVelocity = m_drive.getTurnRate(); 
+        m_PID.reset(currentAngle, currentVelocity);
+        
         if (m_drive.hopperFill < 30) {
             intakeSetpoint = 0.05;
         } else {
