@@ -49,6 +49,15 @@ public class OrientDrive extends Command{
     }
 
     @Override
+    public void initialize() {
+    
+        double currentAngle = convertAngle(m_drive.getAngle());
+        double currentVelocity = m_drive.getTurnRate(); 
+        m_PID.reset(currentAngle, currentVelocity);
+        
+    }
+
+    @Override
     public void execute(){
         // Deadband left-stick inputs once and reuse
         double xInput = MathUtil.applyDeadband(m_controller.getRawAxis(1), OIConstants.kDriveDeadband);
