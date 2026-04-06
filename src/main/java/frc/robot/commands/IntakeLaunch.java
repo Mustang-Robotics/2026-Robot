@@ -32,6 +32,10 @@ public class IntakeLaunch extends Command {
     @Override
     public void initialize(){
 
+        double currentAngle = convertAngle(m_drive.getAngle());
+        double currentVelocity = m_drive.getTurnRate(); 
+        m_PID.reset(currentAngle, currentVelocity);
+        
         intakeSetpoint = 0.005;
         m_intake.setPercent(1);
         
