@@ -122,6 +122,7 @@ public final class Constants {
     public static final InterpolatingDoubleTreeMap rpmTable = new InterpolatingDoubleTreeMap();
 
     static {
+        rpmTable.put(1.000,1500.0);
         rpmTable.put(2.436, 2700.0);
         rpmTable.put(2.726, 2700.0);
         rpmTable.put(3.006, 3000.0);
