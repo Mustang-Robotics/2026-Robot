@@ -59,10 +59,10 @@ public class DriveSubsystem extends SubsystemBase {
   final double BLUE_HUB_X = 4.626;
   final double RED_HUB_X = 11.915;
   final double HUB_Y = 4.035;
-  final double BLUE_PASS_X = 2.313;
+  final double BLUE_PASS_X = 3.813;
   final double PASS_Y_RIGHT = 2.017;
   final double PASS_Y_LEFT = 6.052;
-  final double RED_PASS_X = 14.228;
+  final double RED_PASS_X = 12.728;
   public double rotationSetpoint = 0;
   public boolean redAlliance = false;
   public Translation2d aimLocation;
@@ -73,6 +73,7 @@ public class DriveSubsystem extends SubsystemBase {
   public double currentGyro = 0.0;
   public double hopperFill;
   private LED m_led = new LED();
+  public boolean passing = false;
 
 
   // Odometry class for tracking robot pose
@@ -146,12 +147,12 @@ public class DriveSubsystem extends SubsystemBase {
     });
 
     //Aiming Stuff
-    hopperFill = vision.hopperFill();
-    SmartDashboard.putNumber("Hopper", hopperFill);
+
     if(!redAlliance()) {
             if(getPose().getX() < BLUE_HUB_X) {
                 aimX = BLUE_HUB_X;
                 aimY = HUB_Y;
+                passing = false;
                 if (adjustedDistance > 2.436 && !warningLight()){
                   m_led.SolidGreen();
                 }else if (adjustedDistance > 2.436 && warningLight()){
@@ -163,14 +164,11 @@ public class DriveSubsystem extends SubsystemBase {
                 }
             }else {
                 aimX = BLUE_PASS_X;
-                if (!warningLight() && hopperFill < 75){
+                passing = true;
+                if (!warningLight()){
                   m_led.SolidBlue();
-                }else if (warningLight() && hopperFill < 75){
+                }else if (warningLight()){
                   m_led.BlinkBlue();
-                }else if (!warningLight() && hopperFill >= 75){
-                  m_led.SolidYellow();
-                }else if (warningLight() && hopperFill >= 75){
-                  m_led.BlinkYellow();
                 }
                 if(getPose().getY() < HUB_Y) {
                     aimY = PASS_Y_RIGHT;
@@ -182,6 +180,7 @@ public class DriveSubsystem extends SubsystemBase {
             if(getPose().getX() > RED_HUB_X) {
                 aimX = RED_HUB_X;
                 aimY = HUB_Y;
+                passing = false;
                 if (adjustedDistance > 2.436 && !warningLight()){
                   m_led.SolidGreen();
                 }else if (adjustedDistance > 2.436 && warningLight()){
@@ -193,14 +192,11 @@ public class DriveSubsystem extends SubsystemBase {
                 }
             }else {
                 aimX = RED_PASS_X;
-                if (!warningLight() && hopperFill < 75){
+                passing = true;
+                if (!warningLight()){
                   m_led.SolidBlue();
-                }else if (warningLight() && hopperFill < 75){
+                }else if (warningLight()){
                   m_led.BlinkBlue();
-                }else if (!warningLight() && hopperFill >= 75){
-                  m_led.SolidYellow();
-                }else if (warningLight() && hopperFill >= 75){
-                  m_led.BlinkYellow();
                 }
                 if(getPose().getY() < HUB_Y) {
                     aimY = PASS_Y_RIGHT;

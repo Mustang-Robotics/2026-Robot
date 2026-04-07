@@ -50,8 +50,8 @@ public class RobotContainer {
 
   private final SendableChooser<Command> m_chooser;
 
-  private TrapezoidProfile.Constraints rotationSpeed = new TrapezoidProfile.Constraints(360, 480);
-  private ProfiledPIDController RotationPID = new ProfiledPIDController(.015, 0, 0.001, rotationSpeed);
+  private TrapezoidProfile.Constraints rotationSpeed = new TrapezoidProfile.Constraints(540, 720);
+  private ProfiledPIDController RotationPID = new ProfiledPIDController(.03, 0, 0.001, rotationSpeed);
 
   
 

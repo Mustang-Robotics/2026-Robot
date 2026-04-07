@@ -27,18 +27,29 @@ public class LaunchDrive extends Command {
         addRequirements(m_drive, m_launcher, m_intake);
     }
 
+    private boolean distanceCheck(){
+        boolean launch;
+
+        if(m_drive.passing){
+            launch = true;
+        }else if(m_drive.adjustedDistance > 2.436){
+            launch = true;
+        }else {
+            launch = false;
+        }
+        return launch;
+    }
+
     @Override
     public void initialize() {
  
-        double currentAngle = convertAngle(m_drive.getAngle());
+        double currentAngle = m_drive.currentGyro;
         double currentVelocity = m_drive.getTurnRate(); 
         m_PID.reset(currentAngle, currentVelocity);
         
-        if (m_drive.hopperFill < 30) {
-            intakeSetpoint = 0.05;
-        } else {
-            intakeSetpoint = 0.0;
-        }
+
+        intakeSetpoint = 0.0;
+
     }
 
     @Override
@@ -56,7 +67,7 @@ public class LaunchDrive extends Command {
         // Check conditions: RPM matched, Rotation aligned, and Distance is valid
         boolean isReady = MathUtil.isNear(m_launcher.targetSpeed, m_launcher.shooterEncoder.getVelocity(), 200) 
                        && MathUtil.isNear(m_drive.rotationSetpoint, m_drive.convertGyroAngle(m_drive.getAngle()), m_drive.finalTolerance) 
-                       && m_drive.adjustedDistance > 2.436;
+                       && distanceCheck();
 
         if (isReady) {
             m_launcher.feed();
