@@ -76,7 +76,7 @@ public final class Configs {
                         .closedLoop
                         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                         .outputRange(-1, 1)
-                        .p(0.0001)
+                        .p(0.0003)
                         .maxMotion
                         .cruiseVelocity(5800)
                         .maxAcceleration(4000)
@@ -86,8 +86,8 @@ public final class Configs {
                         .encoder
                         .positionConversionFactor(1)
                         .velocityConversionFactor(1)
-                        .uvwMeasurementPeriod(10)
-                        .uvwAverageDepth(2);
+                        .uvwMeasurementPeriod(5)
+                        .uvwAverageDepth(4);
 
                         LauncherConfig
                         .closedLoop
