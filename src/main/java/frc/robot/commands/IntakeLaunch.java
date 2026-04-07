@@ -50,7 +50,8 @@ public class IntakeLaunch extends Command {
                 m_PID.calculate(m_drive.convertGyroAngle(m_drive.getAngle()), m_drive.rotationSetpoint),
                 true);
         
-        m_launcher.setSpeed(m_drive.adjustedRPM);
+        double clampedRPM = MathUtil.clamp(m_drive.adjustedRPM, 0, 5000);
+        m_launcher.setSpeed(clampedRPM);
         m_intake.changeSetpoint(intakeSetpoint);
 
         // 2. Performance Checks
