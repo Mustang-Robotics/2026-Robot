@@ -54,14 +54,19 @@ public class RobotContainer {
   // The driver's controller
   private final CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
 
-  private final SendableChooser<Command> m_chooser;
+  //private final SendableChooser<Command> m_chooser;
+  private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   private TrapezoidProfile.Constraints rotationSpeed = new TrapezoidProfile.Constraints(540, 720);
   private ProfiledPIDController RotationPID = new ProfiledPIDController(.03, 0, 0.001, rotationSpeed);
-  private TrapezoidProfile.Constraints X_Speed = new TrapezoidProfile.Constraints(0.3, 0.3);
-  private ProfiledPIDController X_PID = new ProfiledPIDController(.1, 0, 0, X_Speed);
-  private TrapezoidProfile.Constraints Y_Speed = new TrapezoidProfile.Constraints(0.3, 0.3);
-  private ProfiledPIDController Y_PID = new ProfiledPIDController(.1, 0, 0, Y_Speed);
+  private TrapezoidProfile.Constraints X_Speed = new TrapezoidProfile.Constraints(0.7, 0.8);
+  private ProfiledPIDController X_PID = new ProfiledPIDController(2, 0, 0, X_Speed);
+  private TrapezoidProfile.Constraints Y_Speed = new TrapezoidProfile.Constraints(0.7, 0.8);
+  private ProfiledPIDController Y_PID = new ProfiledPIDController(2, 0, 0, Y_Speed);
+  private TrapezoidProfile.Constraints Center_X_Speed = new TrapezoidProfile.Constraints(0, 0);
+  private ProfiledPIDController Center_X_PID = new ProfiledPIDController(0, 0, 0, Center_X_Speed);
+  private TrapezoidProfile.Constraints Center_Y_Speed = new TrapezoidProfile.Constraints(0, 0);
+  private ProfiledPIDController Center_Y_PID = new ProfiledPIDController(0, 0, 0, Center_Y_Speed);
   
 
   /**
@@ -91,7 +96,13 @@ public class RobotContainer {
     NamedCommands.registerCommand("SpinUp", new InstantCommand(() -> m_launcher.setSpeed(3150)));
     configureButtonBindings();
     RotationPID.enableContinuousInput(0, 360);
-    m_chooser = AutoBuilder.buildAutoChooser();
+    //m_chooser = AutoBuilder.buildAutoChooser();
+    m_chooser.setDefaultOption("Blue Right", BlueRightAuto());
+    m_chooser.addOption("Blue Left", BlueLeftAuto());
+    m_chooser.addOption("Red Right", RedRightAuto());
+    m_chooser.addOption("Red Left", RedLeftAuto());
+    m_chooser.addOption("Blue Center", BlueCenterAuto());
+    m_chooser.addOption("Red Center", RedCenterAuto());
     SmartDashboard.putData("Auto Chooser", m_chooser);
     
     // Configure default commands
@@ -140,11 +151,10 @@ public class RobotContainer {
 
    }
 
-  private Command BlueRightAuto() {
+  private Command BlueRightPath() {
     try{
         // Load the path you want to follow using its name in the GUI
         PathPlannerPath path = PathPlannerPath.fromPathFile("Right Side Loop 1");
-        PathConstraints constraints = new PathConstraints(3, 1.5, Units.degreesToRadians(540), Units.degreesToRadians(360));
         // Create a path following command using AutoBuilder. This will also trigger event markers.
         return AutoBuilder.followPath(path);
     } catch (Exception e) {
@@ -153,11 +163,11 @@ public class RobotContainer {
     }
   }
 
-    private Command BlueRightAutoTwo() {
+    private Command BlueRightPathTwo() {
     try{
         // Load the path you want to follow using its name in the GUI
         PathPlannerPath path = PathPlannerPath.fromPathFile("Right Side Loop 1");
-        PathConstraints constraints = new PathConstraints(3, 1.5, Units.degreesToRadians(540), Units.degreesToRadians(360));
+        PathConstraints constraints = new PathConstraints(4, 4, Units.degreesToRadians(360), Units.degreesToRadians(480));
         // Create a path following command using AutoBuilder. This will also trigger event markers.
         return AutoBuilder.pathfindThenFollowPath(path, constraints);
     } catch (Exception e) {
@@ -166,11 +176,10 @@ public class RobotContainer {
     }
   }
 
-  private Command BlueLeftAuto() {
+  private Command BlueLeftPath() {
     try{
         // Load the path you want to follow using its name in the GUI
         PathPlannerPath path = PathPlannerPath.fromPathFile("Right Side Loop 1");
-        PathConstraints constraints = new PathConstraints(3, 1.5, Units.degreesToRadians(540), Units.degreesToRadians(360));
         // Create a path following command using AutoBuilder. This will also trigger event markers.
         return AutoBuilder.followPath(path.mirrorPath());
     } catch (Exception e) {
@@ -179,11 +188,23 @@ public class RobotContainer {
     }
   }
 
-  private Command RedRightAuto() {
+  private Command BlueLeftPathTwo() {
     try{
         // Load the path you want to follow using its name in the GUI
         PathPlannerPath path = PathPlannerPath.fromPathFile("Right Side Loop 1");
-        PathConstraints constraints = new PathConstraints(3, 1.5, Units.degreesToRadians(540), Units.degreesToRadians(360));
+        PathConstraints constraints = new PathConstraints(4, 4, Units.degreesToRadians(360), Units.degreesToRadians(480));
+        // Create a path following command using AutoBuilder. This will also trigger event markers.
+        return AutoBuilder.pathfindThenFollowPath(path.mirrorPath(), constraints);
+    } catch (Exception e) {
+        DriverStation.reportError(e.getMessage(), e.getStackTrace());
+        return Commands.none();
+    }
+  }
+
+  private Command RedRightPath() {
+    try{
+        // Load the path you want to follow using its name in the GUI
+        PathPlannerPath path = PathPlannerPath.fromPathFile("Right Side Loop 1");
         // Create a path following command using AutoBuilder. This will also trigger event markers.
         return AutoBuilder.followPath(path.flipPath());
     } catch (Exception e) {
@@ -192,11 +213,23 @@ public class RobotContainer {
     }
   }
 
-  private Command RedLeftAuto() {
+  private Command RedRightPathTwo() {
     try{
         // Load the path you want to follow using its name in the GUI
         PathPlannerPath path = PathPlannerPath.fromPathFile("Right Side Loop 1");
-        PathConstraints constraints = new PathConstraints(3, 1.5, Units.degreesToRadians(540), Units.degreesToRadians(360));
+        PathConstraints constraints = new PathConstraints(4, 4, Units.degreesToRadians(360), Units.degreesToRadians(480));
+        // Create a path following command using AutoBuilder. This will also trigger event markers.
+        return AutoBuilder.pathfindThenFollowPath(path.flipPath(), constraints);
+    } catch (Exception e) {
+        DriverStation.reportError(e.getMessage(), e.getStackTrace());
+        return Commands.none();
+    }
+  }
+
+  private Command RedLeftPath() {
+    try{
+        // Load the path you want to follow using its name in the GUI
+        PathPlannerPath path = PathPlannerPath.fromPathFile("Right Side Loop 1");
         // Create a path following command using AutoBuilder. This will also trigger event markers.
         return AutoBuilder.followPath(path.flipPath().mirrorPath());
     } catch (Exception e) {
@@ -205,6 +238,92 @@ public class RobotContainer {
     }
   }
 
+  private Command RedLeftPathTwo() {
+    try{
+        // Load the path you want to follow using its name in the GUI
+        PathPlannerPath path = PathPlannerPath.fromPathFile("Right Side Loop 1");
+        PathConstraints constraints = new PathConstraints(4, 4, Units.degreesToRadians(360), Units.degreesToRadians(480));
+        // Create a path following command using AutoBuilder. This will also trigger event markers.
+        return AutoBuilder.pathfindThenFollowPath(path.flipPath().mirrorPath(), constraints);
+    } catch (Exception e) {
+        DriverStation.reportError(e.getMessage(), e.getStackTrace());
+        return Commands.none();
+    }
+  }
+
+  private Command BlueCenterPath() {
+    try{
+        // Load the path you want to follow using its name in the GUI
+        PathPlannerPath path = PathPlannerPath.fromPathFile("Center");
+        // Create a path following command using AutoBuilder. This will also trigger event markers.
+        return AutoBuilder.followPath(path);
+    } catch (Exception e) {
+        DriverStation.reportError(e.getMessage(), e.getStackTrace());
+        return Commands.none();
+    }
+  }
+
+  private Command RedCenterPath() {
+    try{
+        // Load the path you want to follow using its name in the GUI
+        PathPlannerPath path = PathPlannerPath.fromPathFile("Center");
+        // Create a path following command using AutoBuilder. This will also trigger event markers.
+        return AutoBuilder.followPath(path.flipPath());
+    } catch (Exception e) {
+        DriverStation.reportError(e.getMessage(), e.getStackTrace());
+        return Commands.none();
+    }
+  }
+
+  private Command BlueRightAuto() {
+    return new SequentialCommandGroup(
+      new InstantCommand(() -> m_robotDrive.resetOdometry(AutoConstants.BLUE_RIGHT_AUTO)),
+      BlueRightPath(),
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake),
+      BlueRightPathTwo(),
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake));
+  }
+
+  private Command BlueLeftAuto() {
+    return new SequentialCommandGroup(
+      new InstantCommand(() -> m_robotDrive.resetOdometry(AutoConstants.BLUE_LEFT_AUTO)),
+      BlueLeftPath(),
+      new AutoLaunchDrive(false, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake),
+      BlueLeftPathTwo(),
+      new AutoLaunchDrive(false, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake));
+  }
+
+  private Command RedRightAuto() {
+    return new SequentialCommandGroup(
+      new InstantCommand(() -> m_robotDrive.resetOdometry(AutoConstants.RED_RIGHT_AUTO)),
+      RedRightPath(),
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake),
+      RedRightPathTwo(),
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake));
+  }
+
+  private Command RedLeftAuto() {
+    return new SequentialCommandGroup(
+      new InstantCommand(() -> m_robotDrive.resetOdometry(AutoConstants.RED_LEFT_AUTO)),
+      RedLeftPath(),
+      new AutoLaunchDrive(false, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake),
+      RedLeftPathTwo(),
+      new AutoLaunchDrive(false, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake));
+  }
+
+  private Command BlueCenterAuto() {
+    return new SequentialCommandGroup(
+      new InstantCommand(() -> m_robotDrive.resetOdometry(AutoConstants.BLUE_CENTER_AUTO)),
+      BlueCenterPath(),
+      new AutoLaunchDrive(false, Center_X_PID, Center_Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake));
+  }
+
+  private Command RedCenterAuto() {
+    return new SequentialCommandGroup(
+      new InstantCommand(() -> m_robotDrive.resetOdometry(AutoConstants.RED_CENTER_AUTO)),
+      RedCenterPath(),
+      new AutoLaunchDrive(false, Center_X_PID, Center_Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake));
+  }
     
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -212,8 +331,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    //return m_chooser.getSelected();
-    return new SequentialCommandGroup(new InstantCommand(() -> m_robotDrive.resetOdometry(AutoConstants.BLUE_RIGHT_AUTO)), BlueRightAuto(), new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake), BlueRightAutoTwo());
+    return m_chooser.getSelected();
   }
 
 }
