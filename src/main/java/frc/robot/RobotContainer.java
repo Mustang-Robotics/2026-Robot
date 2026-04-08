@@ -59,9 +59,9 @@ public class RobotContainer {
   private TrapezoidProfile.Constraints rotationSpeed = new TrapezoidProfile.Constraints(540, 720);
   private ProfiledPIDController RotationPID = new ProfiledPIDController(.03, 0, 0.001, rotationSpeed);
   private TrapezoidProfile.Constraints X_Speed = new TrapezoidProfile.Constraints(0.3, 0.3);
-  private ProfiledPIDController X_PID = new ProfiledPIDController(.01, 0, 0, X_Speed);
+  private ProfiledPIDController X_PID = new ProfiledPIDController(.1, 0, 0, X_Speed);
   private TrapezoidProfile.Constraints Y_Speed = new TrapezoidProfile.Constraints(0.3, 0.3);
-  private ProfiledPIDController Y_PID = new ProfiledPIDController(.01, 0, 0, Y_Speed);
+  private ProfiledPIDController Y_PID = new ProfiledPIDController(.1, 0, 0, Y_Speed);
   
 
   /**
@@ -146,6 +146,19 @@ public class RobotContainer {
         PathPlannerPath path = PathPlannerPath.fromPathFile("Right Side Loop 1");
         PathConstraints constraints = new PathConstraints(3, 1.5, Units.degreesToRadians(540), Units.degreesToRadians(360));
         // Create a path following command using AutoBuilder. This will also trigger event markers.
+        return AutoBuilder.followPath(path);
+    } catch (Exception e) {
+        DriverStation.reportError(e.getMessage(), e.getStackTrace());
+        return Commands.none();
+    }
+  }
+
+    private Command BlueRightAutoTwo() {
+    try{
+        // Load the path you want to follow using its name in the GUI
+        PathPlannerPath path = PathPlannerPath.fromPathFile("Right Side Loop 1");
+        PathConstraints constraints = new PathConstraints(3, 1.5, Units.degreesToRadians(540), Units.degreesToRadians(360));
+        // Create a path following command using AutoBuilder. This will also trigger event markers.
         return AutoBuilder.pathfindThenFollowPath(path, constraints);
     } catch (Exception e) {
         DriverStation.reportError(e.getMessage(), e.getStackTrace());
@@ -159,7 +172,7 @@ public class RobotContainer {
         PathPlannerPath path = PathPlannerPath.fromPathFile("Right Side Loop 1");
         PathConstraints constraints = new PathConstraints(3, 1.5, Units.degreesToRadians(540), Units.degreesToRadians(360));
         // Create a path following command using AutoBuilder. This will also trigger event markers.
-        return AutoBuilder.pathfindThenFollowPath(path.mirrorPath(), constraints);
+        return AutoBuilder.followPath(path.mirrorPath());
     } catch (Exception e) {
         DriverStation.reportError(e.getMessage(), e.getStackTrace());
         return Commands.none();
@@ -172,7 +185,7 @@ public class RobotContainer {
         PathPlannerPath path = PathPlannerPath.fromPathFile("Right Side Loop 1");
         PathConstraints constraints = new PathConstraints(3, 1.5, Units.degreesToRadians(540), Units.degreesToRadians(360));
         // Create a path following command using AutoBuilder. This will also trigger event markers.
-        return AutoBuilder.pathfindThenFollowPath(path.flipPath(), constraints);
+        return AutoBuilder.followPath(path.flipPath());
     } catch (Exception e) {
         DriverStation.reportError(e.getMessage(), e.getStackTrace());
         return Commands.none();
@@ -185,7 +198,7 @@ public class RobotContainer {
         PathPlannerPath path = PathPlannerPath.fromPathFile("Right Side Loop 1");
         PathConstraints constraints = new PathConstraints(3, 1.5, Units.degreesToRadians(540), Units.degreesToRadians(360));
         // Create a path following command using AutoBuilder. This will also trigger event markers.
-        return AutoBuilder.pathfindThenFollowPath(path.flipPath().mirrorPath(), constraints);
+        return AutoBuilder.followPath(path.flipPath().mirrorPath());
     } catch (Exception e) {
         DriverStation.reportError(e.getMessage(), e.getStackTrace());
         return Commands.none();
@@ -200,7 +213,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     //return m_chooser.getSelected();
-    return new SequentialCommandGroup(new InstantCommand(() -> m_robotDrive.resetOdometry(AutoConstants.BLUE_RIGHT_AUTO)), BlueRightAuto(), new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake));
+    return new SequentialCommandGroup(new InstantCommand(() -> m_robotDrive.resetOdometry(AutoConstants.BLUE_RIGHT_AUTO)), BlueRightAuto(), new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake), BlueRightAutoTwo());
   }
 
 }

@@ -86,8 +86,8 @@ public final class Configs {
                         .encoder
                         .positionConversionFactor(1)
                         .velocityConversionFactor(1)
-                        .uvwMeasurementPeriod(5)
-                        .uvwAverageDepth(4);
+                        .uvwMeasurementPeriod(10)
+                        .uvwAverageDepth(2);
 
                         LauncherConfig
                         .closedLoop

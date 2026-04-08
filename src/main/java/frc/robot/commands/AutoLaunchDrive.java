@@ -133,6 +133,6 @@ public class AutoLaunchDrive extends Command {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return MathUtil.isNear(m_Y, m_drive.getPose().getMeasureY().magnitude(), 0.1) && MathUtil.isNear(m_X, m_drive.getPose().getMeasureX().magnitude(), 0.1);
     }
 }
