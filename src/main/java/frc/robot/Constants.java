@@ -9,6 +9,8 @@ import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -150,5 +152,12 @@ public final class Constants {
         e.printStackTrace();
       }
     }
+  }
+
+  public static class AutoConstants {
+    public static final Pose2d BLUE_RIGHT_AUTO = new Pose2d(4.397, 0.656, new Rotation2d(0));
+    public static final Pose2d BLUE_LEFT_AUTO = new Pose2d(4.397, 7.413326, new Rotation2d(0));
+    public static final Pose2d RED_RIGHT_AUTO = new Pose2d(12.143988, 7.413326, new Rotation2d(180));
+    public static final Pose2d RED_LEFT_AUTO = new Pose2d(12.143988, 0.656, new Rotation2d(180));
   }
 }

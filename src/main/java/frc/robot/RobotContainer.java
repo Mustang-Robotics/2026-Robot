@@ -5,11 +5,15 @@
 package frc.robot;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.AutoLaunchDrive;
 import frc.robot.commands.CheckLaunchSpeed;
 import frc.robot.commands.FieldCentricDrive;
 import frc.robot.commands.IntakeLaunch;
@@ -22,16 +26,18 @@ import frc.robot.commands.ZeroShooter;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LauncherSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -52,7 +58,10 @@ public class RobotContainer {
 
   private TrapezoidProfile.Constraints rotationSpeed = new TrapezoidProfile.Constraints(540, 720);
   private ProfiledPIDController RotationPID = new ProfiledPIDController(.03, 0, 0.001, rotationSpeed);
-
+  private TrapezoidProfile.Constraints X_Speed = new TrapezoidProfile.Constraints(0.3, 0.3);
+  private ProfiledPIDController X_PID = new ProfiledPIDController(.01, 0, 0, X_Speed);
+  private TrapezoidProfile.Constraints Y_Speed = new TrapezoidProfile.Constraints(0.3, 0.3);
+  private ProfiledPIDController Y_PID = new ProfiledPIDController(.01, 0, 0, Y_Speed);
   
 
   /**
@@ -131,13 +140,67 @@ public class RobotContainer {
 
    }
 
+  private Command BlueRightAuto() {
+    try{
+        // Load the path you want to follow using its name in the GUI
+        PathPlannerPath path = PathPlannerPath.fromPathFile("Right Side Loop 1");
+        PathConstraints constraints = new PathConstraints(3, 1.5, Units.degreesToRadians(540), Units.degreesToRadians(360));
+        // Create a path following command using AutoBuilder. This will also trigger event markers.
+        return AutoBuilder.pathfindThenFollowPath(path, constraints);
+    } catch (Exception e) {
+        DriverStation.reportError(e.getMessage(), e.getStackTrace());
+        return Commands.none();
+    }
+  }
+
+  private Command BlueLeftAuto() {
+    try{
+        // Load the path you want to follow using its name in the GUI
+        PathPlannerPath path = PathPlannerPath.fromPathFile("Right Side Loop 1");
+        PathConstraints constraints = new PathConstraints(3, 1.5, Units.degreesToRadians(540), Units.degreesToRadians(360));
+        // Create a path following command using AutoBuilder. This will also trigger event markers.
+        return AutoBuilder.pathfindThenFollowPath(path.mirrorPath(), constraints);
+    } catch (Exception e) {
+        DriverStation.reportError(e.getMessage(), e.getStackTrace());
+        return Commands.none();
+    }
+  }
+
+  private Command RedRightAuto() {
+    try{
+        // Load the path you want to follow using its name in the GUI
+        PathPlannerPath path = PathPlannerPath.fromPathFile("Right Side Loop 1");
+        PathConstraints constraints = new PathConstraints(3, 1.5, Units.degreesToRadians(540), Units.degreesToRadians(360));
+        // Create a path following command using AutoBuilder. This will also trigger event markers.
+        return AutoBuilder.pathfindThenFollowPath(path.flipPath(), constraints);
+    } catch (Exception e) {
+        DriverStation.reportError(e.getMessage(), e.getStackTrace());
+        return Commands.none();
+    }
+  }
+
+  private Command RedLeftAuto() {
+    try{
+        // Load the path you want to follow using its name in the GUI
+        PathPlannerPath path = PathPlannerPath.fromPathFile("Right Side Loop 1");
+        PathConstraints constraints = new PathConstraints(3, 1.5, Units.degreesToRadians(540), Units.degreesToRadians(360));
+        // Create a path following command using AutoBuilder. This will also trigger event markers.
+        return AutoBuilder.pathfindThenFollowPath(path.flipPath().mirrorPath(), constraints);
+    } catch (Exception e) {
+        DriverStation.reportError(e.getMessage(), e.getStackTrace());
+        return Commands.none();
+    }
+  }
+
+    
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return m_chooser.getSelected();
+    //return m_chooser.getSelected();
+    return new SequentialCommandGroup(new InstantCommand(() -> m_robotDrive.resetOdometry(AutoConstants.BLUE_RIGHT_AUTO)), BlueRightAuto(), new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake));
   }
 
 }
