@@ -275,6 +275,54 @@ public class RobotContainer {
     }
   }
 
+  private Command BluePassingPathRight() {
+    try{
+        // Load the path you want to follow using its name in the GUI
+        PathPlannerPath path = PathPlannerPath.fromPathFile("Passing Path");
+        // Create a path following command using AutoBuilder. This will also trigger event markers.
+        return AutoBuilder.followPath(path);
+    } catch (Exception e) {
+        DriverStation.reportError(e.getMessage(), e.getStackTrace());
+        return Commands.none();
+    }
+  }
+
+  private Command BluePassingPathLeft() {
+    try{
+        // Load the path you want to follow using its name in the GUI
+        PathPlannerPath path = PathPlannerPath.fromPathFile("Passing Path");
+        // Create a path following command using AutoBuilder. This will also trigger event markers.
+        return AutoBuilder.followPath(path.mirrorPath());
+    } catch (Exception e) {
+        DriverStation.reportError(e.getMessage(), e.getStackTrace());
+        return Commands.none();
+    }
+  }
+
+  private Command RedPassingPathRight() {
+    try{
+        // Load the path you want to follow using its name in the GUI
+        PathPlannerPath path = PathPlannerPath.fromPathFile("Passing Path");
+        // Create a path following command using AutoBuilder. This will also trigger event markers.
+        return AutoBuilder.followPath(path.flipPath());
+    } catch (Exception e) {
+        DriverStation.reportError(e.getMessage(), e.getStackTrace());
+        return Commands.none();
+    }
+  }
+
+  private Command RedPassingPathLeft() {
+    try{
+        // Load the path you want to follow using its name in the GUI
+        PathPlannerPath path = PathPlannerPath.fromPathFile("Passing Path");
+        // Create a path following command using AutoBuilder. This will also trigger event markers.
+        return AutoBuilder.followPath(path.flipPath().mirrorPath());
+    } catch (Exception e) {
+        DriverStation.reportError(e.getMessage(), e.getStackTrace());
+        return Commands.none();
+    }
+  }
+
   private Command BlueRightAuto() {
     return new SequentialCommandGroup(
       new InstantCommand(() -> m_robotDrive.resetOdometry(AutoConstants.BLUE_RIGHT_AUTO)),
