@@ -19,7 +19,7 @@ public class LauncherSubsystem extends SubsystemBase {
     private final SparkMax m_launcher_follower2 = new SparkMax(6, MotorType.kBrushless);
     private final SparkMax m_feeder = new SparkMax(33, MotorType.kBrushless);
     
-    public double targetSpeed = 1000;
+    public double targetSpeed = 2000;
     public RelativeEncoder shooterEncoder = m_launcher.getEncoder();
     private SparkClosedLoopController launcherClosedLoopController = m_launcher.getClosedLoopController();
 
