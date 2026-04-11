@@ -76,7 +76,7 @@ public final class Configs {
                         .closedLoop
                         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                         .outputRange(-1, 1)
-                        .p(0.0003)
+                        .p(0.0001)
                         .maxMotion
                         .cruiseVelocity(5800)
                         .maxAcceleration(4000)

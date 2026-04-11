@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.396871998915737,
-        "y": 0.6556174972893438
+        "x": 4.37978672985782,
+        "y": 0.8003199052132686
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.636477662112826,
-        "y": 0.5842793857087648
+        "x": 5.690853080568721,
+        "y": 0.8325592417061602
       },
       "isLocked": false,
       "linkedName": "Trench Start"
     },
     {
       "anchor": {
-        "x": 7.1624156308085505,
-        "y": 0.796214616248452
+        "x": 7.227594786729859,
+        "y": 0.9185308056872032
       },
       "prevControl": {
-        "x": 6.755999222776549,
-        "y": 0.6659077902964894
+        "x": 6.711765402843603,
+        "y": 0.9937559241706151
       },
       "nextControl": {
-        "x": 8.62355374459827,
-        "y": 1.2646904605366682
+        "x": 8.745937689592338,
+        "y": 0.6971057990197598
       },
       "isLocked": false,
       "linkedName": null
@@ -33,15 +33,15 @@
     {
       "anchor": {
         "x": 7.569646356102849,
-        "y": 3.633500135532838
+        "y": 3.691113744075828
       },
       "prevControl": {
-        "x": 8.383595464309924,
-        "y": 3.225034923216394
+        "x": 8.383595464309925,
+        "y": 3.282648531759384
       },
       "nextControl": {
         "x": 7.0287992641125285,
-        "y": 3.9049141834543137
+        "y": 3.962527791997304
       },
       "isLocked": false,
       "linkedName": null
@@ -80,12 +80,28 @@
     },
     {
       "anchor": {
-        "x": 2.551959320786865,
-        "y": 2.4290854437732357
+        "x": 3.3803672985781987,
+        "y": 2.562736966824643
       },
       "prevControl": {
-        "x": 3.6475301076517965,
-        "y": 2.5486269555452306
+        "x": 3.886792326531847,
+        "y": 2.5365103190115623
+      },
+      "nextControl": {
+        "x": 2.8739422706245503,
+        "y": 2.588963614637724
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.821552132701422,
+        "y": 0.9185308056872032
+      },
+      "prevControl": {
+        "x": 2.7355805687203794,
+        "y": 1.9113090804340132
       },
       "nextControl": null,
       "isLocked": false,
@@ -94,12 +110,12 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.25891644021739135,
+      "waypointRelativePos": 0.4476021314387194,
       "rotationDegrees": 0.0
     },
     {
       "waypointRelativePos": 1.0961843297101446,
-      "rotationDegrees": -80.0
+      "rotationDegrees": -90.0
     },
     {
       "waypointRelativePos": 1.530089447463768,
@@ -114,11 +130,25 @@
       "rotationDegrees": 59.99999999999999
     },
     {
-      "waypointRelativePos": 4.6,
+      "waypointRelativePos": 5.2,
       "rotationDegrees": 59.99999999999999
     }
   ],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 1.1743532058492692,
+      "maxWaypointRelativePos": 2.3352080989876476,
+      "constraints": {
+        "maxVelocity": 3.0,
+        "maxAcceleration": 4.0,
+        "maxAngularVelocity": 360.0,
+        "maxAngularAcceleration": 480.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
@@ -134,7 +164,7 @@
     },
     {
       "name": "IntakeOff",
-      "waypointRelativePos": 4.065720798097249,
+      "waypointRelativePos": 4.15,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -145,7 +175,7 @@
     },
     {
       "name": "SpinUp",
-      "waypointRelativePos": 4.532736522198734,
+      "waypointRelativePos": 5.05,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -165,12 +195,12 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 37.17771911938507
+    "rotation": 58.97410056440545
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
-    "velocity": 0,
+    "velocity": 1.0,
     "rotation": 0.0
   },
   "useDefaultConstraints": true

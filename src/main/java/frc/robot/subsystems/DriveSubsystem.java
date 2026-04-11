@@ -430,8 +430,8 @@ public class DriveSubsystem extends SubsystemBase {
             double totalVel = horizontalVel - radialVel;
             timeOfFlight = (distance / totalVel);
             predictedPos = new Translation2d(
-                targetPos.getX() - (robotVelocity.vxMetersPerSecond * timeOfFlight),
-                targetPos.getY() - (robotVelocity.vyMetersPerSecond * timeOfFlight)
+                targetPos.getX() + (robotVelocity.vxMetersPerSecond * timeOfFlight/2),
+                targetPos.getY() + (robotVelocity.vyMetersPerSecond * timeOfFlight/2)
             );
         }
         this.adjustedRPM = newRPM;

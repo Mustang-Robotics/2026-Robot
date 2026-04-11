@@ -114,7 +114,7 @@ public class AutoLaunchDrive extends Command {
             
             // Increment intake setpoint to push balls toward the shooter
             if (!m_launcher.isJammed()) {
-                intakeSetpoint += 0.0015;
+                intakeSetpoint += 0.002;
             }
         } else {
             m_launcher.feedOff();
