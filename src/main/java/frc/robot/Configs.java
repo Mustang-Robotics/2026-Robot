@@ -87,13 +87,13 @@ public final class Configs {
                         .positionConversionFactor(1)
                         .velocityConversionFactor(1)
                         .uvwMeasurementPeriod(10)
-                        .uvwAverageDepth(2);
+                        .uvwAverageDepth(3);
 
                         LauncherConfig
                         .closedLoop
                         .feedForward.kV(0.0022)
                         .kA(0)
-                        .kS(0.13);
+                        .kS(0.161);
                 
                         Launcher_2Config
                         .idleMode(IdleMode.kCoast)
