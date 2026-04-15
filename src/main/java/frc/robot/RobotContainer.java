@@ -39,6 +39,8 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+import frc.robot.lib.BLine.*;
+import edu.wpi.first.math.controller.PIDController;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -68,7 +70,19 @@ public class RobotContainer {
   private ProfiledPIDController Center_X_PID = new ProfiledPIDController(0, 0, 0, Center_X_Speed);
   private TrapezoidProfile.Constraints Center_Y_Speed = new TrapezoidProfile.Constraints(0, 0);
   private ProfiledPIDController Center_Y_PID = new ProfiledPIDController(0, 0, 0, Center_Y_Speed);
+
   
+//BLine Path Follower  
+FollowPath.Builder pathBuilder = new FollowPath.Builder(
+    m_robotDrive,                      // The drive subsystem to require
+    m_robotDrive::getPose,             // Supplier for current robot pose
+    m_robotDrive::getRobotRelativeSpeeds,    // Supplier for current speeds
+    m_robotDrive::driveRobotRelative,               // Consumer to drive the robot
+    new PIDController(5.0, 0.0, 0.0),    // Translation PID
+    new PIDController(3.0, 0.0, 0.0),    // Rotation PID
+    new PIDController(2.0, 0.0, 0.0)     // Cross-track PID
+).withDefaultShouldFlip()                // Auto-flip for red alliance
+ .withPoseReset(m_robotDrive::resetOdometry);  // Reset odometry at path start
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -95,6 +109,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("LaunchOff", new ZeroShooter(m_launcher, m_intake));
     NamedCommands.registerCommand("Intake Up", new InstantCommand(() -> m_intake.changeSetpoint(.34)));
     NamedCommands.registerCommand("SpinUp", new InstantCommand(() -> m_launcher.setSpeed(2700)));//3150)));
+
+    
+
     configureButtonBindings();
     RotationPID.enableContinuousInput(0, 360);
     //m_chooser = AutoBuilder.buildAutoChooser();
@@ -109,6 +126,10 @@ public class RobotContainer {
     m_chooser.addOption("Blue Pass Left", BluePassingAutoLeft());
     m_chooser.addOption("Red Pass Right", RedPassingAutoRight());
     m_chooser.addOption("Red Pass Left", RedPassingAutoLeft());
+    m_chooser.addOption("Right Trench BLINE", RT());
+    m_chooser.addOption("Left Trench BLINE", LT());
+    m_chooser.addOption("Right Bump BLINE", RB());
+    m_chooser.addOption("Left Bump BLINE", LB());
     SmartDashboard.putData("Auto Chooser", m_chooser);
     
     // Configure default commands
@@ -422,7 +443,143 @@ public class RobotContainer {
       new AutoLaunchDriveIntake(false, Center_X_PID, Center_Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake)
     );
   }
-    
+
+  //Auto Events
+  private Command IntakeOn = new InstantCommand(() -> m_intake.setPercent(1));
+  private Command IntakeOff = new InstantCommand(() -> m_intake.setPercent(0));
+  private Command SpinUp = new InstantCommand(() -> m_launcher.setSpeed(3100));
+
+  //Left Side Trench Auto
+  Path LeftTrenchOne = new Path("Trench Path 1 - Left");
+  FollowPath LTOne = (FollowPath) pathBuilder.build(LeftTrenchOne);
+  Command LT1 = Commands.parallel(
+    LTOne,
+    Commands.waitUntil(() -> LTOne.getCurrentTranslationElementIndex() == 1)
+        .andThen(IntakeOn),
+    Commands.waitUntil(() -> LTOne.getCurrentTranslationElementIndex() == 5)
+        .andThen(SpinUp)
+  );
+  Path LeftTrenchTwo = new Path("Trench Path 2 - Left");
+  FollowPath LTTwo = (FollowPath) pathBuilder.build(LeftTrenchTwo);
+  Command LT2 = Commands.parallel(
+    LTTwo,
+    Commands.waitUntil(() -> LTTwo.getCurrentTranslationElementIndex() == 2)
+        .andThen(IntakeOn),
+    Commands.waitUntil(() -> LTTwo.getCurrentTranslationElementIndex() == 6)
+        .andThen(SpinUp)
+  );
+
+  private Command LT() {
+    return new SequentialCommandGroup(
+      LT1,
+      IntakeOff,
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new ZeroShooter(m_launcher, m_intake),
+      LT2,
+      IntakeOff,
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new ZeroShooter(m_launcher, m_intake));
+
+    }
+
+  //Right Side Trench Auto
+  Path RightTrenchOne = new Path("Trench Path 1");
+  FollowPath RTOne = (FollowPath) pathBuilder.build(RightTrenchOne);
+  Command RT1 = Commands.parallel(
+    RTOne,
+    Commands.waitUntil(() -> RTOne.getCurrentTranslationElementIndex() == 1)
+        .andThen(IntakeOn),
+    Commands.waitUntil(() -> RTOne.getCurrentTranslationElementIndex() == 5)
+        .andThen(SpinUp)
+  );
+  Path RightTrenchTwo = new Path("Trench Path 2");
+  FollowPath RTTwo = (FollowPath) pathBuilder.build(RightTrenchTwo);
+  Command RT2 = Commands.parallel(
+    RTTwo,
+    Commands.waitUntil(() -> RTTwo.getCurrentTranslationElementIndex() == 2)
+        .andThen(IntakeOn),
+    Commands.waitUntil(() -> RTTwo.getCurrentTranslationElementIndex() == 6)
+        .andThen(SpinUp)
+  );
+
+  private Command RT() {
+    return new SequentialCommandGroup(
+      RT1,
+      IntakeOff,
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new ZeroShooter(m_launcher, m_intake),
+      RT2,
+      IntakeOff,
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new ZeroShooter(m_launcher, m_intake));
+
+    }
+
+      //Right Side Bump Auto
+  Path RightBumpOne = new Path("Bump Path 1");
+  FollowPath RBOne = (FollowPath) pathBuilder.build(RightBumpOne);
+  Command RB1 = Commands.parallel(
+    RBOne,
+    Commands.waitUntil(() -> RBOne.getCurrentTranslationElementIndex() == 1)
+        .andThen(IntakeOn),
+    Commands.waitUntil(() -> RBOne.getCurrentTranslationElementIndex() == 4)
+        .andThen(SpinUp)
+  );
+  Path RightBumpTwo = new Path("Bump Path 2");
+  FollowPath RBTwo = (FollowPath) pathBuilder.build(RightBumpTwo);
+  Command RB2 = Commands.parallel(
+    RBTwo,
+    Commands.waitUntil(() -> RBTwo.getCurrentTranslationElementIndex() == 3)
+        .andThen(IntakeOn),
+    Commands.waitUntil(() -> RBTwo.getCurrentTranslationElementIndex() == 6)
+        .andThen(SpinUp)
+  );
+
+  private Command RB() {
+    return new SequentialCommandGroup(
+      RB1,
+      IntakeOff,
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new ZeroShooter(m_launcher, m_intake),
+      RB2,
+      IntakeOff,
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new ZeroShooter(m_launcher, m_intake));
+
+    }
+
+    //Left Side Bump Auto
+  Path LeftBumpOne = new Path("Bump Path 1 - Left");
+  FollowPath LBOne = (FollowPath) pathBuilder.build(LeftBumpOne);
+  Command LB1 = Commands.parallel(
+    LBOne,
+    Commands.waitUntil(() -> LBOne.getCurrentTranslationElementIndex() == 1)
+        .andThen(IntakeOn),
+    Commands.waitUntil(() -> LBOne.getCurrentTranslationElementIndex() == 4)
+        .andThen(SpinUp)
+  );
+  Path LeftBumpTwo = new Path("Bump Path 2 - Left");
+  FollowPath LBTwo = (FollowPath) pathBuilder.build(LeftBumpTwo);
+  Command LB2 = Commands.parallel(
+    LBTwo,
+    Commands.waitUntil(() -> LBTwo.getCurrentTranslationElementIndex() == 3)
+        .andThen(IntakeOn),
+    Commands.waitUntil(() -> LBTwo.getCurrentTranslationElementIndex() == 6)
+        .andThen(SpinUp)
+  );
+
+  private Command LB() {
+    return new SequentialCommandGroup(
+      LB1,
+      IntakeOff,
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new ZeroShooter(m_launcher, m_intake),
+      LB2,
+      IntakeOff,
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new ZeroShooter(m_launcher, m_intake));
+
+    }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
