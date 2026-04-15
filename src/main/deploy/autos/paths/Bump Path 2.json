@@ -55,6 +55,11 @@
       }
     },
     {
+      "type": "event_trigger",
+      "t_ratio": 0.0,
+      "lib_key": "IntakeOn"
+    },
+    {
       "type": "waypoint",
       "translation_target": {
         "x_meters": 8.050965604156037,
@@ -91,6 +96,11 @@
       }
     },
     {
+      "type": "event_trigger",
+      "t_ratio": 0.0,
+      "lib_key": "IntakeOff"
+    },
+    {
       "type": "waypoint",
       "translation_target": {
         "x_meters": 3.3172484011136003,
@@ -101,6 +111,11 @@
         "rotation_radians": 1.0471975511965976,
         "profiled_rotation": true
       }
+    },
+    {
+      "type": "event_trigger",
+      "t_ratio": 0.0,
+      "lib_key": "SpinUp"
     },
     {
       "type": "waypoint",

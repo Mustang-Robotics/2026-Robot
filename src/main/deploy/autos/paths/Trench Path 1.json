@@ -31,6 +31,11 @@
       }
     },
     {
+      "type": "event_trigger",
+      "t_ratio": 0.0,
+      "lib_key": "IntakeOn"
+    },
+    {
       "type": "waypoint",
       "translation_target": {
         "x_meters": 8.050965604156037,
@@ -77,6 +82,16 @@
         "rotation_radians": 1.5707963267948986,
         "profiled_rotation": true
       }
+    },
+    {
+      "type": "event_trigger",
+      "t_ratio": 0.3,
+      "lib_key": "IntakeOff"
+    },
+    {
+      "type": "event_trigger",
+      "t_ratio": 0.3,
+      "lib_key": "SpinUp"
     },
     {
       "type": "waypoint",

@@ -109,7 +109,9 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
     NamedCommands.registerCommand("LaunchOff", new ZeroShooter(m_launcher, m_intake));
     NamedCommands.registerCommand("Intake Up", new InstantCommand(() -> m_intake.changeSetpoint(.34)));
     NamedCommands.registerCommand("SpinUp", new InstantCommand(() -> m_launcher.setSpeed(2700)));//3150)));
-
+    FollowPath.registerEventTrigger("IntakeOn", IntakeOn);
+    FollowPath.registerEventTrigger("IntakeOff", IntakeOff);
+    FollowPath.registerEventTrigger("SpinUp", SpinUp);
     
 
     configureButtonBindings();
@@ -449,33 +451,35 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
   private Command IntakeOff = new InstantCommand(() -> m_intake.setPercent(0));
   private Command SpinUp = new InstantCommand(() -> m_launcher.setSpeed(3100));
 
+  
+
   //Left Side Trench Auto
   Path LeftTrenchOne = new Path("Trench Path 1 - Left");
   FollowPath LTOne = (FollowPath) pathBuilder.build(LeftTrenchOne);
-  Command LT1 = Commands.parallel(
+  /*Command LT1 = Commands.parallel(
     LTOne,
     Commands.waitUntil(() -> LTOne.getCurrentTranslationElementIndex() == 1)
         .andThen(IntakeOn),
     Commands.waitUntil(() -> LTOne.getCurrentTranslationElementIndex() == 5)
         .andThen(SpinUp)
-  );
+  );*/
   Path LeftTrenchTwo = new Path("Trench Path 2 - Left");
   FollowPath LTTwo = (FollowPath) pathBuilder.build(LeftTrenchTwo);
-  Command LT2 = Commands.parallel(
+  /*Command LT2 = Commands.parallel(
     LTTwo,
     Commands.waitUntil(() -> LTTwo.getCurrentTranslationElementIndex() == 2)
         .andThen(IntakeOn),
     Commands.waitUntil(() -> LTTwo.getCurrentTranslationElementIndex() == 6)
         .andThen(SpinUp)
-  );
+  );*/
 
   private Command LT() {
     return new SequentialCommandGroup(
-      LT1,
+      LTOne,
       IntakeOff,
       new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
       new ZeroShooter(m_launcher, m_intake),
-      LT2,
+      LTTwo,
       IntakeOff,
       new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
       new ZeroShooter(m_launcher, m_intake));
@@ -485,30 +489,30 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
   //Right Side Trench Auto
   Path RightTrenchOne = new Path("Trench Path 1");
   FollowPath RTOne = (FollowPath) pathBuilder.build(RightTrenchOne);
-  Command RT1 = Commands.parallel(
+  /*Command RT1 = Commands.parallel(
     RTOne,
     Commands.waitUntil(() -> RTOne.getCurrentTranslationElementIndex() == 1)
         .andThen(IntakeOn),
     Commands.waitUntil(() -> RTOne.getCurrentTranslationElementIndex() == 5)
         .andThen(SpinUp)
-  );
+  );*/
   Path RightTrenchTwo = new Path("Trench Path 2");
   FollowPath RTTwo = (FollowPath) pathBuilder.build(RightTrenchTwo);
-  Command RT2 = Commands.parallel(
+  /*Command RT2 = Commands.parallel(
     RTTwo,
     Commands.waitUntil(() -> RTTwo.getCurrentTranslationElementIndex() == 2)
         .andThen(IntakeOn),
     Commands.waitUntil(() -> RTTwo.getCurrentTranslationElementIndex() == 6)
         .andThen(SpinUp)
-  );
+  );*/
 
   private Command RT() {
     return new SequentialCommandGroup(
-      RT1,
+      RTOne,
       IntakeOff,
       new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
       new ZeroShooter(m_launcher, m_intake),
-      RT2,
+      RTTwo,
       IntakeOff,
       new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
       new ZeroShooter(m_launcher, m_intake));
@@ -518,30 +522,30 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
       //Right Side Bump Auto
   Path RightBumpOne = new Path("Bump Path 1");
   FollowPath RBOne = (FollowPath) pathBuilder.build(RightBumpOne);
-  Command RB1 = Commands.parallel(
+  /*Command RB1 = Commands.parallel(
     RBOne,
     Commands.waitUntil(() -> RBOne.getCurrentTranslationElementIndex() == 1)
         .andThen(IntakeOn),
     Commands.waitUntil(() -> RBOne.getCurrentTranslationElementIndex() == 4)
         .andThen(SpinUp)
-  );
+  );*/
   Path RightBumpTwo = new Path("Bump Path 2");
   FollowPath RBTwo = (FollowPath) pathBuilder.build(RightBumpTwo);
-  Command RB2 = Commands.parallel(
+  /*Command RB2 = Commands.parallel(
     RBTwo,
     Commands.waitUntil(() -> RBTwo.getCurrentTranslationElementIndex() == 3)
         .andThen(IntakeOn),
     Commands.waitUntil(() -> RBTwo.getCurrentTranslationElementIndex() == 6)
         .andThen(SpinUp)
-  );
+  );*/
 
   private Command RB() {
     return new SequentialCommandGroup(
-      RB1,
+      RBOne,
       IntakeOff,
       new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
       new ZeroShooter(m_launcher, m_intake),
-      RB2,
+      RBTwo,
       IntakeOff,
       new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
       new ZeroShooter(m_launcher, m_intake));
@@ -551,30 +555,30 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
     //Left Side Bump Auto
   Path LeftBumpOne = new Path("Bump Path 1 - Left");
   FollowPath LBOne = (FollowPath) pathBuilder.build(LeftBumpOne);
-  Command LB1 = Commands.parallel(
+  /*Command LB1 = Commands.parallel(
     LBOne,
     Commands.waitUntil(() -> LBOne.getCurrentTranslationElementIndex() == 1)
         .andThen(IntakeOn),
     Commands.waitUntil(() -> LBOne.getCurrentTranslationElementIndex() == 4)
         .andThen(SpinUp)
-  );
+  );*/
   Path LeftBumpTwo = new Path("Bump Path 2 - Left");
   FollowPath LBTwo = (FollowPath) pathBuilder.build(LeftBumpTwo);
-  Command LB2 = Commands.parallel(
+  /*Command LB2 = Commands.parallel(
     LBTwo,
     Commands.waitUntil(() -> LBTwo.getCurrentTranslationElementIndex() == 3)
         .andThen(IntakeOn),
     Commands.waitUntil(() -> LBTwo.getCurrentTranslationElementIndex() == 6)
         .andThen(SpinUp)
-  );
+  );*/
 
   private Command LB() {
     return new SequentialCommandGroup(
-      LB1,
+      LBOne,
       IntakeOff,
       new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
       new ZeroShooter(m_launcher, m_intake),
-      LB2,
+      LBTwo,
       IntakeOff,
       new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
       new ZeroShooter(m_launcher, m_intake));
