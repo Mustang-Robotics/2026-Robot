@@ -476,11 +476,11 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
   private Command LT() {
     return new SequentialCommandGroup(
       LTOne,
-      IntakeOff,
+      //IntakeOff,
       new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
       new ZeroShooter(m_launcher, m_intake),
       LTTwo,
-      IntakeOff,
+      //IntakeOff,
       new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
       new ZeroShooter(m_launcher, m_intake));
 
@@ -509,11 +509,11 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
   private Command RT() {
     return new SequentialCommandGroup(
       RTOne,
-      IntakeOff,
+      //IntakeOff,
       new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
       new ZeroShooter(m_launcher, m_intake),
       RTTwo,
-      IntakeOff,
+      //IntakeOff,
       new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
       new ZeroShooter(m_launcher, m_intake));
 
@@ -542,11 +542,11 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
   private Command RB() {
     return new SequentialCommandGroup(
       RBOne,
-      IntakeOff,
+      //IntakeOff,
       new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
       new ZeroShooter(m_launcher, m_intake),
       RBTwo,
-      IntakeOff,
+      //IntakeOff,
       new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
       new ZeroShooter(m_launcher, m_intake));
 
@@ -575,11 +575,11 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
   private Command LB() {
     return new SequentialCommandGroup(
       LBOne,
-      IntakeOff,
+      //IntakeOff,
       new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
       new ZeroShooter(m_launcher, m_intake),
       LBTwo,
-      IntakeOff,
+      //IntakeOff,
       new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
       new ZeroShooter(m_launcher, m_intake));
 
