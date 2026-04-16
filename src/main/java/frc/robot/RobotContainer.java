@@ -78,9 +78,9 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
     m_robotDrive::getPose,             // Supplier for current robot pose
     m_robotDrive::getRobotRelativeSpeeds,    // Supplier for current speeds
     m_robotDrive::driveRobotRelative,               // Consumer to drive the robot
-    new PIDController(4.5, 0.0, 0.0),    // Translation PID
-    new PIDController(3.0, 0.0, 0.0),    // Rotation PID
-    new PIDController(2.0, 0.0, 0.0)     // Cross-track PID
+    new PIDController(4.1, 0.0, 0.05),    // Translation PID
+    new PIDController(7.0, 0.0, 0.0),    // Rotation PID
+    new PIDController(2, 0.0, 0.0)     // Cross-track PID
 ).withDefaultShouldFlip()                // Auto-flip for red alliance
  .withPoseReset(m_robotDrive::resetOdometry);  // Reset odometry at path start
 
