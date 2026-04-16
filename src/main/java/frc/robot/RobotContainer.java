@@ -78,7 +78,7 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
     m_robotDrive::getPose,             // Supplier for current robot pose
     m_robotDrive::getRobotRelativeSpeeds,    // Supplier for current speeds
     m_robotDrive::driveRobotRelative,               // Consumer to drive the robot
-    new PIDController(5.0, 0.0, 0.0),    // Translation PID
+    new PIDController(4.5, 0.0, 0.0),    // Translation PID
     new PIDController(3.0, 0.0, 0.0),    // Rotation PID
     new PIDController(2.0, 0.0, 0.0)     // Cross-track PID
 ).withDefaultShouldFlip()                // Auto-flip for red alliance
@@ -179,6 +179,7 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
   m_driverController.pov(0).onFalse(new InstantCommand(() -> m_launcher.feedOff()));
   m_driverController.pov(180).onTrue(new InstantCommand(() -> m_launcher.feed()));
   m_driverController.pov(180).onFalse(new InstantCommand(() -> m_launcher.feedOff()));
+  m_driverController.pov(270).onTrue(Tune);
 
    }
 
@@ -584,6 +585,12 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
       new ZeroShooter(m_launcher, m_intake));
 
     }
+
+    //Tuning Auto
+  Path Tuning = new Path("Tuning Path");
+  FollowPath Tune = (FollowPath) pathBuilder.build(Tuning);
+
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
