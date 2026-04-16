@@ -20,6 +20,6 @@
     "default_max_velocity_deg_per_sec": 1080.0,
     "default_max_acceleration_deg_per_sec2": 2160.0,
     "default_end_translation_tolerance_meters": 0.03,
-    "default_end_rotation_tolerance_deg": 2.0
+    "default_end_rotation_tolerance_deg": 5.0
   }
 }
