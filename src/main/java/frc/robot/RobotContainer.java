@@ -132,6 +132,8 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
     m_chooser.addOption("Left Trench BLINE", LT());
     m_chooser.addOption("Right Bump BLINE", RB());
     m_chooser.addOption("Left Bump BLINE", LB());
+    m_chooser.addOption("Depot Bump BLINE", DB());
+    m_chooser.addOption("Depot Trench BLINE", DT());
     SmartDashboard.putData("Auto Chooser", m_chooser);
     
     // Configure default commands
@@ -581,6 +583,45 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
       new ZeroShooter(m_launcher, m_intake),
       LBTwo,
       //IntakeOff,
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new ZeroShooter(m_launcher, m_intake));
+
+    }
+
+    //Depot Bump Auto
+  Path DepotIntake = new Path("Depot Path Intake");
+  FollowPath DPI = (FollowPath) pathBuilder.build(DepotIntake);
+  
+  Path DepotLaunch = new Path("Depot Path Launch");
+  FollowPath DPL = (FollowPath) pathBuilder.build(DepotLaunch);
+
+  Path DepotBump = new Path("Depot Path Bump");
+  FollowPath DPB = (FollowPath) pathBuilder.build(DepotBump);
+
+  private Command DB() {
+    return new SequentialCommandGroup(
+      DPI,
+      DPL,
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new ZeroShooter(m_launcher, m_intake),
+      DPB,
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new ZeroShooter(m_launcher, m_intake));
+
+    }
+
+    //Depot Trench Auto
+
+  Path DepotTrench = new Path("Depot Path Trench");
+  FollowPath DPT = (FollowPath) pathBuilder.build(DepotTrench);
+
+  private Command DT() {
+    return new SequentialCommandGroup(
+      DPI,
+      DPL,
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new ZeroShooter(m_launcher, m_intake),
+      DPT,
       new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
       new ZeroShooter(m_launcher, m_intake));
 
