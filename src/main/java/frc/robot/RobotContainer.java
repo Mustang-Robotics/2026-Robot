@@ -589,19 +589,19 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
     }
 
     //Depot Bump Auto
-  Path DepotIntake = new Path("Depot Path Intake");
-  FollowPath DPI = (FollowPath) pathBuilder.build(DepotIntake);
+  Path DepotIntakeB = new Path("Depot Path Intake");
+  FollowPath DPIB = (FollowPath) pathBuilder.build(DepotIntakeB);
   
-  Path DepotLaunch = new Path("Depot Path Launch");
-  FollowPath DPL = (FollowPath) pathBuilder.build(DepotLaunch);
+  Path DepotLaunchB = new Path("Depot Path Launch");
+  FollowPath DPLB = (FollowPath) pathBuilder.build(DepotLaunchB);
 
   Path DepotBump = new Path("Depot Path Bump");
   FollowPath DPB = (FollowPath) pathBuilder.build(DepotBump);
 
   private Command DB() {
     return new SequentialCommandGroup(
-      DPI,
-      DPL,
+      DPIB,
+      DPLB,
       new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
       new ZeroShooter(m_launcher, m_intake),
       DPB,
@@ -611,14 +611,18 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
     }
 
     //Depot Trench Auto
-
+  Path DepotIntakeT = new Path("Depot Path Intake");
+  FollowPath DPIT = (FollowPath) pathBuilder.build(DepotIntakeT);
+  
+  Path DepotLaunchT = new Path("Depot Path Launch");
+  FollowPath DPLT = (FollowPath) pathBuilder.build(DepotLaunchT);
   Path DepotTrench = new Path("Depot Path Trench");
   FollowPath DPT = (FollowPath) pathBuilder.build(DepotTrench);
 
   private Command DT() {
     return new SequentialCommandGroup(
-      DPI,
-      DPL,
+      DPIT,
+      DPLT,
       new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
       new ZeroShooter(m_launcher, m_intake),
       DPT,
