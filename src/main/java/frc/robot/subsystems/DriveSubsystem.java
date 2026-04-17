@@ -364,7 +364,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   public ChassisSpeeds getFieldRelativeSpeeds(){
     ChassisSpeeds robotSpeeds = getRobotRelativeSpeeds();
-    return ChassisSpeeds.froRobotRelativeSpeeds(
+    return ChassisSpeeds.fromRobotRelativeSpeeds(
       robotSpeeds.vxMetersPerSecond,
       robotSpeeds.vyMetersPerSecond,
       robotSpeeds.omegaRadiansPerSecond,
