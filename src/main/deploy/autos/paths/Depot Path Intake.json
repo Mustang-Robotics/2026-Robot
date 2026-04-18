@@ -18,8 +18,20 @@
       "lib_key": "IntakeOn"
     },
     {
+      "type": "waypoint",
+      "translation_target": {
+        "x_meters": 1.75,
+        "y_meters": 6.0,
+        "intermediate_handoff_radius_meters": 0.2
+      },
+      "rotation_target": {
+        "rotation_radians": 0.0,
+        "profiled_rotation": true
+      }
+    },
+    {
       "type": "event_trigger",
-      "t_ratio": 0.9,
+      "t_ratio": 0.9000000000000001,
       "lib_key": "SpinUp"
     },
     {
@@ -34,5 +46,15 @@
         "profiled_rotation": true
       }
     }
-  ]
+  ],
+  "constraints": {
+    "end_translation_tolerance_meters": 0.15,
+    "max_velocity_meters_per_sec": [
+      {
+        "value": 1.0,
+        "start_ordinal": 2,
+        "end_ordinal": 2
+      }
+    ]
+  }
 }

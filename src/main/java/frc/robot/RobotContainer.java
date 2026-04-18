@@ -15,6 +15,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AutoLaunchDrive;
 import frc.robot.commands.AutoLaunchDriveIntake;
+import frc.robot.commands.AutoLaunchDriveLess;
 import frc.robot.commands.CheckLaunchSpeed;
 import frc.robot.commands.FieldCentricDrive;
 import frc.robot.commands.IntakeLaunch;
@@ -78,7 +79,7 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
     m_robotDrive::getPose,             // Supplier for current robot pose
     m_robotDrive::getRobotRelativeSpeeds,    // Supplier for current speeds
     m_robotDrive::driveRobotRelative,               // Consumer to drive the robot
-    new PIDController(4.1, 0.0, 0.05),    // Translation PID
+    new PIDController(4.1, 0.0, 0.02),    // Translation PID
     new PIDController(7.0, 0.0, 0.0),    // Rotation PID
     new PIDController(2, 0.0, 0.0)     // Cross-track PID
 ).withDefaultShouldFlip()                // Auto-flip for red alliance
@@ -182,6 +183,8 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
   m_driverController.pov(180).onTrue(new InstantCommand(() -> m_launcher.feed()));
   m_driverController.pov(180).onFalse(new InstantCommand(() -> m_launcher.feedOff()));
   m_driverController.pov(270).onTrue(Tune);
+  m_driverController.pov(90).onTrue(TestShoot());
+  m_driverController.pov(90).onFalse(new ZeroShooter(m_launcher, m_intake));
 
    }
 
@@ -602,10 +605,10 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
     return new SequentialCommandGroup(
       DPIB,
       DPLB,
-      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new AutoLaunchDriveLess(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(2.5),
       new ZeroShooter(m_launcher, m_intake),
       DPB,
-      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(4.5),
       new ZeroShooter(m_launcher, m_intake));
 
     }
@@ -623,10 +626,10 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
     return new SequentialCommandGroup(
       DPIT,
       DPLT,
-      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new AutoLaunchDriveLess(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(2.5),
       new ZeroShooter(m_launcher, m_intake),
       DPT,
-      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(4.5),
       new ZeroShooter(m_launcher, m_intake));
 
     }
@@ -643,6 +646,22 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
    */
   public Command getAutonomousCommand() {
     return m_chooser.getSelected();
+  }
+
+  private Command TestShoot() {
+    return new InstantCommand(() -> m_launcher.setSpeed(1500))
+    .andThen(
+        new RunCommand(() -> {
+            // 1. Get where we are now
+            double current = m_intake.getSetpoint();
+            
+            // 2. Add a small step (e.g., 0.005) but stop at 0.25
+            m_intake.changeSetpoint(Math.min(0.25, current + 0.0015));
+            
+            // 3. Keep the feeder running simultaneously
+            m_launcher.feed();
+        }, m_intake, m_launcher) // Claims both subsystems
+    );
   }
 
 }
