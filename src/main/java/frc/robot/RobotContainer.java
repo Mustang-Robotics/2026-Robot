@@ -5,17 +5,17 @@
 package frc.robot;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
+//import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.wpilibj.DriverStation;
+//import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.AutoConstants;
+//import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AutoLaunchDrive;
-import frc.robot.commands.AutoLaunchDriveIntake;
-import frc.robot.commands.AutoLaunchDriveLess;
+//import frc.robot.commands.AutoLaunchDriveIntake;
+//import frc.robot.commands.AutoLaunchDriveLess;
 import frc.robot.commands.CheckLaunchSpeed;
 import frc.robot.commands.FieldCentricDrive;
 import frc.robot.commands.IntakeLaunch;
@@ -28,18 +28,19 @@ import frc.robot.commands.ZeroShooter;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LauncherSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+//import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import com.pathplanner.lib.auto.AutoBuilder;
+//import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
+//import com.pathplanner.lib.path.PathConstraints;
+//import com.pathplanner.lib.path.PathPlannerPath;
 import frc.robot.lib.BLine.*;
 import edu.wpi.first.math.controller.PIDController;
 
@@ -67,10 +68,10 @@ public class RobotContainer {
   private ProfiledPIDController X_PID = new ProfiledPIDController(0, 0, 0.0, X_Speed);
   private TrapezoidProfile.Constraints Y_Speed = new TrapezoidProfile.Constraints(0.0, 0.0);
   private ProfiledPIDController Y_PID = new ProfiledPIDController(0, 0, 0.0, Y_Speed);
-  private TrapezoidProfile.Constraints Center_X_Speed = new TrapezoidProfile.Constraints(0, 0);
-  private ProfiledPIDController Center_X_PID = new ProfiledPIDController(0, 0, 0, Center_X_Speed);
-  private TrapezoidProfile.Constraints Center_Y_Speed = new TrapezoidProfile.Constraints(0, 0);
-  private ProfiledPIDController Center_Y_PID = new ProfiledPIDController(0, 0, 0, Center_Y_Speed);
+  //private TrapezoidProfile.Constraints Center_X_Speed = new TrapezoidProfile.Constraints(0, 0);
+  //private ProfiledPIDController Center_X_PID = new ProfiledPIDController(0, 0, 0, Center_X_Speed);
+  //private TrapezoidProfile.Constraints Center_Y_Speed = new TrapezoidProfile.Constraints(0, 0);
+  //private ProfiledPIDController Center_Y_PID = new ProfiledPIDController(0, 0, 0, Center_Y_Speed);
 
   
 //BLine Path Follower  
@@ -119,22 +120,23 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
     RotationPID.enableContinuousInput(0, 360);
     //m_chooser = AutoBuilder.buildAutoChooser();
     m_chooser.setDefaultOption("none", new InstantCommand());
-    m_chooser.addOption("Blue Right", BlueRightAuto());
-    m_chooser.addOption("Blue Left", BlueLeftAuto());
-    m_chooser.addOption("Red Right", RedRightAuto());
-    m_chooser.addOption("Red Left", RedLeftAuto());
-    m_chooser.addOption("Blue Center", BlueCenterAuto());
-    m_chooser.addOption("Red Center", RedCenterAuto());
-    m_chooser.addOption("Blue Pass Right", BluePassingAutoRight());
-    m_chooser.addOption("Blue Pass Left", BluePassingAutoLeft());
-    m_chooser.addOption("Red Pass Right", RedPassingAutoRight());
-    m_chooser.addOption("Red Pass Left", RedPassingAutoLeft());
+    //m_chooser.addOption("Blue Right", BlueRightAuto());
+    //m_chooser.addOption("Blue Left", BlueLeftAuto());
+    //m_chooser.addOption("Red Right", RedRightAuto());
+    //m_chooser.addOption("Red Left", RedLeftAuto());
+    //m_chooser.addOption("Blue Center", BlueCenterAuto());
+    //m_chooser.addOption("Red Center", RedCenterAuto());
+    //m_chooser.addOption("Blue Pass Right", BluePassingAutoRight());
+    //m_chooser.addOption("Blue Pass Left", BluePassingAutoLeft());
+    //m_chooser.addOption("Red Pass Right", RedPassingAutoRight());
+    //m_chooser.addOption("Red Pass Left", RedPassingAutoLeft());
     m_chooser.addOption("Right Trench BLINE", RT());
     m_chooser.addOption("Left Trench BLINE", LT());
     m_chooser.addOption("Right Bump BLINE", RB());
     m_chooser.addOption("Left Bump BLINE", LB());
-    m_chooser.addOption("Depot Bump BLINE", DB());
-    m_chooser.addOption("Depot Trench BLINE", DT());
+    m_chooser.addOption("Delay Depot", DD());
+
+    SmartDashboard.putNumber("Delay", 3.0);
     SmartDashboard.putData("Auto Chooser", m_chooser);
     
     // Configure default commands
@@ -182,13 +184,140 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
   m_driverController.pov(0).onFalse(new InstantCommand(() -> m_launcher.feedOff()));
   m_driverController.pov(180).onTrue(new InstantCommand(() -> m_launcher.feed()));
   m_driverController.pov(180).onFalse(new InstantCommand(() -> m_launcher.feedOff()));
-  m_driverController.pov(270).onTrue(Tune);
-  m_driverController.pov(90).onTrue(TestShoot());
-  m_driverController.pov(90).onFalse(new ZeroShooter(m_launcher, m_intake));
+  //m_driverController.pov(270).onTrue(Tune);
+  //m_driverController.pov(90).onTrue(TestShoot());
+  //m_driverController.pov(90).onFalse(new ZeroShooter(m_launcher, m_intake));
 
    }
 
-  private Command BlueRightPath() {
+
+  //Auto Events
+  private Command IntakeOn = new InstantCommand(() -> m_intake.setPercent(1));
+  private Command IntakeOff = new InstantCommand(() -> m_intake.setPercent(0));
+  private Command SpinUp = new InstantCommand(() -> m_launcher.setSpeed(3100));
+
+  
+
+  //Left Side Trench Auto
+  Path LeftTrenchOne = new Path("Trench Path 1 - Left");
+  FollowPath LTOne = (FollowPath) pathBuilder.build(LeftTrenchOne);
+  Path LeftTrenchTwo = new Path("Trench Path 2 - Left");
+  FollowPath LTTwo = (FollowPath) pathBuilder.build(LeftTrenchTwo);
+
+
+  private Command LT() {
+    return new SequentialCommandGroup(
+      LTOne,
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new ZeroShooter(m_launcher, m_intake),
+      LTTwo,
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new ZeroShooter(m_launcher, m_intake));
+
+    }
+
+  //Right Side Trench Auto
+  Path RightTrenchOne = new Path("Trench Path 1");
+  FollowPath RTOne = (FollowPath) pathBuilder.build(RightTrenchOne);
+  Path RightTrenchTwo = new Path("Trench Path 2");
+  FollowPath RTTwo = (FollowPath) pathBuilder.build(RightTrenchTwo);
+
+  private Command RT() {
+    return new SequentialCommandGroup(
+      RTOne,
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new ZeroShooter(m_launcher, m_intake),
+      RTTwo,
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new ZeroShooter(m_launcher, m_intake));
+
+    }
+
+      //Right Side Bump Auto
+  Path RightBumpOne = new Path("Bump Path 1");
+  FollowPath RBOne = (FollowPath) pathBuilder.build(RightBumpOne);
+  Path RightBumpTwo = new Path("Bump Path 2");
+  FollowPath RBTwo = (FollowPath) pathBuilder.build(RightBumpTwo);
+
+  private Command RB() {
+    return new SequentialCommandGroup(
+      RBOne,
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new ZeroShooter(m_launcher, m_intake),
+      RBTwo,
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new ZeroShooter(m_launcher, m_intake));
+
+    }
+
+    //Left Side Bump Auto
+  Path LeftBumpOne = new Path("Bump Path 1 - Left");
+  FollowPath LBOne = (FollowPath) pathBuilder.build(LeftBumpOne);
+  Path LeftBumpTwo = new Path("Bump Path 2 - Left");
+  FollowPath LBTwo = (FollowPath) pathBuilder.build(LeftBumpTwo);
+
+  private Command LB() {
+    return new SequentialCommandGroup(
+      LBOne,
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new ZeroShooter(m_launcher, m_intake),
+      LBTwo,
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new ZeroShooter(m_launcher, m_intake));
+
+    }
+
+      //Left Side Bump Auto
+  Path DelayDepot1 = new Path("Delayed Depot 1");
+  FollowPath DD1 = (FollowPath) pathBuilder.build(DelayDepot1);
+  Path DelayDepot2 = new Path("Delayed Depot 2");
+  FollowPath DD2 = (FollowPath) pathBuilder.build(DelayDepot2);
+
+  private Command DD() {
+    return new SequentialCommandGroup(
+      new WaitCommand(SmartDashboard.getNumber("Delay", 3)),
+      DD1,
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new ZeroShooter(m_launcher, m_intake),
+      DD2,
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new ZeroShooter(m_launcher, m_intake));
+
+    }
+
+
+    //Tuning Auto
+  Path Tuning = new Path("Tuning Path");
+  FollowPath Tune = (FollowPath) pathBuilder.build(Tuning);
+
+
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
+  public Command getAutonomousCommand() {
+    return m_chooser.getSelected();
+  }
+
+  /*private Command TestShoot() {
+    return new InstantCommand(() -> m_launcher.setSpeed(1500))
+    .andThen(
+        new RunCommand(() -> {
+            // 1. Get where we are now
+            double current = m_intake.getSetpoint();
+            
+            // 2. Add a small step (e.g., 0.005) but stop at 0.25
+            m_intake.changeSetpoint(Math.min(0.25, current + 0.0015));
+            
+            // 3. Keep the feeder running simultaneously
+            m_launcher.feed();
+        }, m_intake, m_launcher) // Claims both subsystems
+    );
+  }*/
+
+  //Old PathPlanner Paths
+  /*private Command BlueRightPath() {
     try{
         // Load the path you want to follow using its name in the GUI
         PathPlannerPath path = PathPlannerPath.fromPathFile("Right Side Loop 1");
@@ -450,218 +579,6 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
       RedPassingPathLeft(),
       new AutoLaunchDriveIntake(false, Center_X_PID, Center_Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake)
     );
-  }
-
-  //Auto Events
-  private Command IntakeOn = new InstantCommand(() -> m_intake.setPercent(1));
-  private Command IntakeOff = new InstantCommand(() -> m_intake.setPercent(0));
-  private Command SpinUp = new InstantCommand(() -> m_launcher.setSpeed(3100));
-
-  
-
-  //Left Side Trench Auto
-  Path LeftTrenchOne = new Path("Trench Path 1 - Left");
-  FollowPath LTOne = (FollowPath) pathBuilder.build(LeftTrenchOne);
-  /*Command LT1 = Commands.parallel(
-    LTOne,
-    Commands.waitUntil(() -> LTOne.getCurrentTranslationElementIndex() == 1)
-        .andThen(IntakeOn),
-    Commands.waitUntil(() -> LTOne.getCurrentTranslationElementIndex() == 5)
-        .andThen(SpinUp)
-  );*/
-  Path LeftTrenchTwo = new Path("Trench Path 2 - Left");
-  FollowPath LTTwo = (FollowPath) pathBuilder.build(LeftTrenchTwo);
-  /*Command LT2 = Commands.parallel(
-    LTTwo,
-    Commands.waitUntil(() -> LTTwo.getCurrentTranslationElementIndex() == 2)
-        .andThen(IntakeOn),
-    Commands.waitUntil(() -> LTTwo.getCurrentTranslationElementIndex() == 6)
-        .andThen(SpinUp)
-  );*/
-
-  private Command LT() {
-    return new SequentialCommandGroup(
-      LTOne,
-      //IntakeOff,
-      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
-      new ZeroShooter(m_launcher, m_intake),
-      LTTwo,
-      //IntakeOff,
-      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
-      new ZeroShooter(m_launcher, m_intake));
-
-    }
-
-  //Right Side Trench Auto
-  Path RightTrenchOne = new Path("Trench Path 1");
-  FollowPath RTOne = (FollowPath) pathBuilder.build(RightTrenchOne);
-  /*Command RT1 = Commands.parallel(
-    RTOne,
-    Commands.waitUntil(() -> RTOne.getCurrentTranslationElementIndex() == 1)
-        .andThen(IntakeOn),
-    Commands.waitUntil(() -> RTOne.getCurrentTranslationElementIndex() == 5)
-        .andThen(SpinUp)
-  );*/
-  Path RightTrenchTwo = new Path("Trench Path 2");
-  FollowPath RTTwo = (FollowPath) pathBuilder.build(RightTrenchTwo);
-  /*Command RT2 = Commands.parallel(
-    RTTwo,
-    Commands.waitUntil(() -> RTTwo.getCurrentTranslationElementIndex() == 2)
-        .andThen(IntakeOn),
-    Commands.waitUntil(() -> RTTwo.getCurrentTranslationElementIndex() == 6)
-        .andThen(SpinUp)
-  );*/
-
-  private Command RT() {
-    return new SequentialCommandGroup(
-      RTOne,
-      //IntakeOff,
-      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
-      new ZeroShooter(m_launcher, m_intake),
-      RTTwo,
-      //IntakeOff,
-      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
-      new ZeroShooter(m_launcher, m_intake));
-
-    }
-
-      //Right Side Bump Auto
-  Path RightBumpOne = new Path("Bump Path 1");
-  FollowPath RBOne = (FollowPath) pathBuilder.build(RightBumpOne);
-  /*Command RB1 = Commands.parallel(
-    RBOne,
-    Commands.waitUntil(() -> RBOne.getCurrentTranslationElementIndex() == 1)
-        .andThen(IntakeOn),
-    Commands.waitUntil(() -> RBOne.getCurrentTranslationElementIndex() == 4)
-        .andThen(SpinUp)
-  );*/
-  Path RightBumpTwo = new Path("Bump Path 2");
-  FollowPath RBTwo = (FollowPath) pathBuilder.build(RightBumpTwo);
-  /*Command RB2 = Commands.parallel(
-    RBTwo,
-    Commands.waitUntil(() -> RBTwo.getCurrentTranslationElementIndex() == 3)
-        .andThen(IntakeOn),
-    Commands.waitUntil(() -> RBTwo.getCurrentTranslationElementIndex() == 6)
-        .andThen(SpinUp)
-  );*/
-
-  private Command RB() {
-    return new SequentialCommandGroup(
-      RBOne,
-      //IntakeOff,
-      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
-      new ZeroShooter(m_launcher, m_intake),
-      RBTwo,
-      //IntakeOff,
-      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
-      new ZeroShooter(m_launcher, m_intake));
-
-    }
-
-    //Left Side Bump Auto
-  Path LeftBumpOne = new Path("Bump Path 1 - Left");
-  FollowPath LBOne = (FollowPath) pathBuilder.build(LeftBumpOne);
-  /*Command LB1 = Commands.parallel(
-    LBOne,
-    Commands.waitUntil(() -> LBOne.getCurrentTranslationElementIndex() == 1)
-        .andThen(IntakeOn),
-    Commands.waitUntil(() -> LBOne.getCurrentTranslationElementIndex() == 4)
-        .andThen(SpinUp)
-  );*/
-  Path LeftBumpTwo = new Path("Bump Path 2 - Left");
-  FollowPath LBTwo = (FollowPath) pathBuilder.build(LeftBumpTwo);
-  /*Command LB2 = Commands.parallel(
-    LBTwo,
-    Commands.waitUntil(() -> LBTwo.getCurrentTranslationElementIndex() == 3)
-        .andThen(IntakeOn),
-    Commands.waitUntil(() -> LBTwo.getCurrentTranslationElementIndex() == 6)
-        .andThen(SpinUp)
-  );*/
-
-  private Command LB() {
-    return new SequentialCommandGroup(
-      LBOne,
-      //IntakeOff,
-      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
-      new ZeroShooter(m_launcher, m_intake),
-      LBTwo,
-      //IntakeOff,
-      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
-      new ZeroShooter(m_launcher, m_intake));
-
-    }
-
-    //Depot Bump Auto
-  Path DepotIntakeB = new Path("Depot Path Intake");
-  FollowPath DPIB = (FollowPath) pathBuilder.build(DepotIntakeB);
-  
-  Path DepotLaunchB = new Path("Depot Path Launch");
-  FollowPath DPLB = (FollowPath) pathBuilder.build(DepotLaunchB);
-
-  Path DepotBump = new Path("Depot Path Bump");
-  FollowPath DPB = (FollowPath) pathBuilder.build(DepotBump);
-
-  private Command DB() {
-    return new SequentialCommandGroup(
-      DPIB,
-      DPLB,
-      new AutoLaunchDriveLess(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(2.5),
-      new ZeroShooter(m_launcher, m_intake),
-      DPB,
-      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(4.5),
-      new ZeroShooter(m_launcher, m_intake));
-
-    }
-
-    //Depot Trench Auto
-  Path DepotIntakeT = new Path("Depot Path Intake");
-  FollowPath DPIT = (FollowPath) pathBuilder.build(DepotIntakeT);
-  
-  Path DepotLaunchT = new Path("Depot Path Launch");
-  FollowPath DPLT = (FollowPath) pathBuilder.build(DepotLaunchT);
-  Path DepotTrench = new Path("Depot Path Trench");
-  FollowPath DPT = (FollowPath) pathBuilder.build(DepotTrench);
-
-  private Command DT() {
-    return new SequentialCommandGroup(
-      DPIT,
-      DPLT,
-      new AutoLaunchDriveLess(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(2.5),
-      new ZeroShooter(m_launcher, m_intake),
-      DPT,
-      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(4.5),
-      new ZeroShooter(m_launcher, m_intake));
-
-    }
-
-    //Tuning Auto
-  Path Tuning = new Path("Tuning Path");
-  FollowPath Tune = (FollowPath) pathBuilder.build(Tuning);
-
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    return m_chooser.getSelected();
-  }
-
-  private Command TestShoot() {
-    return new InstantCommand(() -> m_launcher.setSpeed(1500))
-    .andThen(
-        new RunCommand(() -> {
-            // 1. Get where we are now
-            double current = m_intake.getSetpoint();
-            
-            // 2. Add a small step (e.g., 0.005) but stop at 0.25
-            m_intake.changeSetpoint(Math.min(0.25, current + 0.0015));
-            
-            // 3. Keep the feeder running simultaneously
-            m_launcher.feed();
-        }, m_intake, m_launcher) // Claims both subsystems
-    );
-  }
+  }*/
 
 }
