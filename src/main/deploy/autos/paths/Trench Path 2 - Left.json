@@ -68,8 +68,8 @@
     {
       "type": "waypoint",
       "translation_target": {
-        "x_meters": 7.94674142448849,
-        "y_meters": 5.038,
+        "x_meters": 7.847,
+        "y_meters": 4.639,
         "intermediate_handoff_radius_meters": 0.2
       },
       "rotation_target": {

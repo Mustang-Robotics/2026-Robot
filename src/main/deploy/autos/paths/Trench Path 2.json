@@ -15,7 +15,7 @@
     {
       "type": "rotation",
       "rotation_radians": 0.0,
-      "t_ratio": 0.2499999999999996,
+      "t_ratio": 0.2499999999999995,
       "profiled_rotation": true
     },
     {
@@ -68,8 +68,8 @@
     {
       "type": "waypoint",
       "translation_target": {
-        "x_meters": 7.94674142448849,
-        "y_meters": 3.0308144345733394,
+        "x_meters": 7.846869538367493,
+        "y_meters": 3.430301979057324,
         "intermediate_handoff_radius_meters": 0.2
       },
       "rotation_target": {
@@ -103,12 +103,12 @@
     },
     {
       "type": "event_trigger",
-      "t_ratio": 0.3,
+      "t_ratio": 0.2999999999999999,
       "lib_key": "IntakeOff"
     },
     {
       "type": "event_trigger",
-      "t_ratio": 0.3,
+      "t_ratio": 0.2999999999999999,
       "lib_key": "SpinUp"
     },
     {
