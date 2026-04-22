@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 //import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj.Timer;
 //import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -28,13 +29,14 @@ import frc.robot.commands.ZeroShooter;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LauncherSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 //import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+//import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 //import com.pathplanner.lib.auto.AutoBuilder;
@@ -275,7 +277,7 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
 
   private Command DD() {
     return new SequentialCommandGroup(
-      new WaitCommand(SmartDashboard.getNumber("Delay", 3)),
+      autoWait(),
       DD1,
       new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
       new ZeroShooter(m_launcher, m_intake),
@@ -285,6 +287,20 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
 
     }
 
+
+  private Command autoWait() {
+    Timer timer = new Timer();
+    return new FunctionalCommand(
+        // On Start: Reset and start the timer, and read the dashboard value
+        timer::restart,
+        // On Execute: Do nothing while waiting
+        () -> {},
+        // On End: Stop the timer
+        interrupted -> timer.stop(),
+        // Is Finished: Check if timer has reached the current dashboard value
+        () -> timer.hasElapsed(SmartDashboard.getNumber("Delay", 3.0))
+    );
+  }
 
     //Tuning Auto
   Path Tuning = new Path("Tuning Path");
