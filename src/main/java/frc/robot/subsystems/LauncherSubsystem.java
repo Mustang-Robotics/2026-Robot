@@ -7,6 +7,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkFlex;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.Timer;
@@ -17,7 +18,7 @@ public class LauncherSubsystem extends SubsystemBase {
     private final SparkMax m_launcher = new SparkMax(8, MotorType.kBrushless);
     private final SparkMax m_launcher_follower = new SparkMax(9, MotorType.kBrushless);
     private final SparkMax m_launcher_follower2 = new SparkMax(6, MotorType.kBrushless);
-    private final SparkMax m_feeder = new SparkMax(33, MotorType.kBrushless);
+    private final SparkFlex m_feeder = new SparkFlex(33, MotorType.kBrushless);
     
     public double targetSpeed = 2000;
     public RelativeEncoder shooterEncoder = m_launcher.getEncoder();

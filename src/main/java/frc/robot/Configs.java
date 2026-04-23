@@ -65,7 +65,7 @@ public final class Configs {
                 public static final SparkMaxConfig LauncherConfig = new SparkMaxConfig();
                 public static final SparkMaxConfig Launcher_2Config = new SparkMaxConfig();
                 public static final SparkMaxConfig Launcher_3Config = new SparkMaxConfig();
-                public static final SparkMaxConfig FeederConfig = new SparkMaxConfig();
+                public static final SparkFlexConfig FeederConfig = new SparkFlexConfig();
 
                 static {
                         LauncherConfig
@@ -87,7 +87,7 @@ public final class Configs {
                         .positionConversionFactor(1)
                         .velocityConversionFactor(1)
                         .uvwMeasurementPeriod(10)
-                        .uvwAverageDepth(3);
+                        .uvwAverageDepth(2);
 
                         LauncherConfig
                         .closedLoop
