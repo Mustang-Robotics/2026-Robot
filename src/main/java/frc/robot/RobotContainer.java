@@ -137,6 +137,8 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
     m_chooser.addOption("Right Bump BLINE", RB());
     m_chooser.addOption("Left Bump BLINE", LB());
     m_chooser.addOption("Delay Depot", DD());
+    m_chooser.addOption("Just Depot BLINE", JD());
+    m_chooser.addOption("Delay Long Trench", LTrench());
 
     SmartDashboard.putNumber("Delay", 3.0);
     SmartDashboard.putData("Auto Chooser", m_chooser);
@@ -178,7 +180,7 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
   //m_driverController.b().onTrue(new InstantCommand(() -> m_intake.changeSetpoint(0), m_intake));
   m_driverController.leftTrigger().onTrue(new IntakeLaunch(m_robotDrive, m_driverController, m_launcher, RotationPID, m_intake));
   m_driverController.leftTrigger().onFalse(new InstantCommand(() -> m_intake.setPercent(0), m_intake).andThen(new ParallelCommandGroup(new FieldCentricDrive(m_robotDrive, m_driverController), new ZeroShooter(m_launcher, m_intake))));
-  m_driverController.leftBumper().onTrue(new ParallelCommandGroup(new InstantCommand(() -> m_intake.changeSetpoint(0.005)), new RunCommand(() -> m_intake.setPercent(1), m_intake)));
+  m_driverController.leftBumper().onTrue(new ParallelCommandGroup(new InstantCommand(() -> m_intake.changeSetpoint(0.003)), new RunCommand(() -> m_intake.setPercent(1), m_intake)));
   m_driverController.leftBumper().onFalse(new RunCommand(() -> m_intake.setPercent(0), m_intake));
   m_driverController.y().onTrue(new InstantCommand(() -> m_launcher.setSpeed(-1500)));
   m_driverController.y().onFalse(new ZeroShooter(m_launcher, m_intake));
@@ -269,7 +271,7 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
 
     }
 
-      //Left Side Bump Auto
+      //DelayDepot Auto
   Path DelayDepot1 = new Path("Delayed Depot 1");
   FollowPath DD1 = (FollowPath) pathBuilder.build(DelayDepot1);
   Path DelayDepot2 = new Path("Delayed Depot 2");
@@ -282,6 +284,24 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
       new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
       new ZeroShooter(m_launcher, m_intake),
       DD2,
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new ZeroShooter(m_launcher, m_intake));
+
+    }
+
+    //Long Trench Auto
+  Path LTrench1 = new Path("Long Trench");
+  FollowPath LT1 = (FollowPath) pathBuilder.build(LTrench1);
+  Path LTrench2 = new Path("Trench Path 2 - Left");
+  FollowPath LT2 = (FollowPath) pathBuilder.build(LTrench2);
+
+  private Command LTrench() {
+    return new SequentialCommandGroup(
+      autoWait(),
+      LT1,
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
+      new ZeroShooter(m_launcher, m_intake),
+      LT2,
       new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(3.5),
       new ZeroShooter(m_launcher, m_intake));
 
@@ -301,6 +321,19 @@ FollowPath.Builder pathBuilder = new FollowPath.Builder(
         () -> timer.hasElapsed(SmartDashboard.getNumber("Delay", 3.0))
     );
   }
+
+  //CenterDepot Auto
+  Path JustDepot = new Path("Just Depot");
+  FollowPath JDP = (FollowPath) pathBuilder.build(JustDepot);
+
+  private Command JD() {
+    return new SequentialCommandGroup(
+      JDP,
+      new AutoLaunchDrive(true, X_PID, Y_PID, m_launcher, RotationPID, m_robotDrive, m_intake).withTimeout(5),
+      new ZeroShooter(m_launcher, m_intake)
+    );
+
+    }
 
     //Tuning Auto
   Path Tuning = new Path("Tuning Path");

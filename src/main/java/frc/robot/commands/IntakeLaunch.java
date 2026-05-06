@@ -36,7 +36,7 @@ public class IntakeLaunch extends Command {
         double currentVelocity = m_drive.getTurnRate(); 
         m_PID.reset(currentAngle, currentVelocity);
         
-        intakeSetpoint = 0.005;
+        intakeSetpoint = 0.003;
         m_intake.setPercent(1);
         m_isFeeding = false; // Reset state
     }

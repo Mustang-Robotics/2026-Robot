@@ -20,7 +20,7 @@ public class IntakeSubsystem extends SubsystemBase {
     private final SparkMax m_extend = new SparkMax(34, MotorType.kBrushless);
     private SparkClosedLoopController ExtendClosedLoopController = m_extend.getClosedLoopController();
     public final AbsoluteEncoder extendEncoder = m_extend.getAbsoluteEncoder();
-    public double extendTarget = 0.005;
+    public double extendTarget = 0.003;
 
     private final SparkMax m_intake = new SparkMax(7, MotorType.kBrushless);
 

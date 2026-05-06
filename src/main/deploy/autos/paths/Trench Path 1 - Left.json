@@ -15,7 +15,7 @@
     {
       "type": "rotation",
       "rotation_radians": 0.0,
-      "t_ratio": 0.537507252863668,
+      "t_ratio": 0.5375072528636681,
       "profiled_rotation": true
     },
     {
@@ -84,13 +84,25 @@
       }
     },
     {
+      "type": "waypoint",
+      "translation_target": {
+        "x_meters": 5.678108511235384,
+        "y_meters": 7.380605390123409,
+        "intermediate_handoff_radius_meters": 0.2
+      },
+      "rotation_target": {
+        "rotation_radians": -1.5707963267948966,
+        "profiled_rotation": true
+      }
+    },
+    {
       "type": "event_trigger",
-      "t_ratio": 0.3,
+      "t_ratio": 0.30000000000000016,
       "lib_key": "IntakeOff"
     },
     {
       "type": "event_trigger",
-      "t_ratio": 0.3,
+      "t_ratio": 0.30000000000000016,
       "lib_key": "SpinUp"
     },
     {
@@ -110,8 +122,8 @@
     "max_acceleration_meters_per_sec2": [
       {
         "value": 16.0,
-        "start_ordinal": 6,
-        "end_ordinal": 6
+        "start_ordinal": 7,
+        "end_ordinal": 7
       },
       {
         "value": 5.5,

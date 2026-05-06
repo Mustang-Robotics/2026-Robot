@@ -34,7 +34,7 @@ public class LauncherSubsystem extends SubsystemBase {
     private boolean m_isAutoReversing = false;
 
     private final double STALL_THRESHOLD_RPM = 50.0;
-    private final double AUTO_REVERSE_DURATION = 0.25; 
+    private final double AUTO_REVERSE_DURATION = 0.5; 
     private final double REVERSE_SPEED = -1.0;
 
     public LauncherSubsystem() {
