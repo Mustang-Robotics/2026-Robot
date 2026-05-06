@@ -102,6 +102,18 @@
       }
     },
     {
+      "type": "waypoint",
+      "translation_target": {
+        "x_meters": 5.678,
+        "y_meters": 0.688,
+        "intermediate_handoff_radius_meters": 0.2
+      },
+      "rotation_target": {
+        "rotation_radians": 1.5707963267948966,
+        "profiled_rotation": true
+      }
+    },
+    {
       "type": "event_trigger",
       "t_ratio": 0.2999999999999999,
       "lib_key": "IntakeOff"
@@ -128,8 +140,8 @@
     "max_acceleration_meters_per_sec2": [
       {
         "value": 16.0,
-        "start_ordinal": 7,
-        "end_ordinal": 7
+        "start_ordinal": 8,
+        "end_ordinal": 8
       },
       {
         "value": 5.5,
