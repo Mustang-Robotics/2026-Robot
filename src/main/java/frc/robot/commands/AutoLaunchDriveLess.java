@@ -54,6 +54,7 @@ public class AutoLaunchDriveLess extends Command {
         m_YDrivePID.reset(m_drive.getPose().getY(), m_drive.getFieldRelativeSpeeds().vyMetersPerSecond);
         
         intakeSetpoint = 0.0;
+        m_intake.setPercent(.3);
         m_isFeeding = false; // Reset firing state
 
         if(m_drive.redAlliance){

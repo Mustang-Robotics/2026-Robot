@@ -44,6 +44,7 @@ public class LaunchDrive extends Command {
         m_PID.reset(currentAngle, currentVelocity);
         
         intakeSetpoint = 0.0;
+        m_intake.setPercent(.3);
         m_isFeeding = false; // Reset firing state
     }
 
