@@ -7,18 +7,21 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeDrive extends Command{
     DriveSubsystem m_drive;
     CommandXboxController m_controller;
     ProfiledPIDController m_PID;
+    IntakeSubsystem m_intake;
 
-    public IntakeDrive(DriveSubsystem drive, CommandXboxController controller, ProfiledPIDController PID){
+    public IntakeDrive(DriveSubsystem drive, CommandXboxController controller, ProfiledPIDController PID, IntakeSubsystem intake){
         m_drive = drive;
         m_controller = controller;
         m_PID = PID;
+        m_intake = intake;
 
-        addRequirements(m_drive);
+        addRequirements(m_drive, m_intake);
     }
 
     private double convertAngle(double angle) {
@@ -48,6 +51,19 @@ public class IntakeDrive extends Command{
         }
 
         return plusAngle;
+    }
+
+    @Override
+    public void initialize() {
+        // Reset the Profiled PID with current position AND velocity 
+        // This prevents the "wrong way jerk" by matching the robot's existing momentum
+        double currentAngle = m_drive.convertGyroAngle(m_drive.getAngle());
+        double currentVelocity = m_drive.getTurnRate(); 
+        
+        m_PID.reset(currentAngle, currentVelocity);
+        
+        m_intake.setPercent(1);
+        m_intake.changeSetpoint(0.003);
     }
 
     @Override

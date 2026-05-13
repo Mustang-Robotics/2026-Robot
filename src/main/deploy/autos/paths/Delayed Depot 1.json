@@ -27,7 +27,7 @@
     {
       "type": "waypoint",
       "translation_target": {
-        "x_meters": 5.728,
+        "x_meters": 5.778,
         "y_meters": 2.5,
         "intermediate_handoff_radius_meters": 0.2
       },
@@ -44,12 +44,24 @@
     {
       "type": "waypoint",
       "translation_target": {
-        "x_meters": 5.728,
-        "y_meters": 5.231,
+        "x_meters": 5.778,
+        "y_meters": 4.231,
         "intermediate_handoff_radius_meters": 0.2
       },
       "rotation_target": {
         "rotation_radians": -1.5707963267948966,
+        "profiled_rotation": true
+      }
+    },
+    {
+      "type": "waypoint",
+      "translation_target": {
+        "x_meters": 6.4,
+        "y_meters": 5.331,
+        "intermediate_handoff_radius_meters": 0.2
+      },
+      "rotation_target": {
+        "rotation_radians": 0.0,
         "profiled_rotation": true
       }
     },
@@ -62,28 +74,28 @@
       "type": "waypoint",
       "translation_target": {
         "x_meters": 3.2730000000000006,
-        "y_meters": 5.231,
+        "y_meters": 5.331,
         "intermediate_handoff_radius_meters": 0.2
       },
       "rotation_target": {
-        "rotation_radians": -1.5707963267948966,
+        "rotation_radians": 0.0,
         "profiled_rotation": true
       }
     },
     {
       "type": "event_trigger",
-      "t_ratio": 0.5,
+      "t_ratio": 0.5000000000000001,
       "lib_key": "SpinUp"
     },
     {
       "type": "waypoint",
       "translation_target": {
-        "x_meters": 1.229556945146887,
-        "y_meters": 4.890892098921553,
+        "x_meters": 1.6,
+        "y_meters": 5.84717903784758,
         "intermediate_handoff_radius_meters": 0.2
       },
       "rotation_target": {
-        "rotation_radians": -0.2480279062814356,
+        "rotation_radians": -0.5235987755982988,
         "profiled_rotation": true
       }
     }
@@ -93,7 +105,7 @@
       {
         "value": 1.5,
         "start_ordinal": 0,
-        "end_ordinal": 3
+        "end_ordinal": 4
       }
     ],
     "max_acceleration_meters_per_sec2": [
