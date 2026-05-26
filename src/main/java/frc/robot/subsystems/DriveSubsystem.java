@@ -94,6 +94,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final StructPublisher<Pose3d> m_latestPosePub;
 
   private double m_lastPoseTimestamp = -1;
+  private boolean m_hasSeededPosition = false;
 
 
   // Odometry class for tracking robot pose
@@ -180,21 +181,70 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
         });
+
+    m_questNav.commandPeriodic();
+    
+    SmartDashboard.putBoolean("Position Seeded", m_hasSeededPosition);
+    
     var visionBottomEst = vision.getFrontEstimatedGlobalPose();
-    visionBottomEst.ifPresent(
-      est -> {
-        var estStdDevs = vision.getEstimationStdDevs();
-        m_odometry.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+    visionBottomEst.ifPresent(est -> {
+        if (isVisionPoseValid(est.estimatedPose.toPose2d())) {
+            var estStdDevs = vision.getEstimationStdDevs();
+            m_odometry.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+            
+            // If we get a high-confidence multi-tag lock, sync/seed QuestNav
+            if (est.targetsUsed.size() > 1) {
+              if(!m_hasSeededPosition) {
+                m_hasSeededPosition = true;
+                resetPose(est.estimatedPose);
+            }else{
+              double currentCameraNoise = estStdDevs.get(0, 0); 
+                    
+                    // Calculate how far QuestNav has drifted from this camera frame
+                    double currentEstimateDrift = getPose().getTranslation()
+                        .getDistance(est.estimatedPose.toPose2d().getTranslation());
+                    
+                    SmartDashboard.putNumber("Front Drift", currentEstimateDrift);
+                    SmartDashboard.putNumber("Front Noise", currentCameraNoise);    
+                    // Only override QuestNav if:
+                    // 1. The camera noise is low enough to trust (e.g., under 15cm)
+                    // 2. The drift is larger than the camera's current noise floor
+                    if (currentCameraNoise < 0.15 && currentEstimateDrift > currentCameraNoise) {
+                        resetPose(est.estimatedPose);
+                    }
+          }
+        }
+      }
     });
 
     var visionTopEst = vision.getBackEstimatedGlobalPose();
-    visionTopEst.ifPresent(
-      est -> {
-        var estStdDevs = vision.getEstimationStdDevs();
-        m_odometry.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+    visionTopEst.ifPresent(est -> {
+        if (isVisionPoseValid(est.estimatedPose.toPose2d())) {
+            var estStdDevs = vision.getEstimationStdDevs();
+            m_odometry.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+            
+            if (est.targetsUsed.size() > 1) {
+                if (!m_hasSeededPosition) {
+                    m_hasSeededPosition = true;
+                    resetPose(est.estimatedPose);
+                } 
+                else {
+                    double currentCameraNoise = estStdDevs.get(0, 0); 
+                    double currentEstimateDrift = getPose().getTranslation()
+                        .getDistance(est.estimatedPose.toPose2d().getTranslation());
+
+                    SmartDashboard.putNumber("Back Drift", currentEstimateDrift);
+                    SmartDashboard.putNumber("Back Noise", currentCameraNoise); 
+                        
+                    if (currentCameraNoise < 0.15 && currentEstimateDrift > currentCameraNoise) {
+                        resetPose(est.estimatedPose);
+                    }
+                }
+            }
+        }
     });
 
-    m_questNav.commandPeriodic();
+    
 
     // Publish device diagnostics
     boolean connected = m_questNav.isConnected();
@@ -232,7 +282,7 @@ public class DriveSubsystem extends SubsystemBase {
 
       acceptedPoses.add(robotPose);
 
-      if (frame.isTracking()) {
+      if (frame.isTracking() && m_hasSeededPosition) {
         m_odometry.addVisionMeasurement(
             robotPose.toPose2d(), frame.dataTimestamp(), Constants.Vision.QUESTNAV_STD_DEVS);
       }
@@ -349,6 +399,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @param pose The pose to which to set the odometry.
    */
   public void resetOdometry(Pose2d pose) {
+    m_hasSeededPosition = true;
     m_odometry.resetPosition(
         Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)),
         new SwerveModulePosition[] {
@@ -591,6 +642,15 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void resetPose(Pose2d robotPose) {
     resetPose(new Pose3d(robotPose));
+  }
+
+  private boolean isVisionPoseValid(Pose2d visionPose) {
+    // If we haven't seeded yet, we have to assume the first multi-tag lock is correct
+    if (!m_hasSeededPosition) return true; 
+
+    double distance = m_odometry.getEstimatedPosition().getTranslation().getDistance(visionPose.getTranslation());
+    // Reject the measurement if it's more than 1.0 meter away from our current estimate
+    return distance < 1.0;
   }
 
   }
