@@ -50,7 +50,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 
      private final PhotonPoseEstimator photonFrontEstimator;
      private final PhotonPoseEstimator photonBackEstimator;
-     private Matrix<N3, N1> curStdDevs;
+     private Matrix<N3, N1> curStdDevsFront;
+     private Matrix<N3, N1> curStdDevsBack;
 
 
  
@@ -156,7 +157,7 @@ import edu.wpi.first.math.geometry.Pose2d;
              Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
          if (estimatedPose.isEmpty()) {
              // No pose input. Default to single-tag std devs
-             curStdDevs = kSingleTagStdDevs;
+             curStdDevsFront = kSingleTagStdDevs;
  
          } else {
              // Pose present. Start running Heuristic
@@ -179,7 +180,7 @@ import edu.wpi.first.math.geometry.Pose2d;
  
              if (numTags == 0) {
                  // No tags visible. Default to single-tag std devs
-                 curStdDevs = kSingleTagStdDevs;
+                 curStdDevsFront = kSingleTagStdDevs;
              } else {
                  // One or more tags visible, run the full heuristic.
                  avgDist /= numTags;
@@ -189,7 +190,7 @@ import edu.wpi.first.math.geometry.Pose2d;
                  if (numTags == 1 && avgDist > 4)
                      estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
                  else estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / 30));
-                 curStdDevs = estStdDevs;
+                 curStdDevsFront = estStdDevs;
              }
          }
      }
@@ -205,7 +206,7 @@ import edu.wpi.first.math.geometry.Pose2d;
         Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
     if (estimatedPose.isEmpty()) {
         // No pose input. Default to single-tag std devs
-        curStdDevs = kSingleTagStdDevs;
+        curStdDevsBack = kSingleTagStdDevs;
 
     } else {
         // Pose present. Start running Heuristic
@@ -228,7 +229,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 
         if (numTags == 0) {
             // No tags visible. Default to single-tag std devs
-            curStdDevs = kSingleTagStdDevs;
+            curStdDevsBack = kSingleTagStdDevs;
         } else {
             // One or more tags visible, run the full heuristic.
             avgDist /= numTags;
@@ -238,7 +239,7 @@ import edu.wpi.first.math.geometry.Pose2d;
             if (numTags == 1 && avgDist > 4)
                 estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
             else estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / 30));
-            curStdDevs = estStdDevs;
+            curStdDevsBack = estStdDevs;
         }
     }
 }
@@ -249,8 +250,12 @@ import edu.wpi.first.math.geometry.Pose2d;
       * edu.wpi.first.math.estimator.SwerveDrivePoseEstimator SwerveDrivePoseEstimator}. This should
       * only be used when there are targets visible.
       */
-     public Matrix<N3, N1> getEstimationStdDevs() {
-         return curStdDevs;
+     public Matrix<N3, N1> getEstimationStdDevsFront() {
+         return curStdDevsFront;
+     }
+
+     public Matrix<N3, N1> getEstimationStdDevsBack() {
+         return curStdDevsBack;
      }
  
      // ----- Simulation

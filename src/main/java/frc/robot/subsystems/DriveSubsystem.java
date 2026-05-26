@@ -185,50 +185,50 @@ public class DriveSubsystem extends SubsystemBase {
     m_questNav.commandPeriodic();
     
     SmartDashboard.putBoolean("Position Seeded", m_hasSeededPosition);
-    
+
     var visionBottomEst = vision.getFrontEstimatedGlobalPose();
     visionBottomEst.ifPresent(est -> {
-        if (isVisionPoseValid(est.estimatedPose.toPose2d())) {
-            var estStdDevs = vision.getEstimationStdDevs();
+        boolean isMultiTag = est.targetsUsed.size() > 1;
+
+        // Bypass lane: allow multi-tag through or enforce the 1m filter on single tags
+        if (isMultiTag || isVisionPoseValid(est.estimatedPose.toPose2d())) {
+            var estStdDevs = vision.getEstimationStdDevsFront();
             m_odometry.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
             
-            // If we get a high-confidence multi-tag lock, sync/seed QuestNav
-            if (est.targetsUsed.size() > 1) {
-              if(!m_hasSeededPosition) {
-                m_hasSeededPosition = true;
-                resetPose(est.estimatedPose);
-            }else{
-              double currentCameraNoise = estStdDevs.get(0, 0); 
-                    
-                    // Calculate how far QuestNav has drifted from this camera frame
+            if (isMultiTag) {
+                if(!m_hasSeededPosition) {
+                    m_hasSeededPosition = true;
+                    resetPose(est.estimatedPose);
+                } else {
+                    double currentCameraNoise = estStdDevs.get(0, 0); 
                     double currentEstimateDrift = getPose().getTranslation()
                         .getDistance(est.estimatedPose.toPose2d().getTranslation());
                     
                     SmartDashboard.putNumber("Front Drift", currentEstimateDrift);
                     SmartDashboard.putNumber("Front Noise", currentCameraNoise);    
-                    // Only override QuestNav if:
-                    // 1. The camera noise is low enough to trust (e.g., under 15cm)
-                    // 2. The drift is larger than the camera's current noise floor
+
                     if (currentCameraNoise < 0.15 && currentEstimateDrift > currentCameraNoise) {
                         resetPose(est.estimatedPose);
                     }
-          }
+                }
+            }
         }
-      }
     });
 
     var visionTopEst = vision.getBackEstimatedGlobalPose();
     visionTopEst.ifPresent(est -> {
-        if (isVisionPoseValid(est.estimatedPose.toPose2d())) {
-            var estStdDevs = vision.getEstimationStdDevs();
+        boolean isMultiTag = est.targetsUsed.size() > 1;
+
+        // Bypass lane: allow multi-tag through or enforce the 1m filter on single tags
+        if (isMultiTag || isVisionPoseValid(est.estimatedPose.toPose2d())) {
+            var estStdDevs = vision.getEstimationStdDevsBack();
             m_odometry.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
             
-            if (est.targetsUsed.size() > 1) {
+            if (isMultiTag) {
                 if (!m_hasSeededPosition) {
                     m_hasSeededPosition = true;
                     resetPose(est.estimatedPose);
-                } 
-                else {
+                } else {
                     double currentCameraNoise = estStdDevs.get(0, 0); 
                     double currentEstimateDrift = getPose().getTranslation()
                         .getDistance(est.estimatedPose.toPose2d().getTranslation());
