@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -14,20 +17,28 @@ import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
 import frc.robot.Constants.AutoConfig;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.Launcher;
+import gg.questnav.questnav.PoseFrame;
+import gg.questnav.questnav.QuestNav;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -75,6 +86,15 @@ public class DriveSubsystem extends SubsystemBase {
   private LED m_led = new LED();
   public boolean passing = false;
 
+  private final QuestNav m_questNav = new QuestNav();
+
+  private final StructArrayPublisher<Pose3d> m_allPosesPub;
+  private final StructArrayPublisher<Pose3d> m_acceptedPosesPub;
+  private final StructArrayPublisher<Pose3d> m_rejectedPosesPub;
+  private final StructPublisher<Pose3d> m_latestPosePub;
+
+  private double m_lastPoseTimestamp = -1;
+
 
   // Odometry class for tracking robot pose
   public final Field2d m_pose = new Field2d();
@@ -114,6 +134,34 @@ public class DriveSubsystem extends SubsystemBase {
     },
     this // Reference to this subsystem to set requirements
   );
+  
+    var nt = NetworkTableInstance.getDefault();
+    m_allPosesPub =
+        nt.getStructArrayTopic("QuestNav/RobotPoses", Pose3d.struct).publish();
+    m_acceptedPosesPub =
+        nt.getStructArrayTopic("QuestNav/RobotPosesAccepted", Pose3d.struct).publish();
+    m_rejectedPosesPub =
+        nt.getStructArrayTopic("QuestNav/RobotPosesRejected", Pose3d.struct).publish();
+    m_latestPosePub =
+        nt.getStructTopic("QuestNav/LatestRobotPose", Pose3d.struct).publish();
+
+    m_questNav.setVersionCheckEnabled(false);
+
+    m_questNav.onConnected(() ->
+        System.out.println("Quest connected!"));
+    m_questNav.onDisconnected(() ->
+        DriverStation.reportWarning("Quest disconnected!", false));
+    m_questNav.onTrackingAcquired(() ->
+        System.out.println("Quest tracking acquired!"));
+    m_questNav.onTrackingLost(() ->
+        DriverStation.reportWarning("Quest tracking lost!", false));
+    m_questNav.onLowBattery((int) Constants.Vision.BATTERY_LOW_PERCENT, level ->
+        DriverStation.reportWarning("Quest battery low: " + level + "%", false));
+    m_questNav.onCommandSuccess(response ->
+        System.out.println("Pose reset succeeded: " + response.getCommandId()));
+    m_questNav.onCommandFailure(response ->
+        DriverStation.reportError(
+            "Pose reset failed: " + response.getErrorMessage(), false));
   }
 
   @Override
@@ -145,6 +193,66 @@ public class DriveSubsystem extends SubsystemBase {
         var estStdDevs = vision.getEstimationStdDevs();
         m_odometry.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
     });
+
+    m_questNav.commandPeriodic();
+
+    // Publish device diagnostics
+    boolean connected = m_questNav.isConnected();
+    boolean tracking = m_questNav.isTracking();
+    SmartDashboard.putBoolean("QuestNav/Connected", connected);
+    SmartDashboard.putBoolean("QuestNav/Tracking", tracking);
+    SmartDashboard.putNumber("QuestNav/Latency", m_questNav.getLatency());
+    m_questNav.getBatteryPercent().ifPresent(b -> {
+      SmartDashboard.putNumber("QuestNav/Battery%", b);
+      if (b < Constants.Vision.BATTERY_CRITICAL_PERCENT) {
+        DriverStation.reportWarning("Quest battery CRITICAL: " + b + "%", false);
+      }
+    });
+    m_questNav.getTrackingLostCounter().ifPresent(
+        c -> SmartDashboard.putNumber("QuestNav/TrackingLostCount", c));
+
+    // Process all unread pose frames
+    PoseFrame[] frames = m_questNav.getAllUnreadPoseFrames();
+    SmartDashboard.putNumber("QuestNav/UnreadFrames", frames.length);
+
+    List<Pose3d> allPoses = new ArrayList<>();
+    List<Pose3d> acceptedPoses = new ArrayList<>();
+    List<Pose3d> rejectedPoses = new ArrayList<>();
+
+    for (PoseFrame frame : frames) {
+      Pose3d questPose = frame.questPose3d();
+      Pose3d robotPose = questPose.plus(Constants.Vision.ROBOT_TO_QUEST.inverse());
+
+      allPoses.add(robotPose);
+
+      if (shouldReject(robotPose)) {
+        rejectedPoses.add(robotPose);
+        continue;
+      }
+
+      acceptedPoses.add(robotPose);
+
+      if (frame.isTracking()) {
+        m_odometry.addVisionMeasurement(
+            robotPose.toPose2d(), frame.dataTimestamp(), Constants.Vision.QUESTNAV_STD_DEVS);
+      }
+
+      m_lastPoseTimestamp = frame.dataTimestamp();
+    }
+
+    // Publish pose arrays for AdvantageScope 3D field visualization
+    m_allPosesPub.set(allPoses.toArray(Pose3d[]::new));
+    m_acceptedPosesPub.set(acceptedPoses.toArray(Pose3d[]::new));
+    m_rejectedPosesPub.set(rejectedPoses.toArray(Pose3d[]::new));
+
+    if (!allPoses.isEmpty()) {
+      m_latestPosePub.set(allPoses.get(allPoses.size() - 1));
+    }
+
+    if (m_lastPoseTimestamp > 0) {
+      SmartDashboard.putNumber(
+          "QuestNav/TimeSinceLastPose", Timer.getTimestamp() - m_lastPoseTimestamp);
+    }
 
     //Aiming Stuff
 
@@ -466,5 +574,21 @@ public class DriveSubsystem extends SubsystemBase {
       }
       return light;
       }
+
+  private boolean shouldReject(Pose3d pose) {
+    return pose.getX() < 0.0
+        || pose.getX() > Constants.Vision.kTagLayout.getFieldLength()
+        || pose.getY() < 0.0
+        || pose.getY() > Constants.Vision.kTagLayout.getFieldWidth();
+  }
+
+  public void resetPose(Pose3d robotPose) {
+    Pose3d questPose = robotPose.plus(Constants.Vision.ROBOT_TO_QUEST);
+    m_questNav.setPose(questPose);
+  }
+
+  public void resetPose(Pose2d robotPose) {
+    resetPose(new Pose3d(robotPose));
+  }
 
   }

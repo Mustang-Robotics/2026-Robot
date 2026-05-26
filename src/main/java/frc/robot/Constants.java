@@ -116,6 +116,20 @@ public final class Constants {
         // (Fake values. Experiment and determine estimation noise on an actual robot.)
         public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(.5, .5, 2);
         public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(.25, .25, .5);
+
+        public static final Transform3d ROBOT_TO_QUEST = 
+          new Transform3d(
+            new Translation3d(0.076, 0.398, 0.621),
+            new Rotation3d(0,0, Math.PI / 2));
+
+        public static final Matrix<N3, N1> QUESTNAV_STD_DEVS =
+          VecBuilder.fill(
+            0.02,       // X position trust (20mm)
+            0.02,       // Y position trust (20mm)
+            0.0872665); // Rotation trust (5 degrees)
+
+        public static final double BATTERY_LOW_PERCENT = 20;
+        public static final double BATTERY_CRITICAL_PERCENT = 10;
     }
 
   
